@@ -1,0 +1,15 @@
+/*!
+ * Start Bootstrap - SB Admin (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+
+/* Global Styles */
+html, body {
+    height: 100%;
+    background-color: #fff;
+}
+
+@media (min-width: 768px){
+  .side-nav{right: 0;left: auto;}
+}
