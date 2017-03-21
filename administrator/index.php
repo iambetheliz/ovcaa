@@ -1,61 +1,11 @@
 <?php
-    ob_start();
-    session_start();
-    require_once 'includes/dbconnect.php';
-    
-    // it will never let you open index(login) page if session is set
-    if ( isset($_SESSION['user'])!="" ) {
-        header("Location: dashboard.php");
-        exit;
-    }
-    
-    $error = false;
-    
-    if( isset($_POST['btn-login']) ) {  
-        
-        // prevent sql injections/ clear user invalid inputs
+include('login.php');
+?>
+<?php
 
-        $userName = trim($_POST['userName']);
-        $userName = strip_tags($userName);
-        $userName = htmlspecialchars($userName);
-        
-        $pass = trim($_POST['pass']);
-        $pass = strip_tags($pass);
-        $pass = htmlspecialchars($pass);
-        // prevent sql injections / clear user invalid inputs
-        
-        if(empty($userName)){
-            $error = true;
-            $userNameError = "Please enter your username.";
-        } else if ( !filter_var($userName) ) {
-            $error = true;
-            $userNameError = "Please enter valid username.";
-        }
-        
-        if(empty($pass)){
-            $error = true;
-            $passError = "Please enter your password.";
-        }
-        
-        // if there's no error, continue to login
-        if (!$error) {
-            
-            $password = hash('sha256', $pass); // password hashing using SHA256
-        
-            $res=mysql_query("SELECT userId, userName, userPass FROM members WHERE userName='$userName'");
-            $row=mysql_fetch_array($res);
-            $count = mysql_num_rows($res); // if uname/pass correct it returns must be 1 row
-            
-            if( $count == 1 && $row['userPass']==$password ) {
-                $_SESSION['user'] = $row['userId'];
-                header("Location: dashboard.php");
-            } else {
-                $errMSG = "Incorrect Credentials, Try again...";
-            }
-                
-        }
-        
-    }
+if(isset($_SESSION['login_admin'])){
+header("location: dashboard.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -88,7 +38,7 @@
                         <strong> Sign in to continue</strong>
                     </div>
                     <div class="panel-body">
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
+                        <form action="" method="POST">
                             <fieldset>
                                 <div class="row">
                                     <div class="center-block"><br>
@@ -99,39 +49,55 @@
                                 <div class="row">
                                     <div class="col-sm-12 col-md-10  col-md-offset-1 ">
                                         <?php
-                                            if ( isset($errMSG) ) {
+                                            if(isset($_GET['error'])){
                                         ?>
-                                        <div class="form-group">
                                             <div class="alert alert-danger">
-                                                <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
+                                                <span class="glyphicon glyphicon-info-sign"></span> <strong>You need to login first!</strong>
+                                            </div><br>
+                                        <?php header("Refresh: 2; url=/ovcaa/administrator");}?>
+                                        <?php
+                                            if(isset($errMSG)){
+                                        ?>
+                                            <div class="alert alert-danger">
+                                                <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
+                                            </div><br>
+                                        <?php
+                                        }
+                                            else if(isset($successMSG)){
+                                        ?>
+                                            <div class="alert alert-success">
+                                                <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
+                                            </div><br>
+                                        <?php
+                                        }
+                                        ?>  
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="glyphicon glyphicon-user"></i>
+                                                </span> 
+                                                <input class="form-control" placeholder="Username" name="userName" type="text" autofocus>
                                             </div>
                                         </div>
-                                        <?php
-                                            }
-                                        ?>
                                         <div class="form-group">
-                <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                <input type="text" name="userName" class="form-control" placeholder="Your username" value="<?php echo $userName; ?>" maxlength="40" autofocus />
-                </div>
-                <span class="text-danger"><?php echo $userNameError; ?></span>
-            </div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="glyphicon glyphicon-lock"></i>
+                                                </span>
+                                                <input class="form-control" placeholder="Password" name="userPass" type="password" value="">
+                                            </div>
+                                        </div>
                                         <div class="form-group">
-                <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                <input type="password" name="pass" class="form-control" placeholder="Your Password" maxlength="15" />
-                </div>
-                <span class="text-danger"><?php echo $passError; ?></span>
-            </div>
-                                        <div class="form-group">
-                <button type="submit" class="btn btn-lg btn-block btn-primary" name="btn-login">Sign In</button>
-            </div>
+                                            <input type="submit" class="btn btn-lg btn-primary btn-block" name="signin" value="Sign in">
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
                         </form>
                     </div>
-                    <div class="panel-footer "></div>
+                    <div class="panel-footer ">
+                        Don't have an account! <a href="#" onClick=""> Sign Up Here </a>
+                    </div>
                 </div>
             </div>
         </div>

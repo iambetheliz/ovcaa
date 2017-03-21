@@ -1,16 +1,6 @@
 <?php
-    ob_start();
-    session_start();
-    require_once 'includes/dbconnect.php';
-    
-    // if session is not set this will redirect to login page
-    if( !isset($_SESSION['user']) ) {
-        header('Location:index.php?error'); // Redirecting To Home Page
-        exit;
-    }
-    // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+include('session.php'); 
+session_start();// Starting Session
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -46,10 +36,13 @@
             <!-- Top Menu Items -->
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="upload-document.php"><span class="glyphicon glyphicon-upload"></span>&nbsp;&nbsp;Upload</a></li>
                 <li class="dropdown show-on-hover">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userEmail'] ; ?>&nbsp;&nbsp;<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $login_session; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="logout.php?logout">Logout</a></li>
+                        <li>
+                            <a href="logout.php">Logout</a>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -59,16 +52,19 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
-                        <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
+                        <a href="/ovcaa/administrator"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
+                        <a href="#">Media</a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-table"></i> Tables <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="demo" class="collapse">
                             <li>
-                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Files</a>
+                                <a href="tbl_materials.php">Files</a>
                             </li>
                             <li>
-                                <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
+                                <a href="tbl_users.php">Users</a>
                             </li>
                         </ul>
                     </li>
@@ -87,30 +83,37 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Welcome Admin!</h1>
+                        <ol class="breadcrumb">
+                            <li class="active">
+                                <i class="fa fa-dashboard"></i> Dashboard
+                            </li>
+                        </ol>
                     </div>
                 </div>
                 <!-- /.row -->
-                
+                        
+                        <br>
+                        <div class="jumbotron">
+                            <h1></h1>
+                            <p>This is your dashboard</p>
+                        </div>
+                        <br>
             </div><!-- /.container-fluid -->
         </div><!-- /#page-wrapper -->
-        <!-- Ed of Main Screen -->
-
-        </div>
 
     </div><!-- /#wrapper -->
-</div><!-- /.wrap -->
+</div>
 
     <footer class="footer">
         <div class="container-fluid">
-            <p align="right">&copy; UP Open University 2017 <a class="top-nav" href="/ovcaa">View Site</a></p>
+            <p>&copy; UP Open University 2017 <a class="top-nav" href="/ovcaa">View Site</a></p>
         </div>
     </footer>
 
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
-<script src="../assets/js/index.js"></script>
 
 </body>
+
 </html>
-<?php ob_end_flush(); ?>

@@ -1,16 +1,7 @@
 <?php
-    ob_start();
-    session_start();
-    require_once 'includes/dbconnect.php';
-    
-    // if session is not set this will redirect to login page
-    if( !isset($_SESSION['user']) ) {
-        header("Location: index.php");
-        exit;
-    }
-    // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+include('session.php'); // Includes Login Script
+
+session_start();
 ?>
 <?php
 
@@ -40,6 +31,7 @@
     $category_id = $_POST['category_id'];
     $cat_name = $_POST['cat_name'];
     $uploaded_by = $_POST['uploaded_by'];
+    $date = date('Y-m-d H:i:s');
   
     $file = $_FILES['file']['name'];
     $file_loc = $_FILES['file']['tmp_name'];
@@ -82,7 +74,7 @@
     // if no error occured, continue ....
     if(!isset($errMSG))
     {
-      $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, category_id=:category_id WHERE id=:id');
+      $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, date_updated=:date_updated, category_id=:category_id WHERE id=:id');
       $stmt->bindParam(':title',$title);
       $stmt->bindParam(':description',$description);
       $stmt->bindParam(':filename',$final_file);
@@ -90,6 +82,7 @@
       $stmt->bindParam(':location',$location);
       $stmt->bindParam(':url',$url);
       $stmt->bindParam(':uploaded_by',$uploaded_by);
+      $stmt->bindParam(':date_updated',$date);
       $stmt->bindParam(':category_id', $_POST['category_id']);
       $stmt->bindParam(':id',$id);
         
@@ -97,7 +90,7 @@
         ?>
                 <script>
         alert('Successfully Updated ...');
-        window.location.href='tbl_materials.php';
+        window.location.href='uploads.php';
         </script>
                 <?php
       }
@@ -114,95 +107,19 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
-<title>Admin - UP Open University</title>
+    <title>UP Open University</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
-<link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/bootstrap-theme.css" rel="stylesheet">
+<link href="../assets/css/font-awesome.min.css" rel="stylesheet">
 </head>
-
 <body>
+<?php include('header.php'); ?>
 <div class="wrap">
-    <div id="wrapper">
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
-
-            <!-- Brand and toggle -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
-            </div>
-
-            <!-- Top Menu Items -->
-            <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="upload-document.php"><span class="glyphicon glyphicon-upload"></span>&nbsp;&nbsp;Upload</a></li>
-                <li class="dropdown show-on-hover">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $login_session; ?>&nbsp;&nbsp;<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="logout.php">Logout</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            </div>
-
-            <!-- Sidebar Menu Items -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
-                        <a href="/ovcaa/administrator"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    </li>
-                    <li class="active">
-                      <a href="#">Media</a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-table"></i> Tables <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo" class="collapse">
-                            <li>
-                                <a href="tbl_materials.php">Files</a>
-                            </li>
-                            <li>
-                                <a href="tbl_users.php">Users</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>            
-            
-        </div>
-        </nav>
-        <!-- /.navbar-collapse -->
-        
-        <br><br>
-        <!-- Main Screen -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Edit</h1>
-                    </div>
-                </div>
-                <!-- /.row -->
-                        
-  <br>
-<div class="panel panel-default">
-  <div class="panel-heading">
-  <h3 class="panel-title">Edit</h3>
-  </div>
-  <div class="panel-body">
-<?php
+        <div class="container">
+                <div class="site-index"><br><br>
+                <div class="jumbotron">
+    <?php
   if(isset($errMSG)){
       ?>
             <div class="alert alert-danger">
@@ -222,7 +139,7 @@
 
  <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
-    <div class="col-sm-4">
+    <div class="col-sm-10">
     <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >
     <small id="emailHelp" class="form-text text-muted">Title of your document.</small>
     </div>
@@ -230,7 +147,7 @@
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
-    <div class="col-sm-4">
+    <div class="col-sm-10">
     <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>
     <small id="emailHelp" class="form-text text-muted">Description of your document.</small>
     </div>
@@ -238,7 +155,7 @@
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Category: (Required)</label>
-    <div class="col-sm-4">
+    <div class="col-sm-10">
         <?php
             // php select option value from database
             $hostname = "localhost";
@@ -277,51 +194,43 @@
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Old File:</label>    
-    <div class="col-sm-4">
+    <div class="col-sm-10">
     <input disabled="" readonly="" type="text" class="form-control" name="file" value="<?php echo $edit_row['filename'] ?>" >
     </div>
   </div>  
 
   <div class="form-group row">
   <label class="col-sm-2 col-form-label">New File: </label>
-    <div class="col-sm-4">
+    <div class="col-sm-10">
     <input type="file" name="file" class="form-control-file" />
   </div>
   </div>
   
   <div class="form-group row">
   <label class="col-sm-2 col-form-label"></label>
-    <div class="col-sm-4">
+    <div class="col-sm-10">
   <button type="submit" name="btn_save_updates" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span>
   &nbsp;&nbsp;UPDATE (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.</button>
   </div>
   </div>
 
-  <textarea hidden="" name="uploaded_by"><?php echo $userRow['userName']; ?></textarea>
+  <textarea hidden="" name="uploaded_by"><?php echo "$uploader";?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea>
 
-  </form></div>
-
-
-                        </div>
-                        <br>
-            </div><!-- /.container-fluid -->
-        </div><!-- /#page-wrapper -->
-
-    </div><!-- /#wrapper -->
+  </form>
+ 
+</div>
+</div>
+</div>
 </div>
 
-    <footer class="footer">
-        <div class="container-fluid">
-            <p align="right">&copy; UP Open University 2017 <a class="top-nav" href="/ovcaa">View Site</a></p>
-        </div>
-    </footer>
+<footer class="footer">
+<div class="container">
+        <p>&copy; UP Open University 2017</p>
+</div>
+</footer>
 
-<!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
-
+<script src="../assets/js/bootstrap.js"></script>
 </body>
-
 </html>
