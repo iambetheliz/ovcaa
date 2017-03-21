@@ -1,60 +1,58 @@
 <?php
-//Include GP config file && User class
-include_once 'gpConfig.php';
-include_once 'User.php';
-
-session_start();
-
-if(isset($_GET['code'])){
-    $gClient->authenticate($_GET['code']);
-    $_SESSION['token'] = $gClient->getAccessToken();
-    header('Location: ' . $redirectURL);
-}
-
-if (isset($_SESSION['token'])) {
-    $gClient->setAccessToken($_SESSION['token']);
-}
-
-if ($gClient->getAccessToken()) {
-    //Get user profile data from google
-    $gpUserProfile = $google_oauthV2->userinfo->get();
+    ob_start();
+    session_start();
+    require_once 'includes/dbconnect.php';
     
-    //Initialize User class
-    $user = new User();
-    
-    //Insert or update user data to the database
-    $gpUserData = array(
-        'oauth_provider'=> 'google',
-        'oauth_uid'     => $gpUserProfile['id'],
-        'first_name'    => $gpUserProfile['given_name'],
-        'last_name'     => $gpUserProfile['family_name'],
-        'email'         => $gpUserProfile['email'],
-        'gender'        => $gpUserProfile['gender'],
-        'locale'        => $gpUserProfile['locale'],
-        'picture'       => $gpUserProfile['picture'],
-        'link'          => $gpUserProfile['link']
-    );
-    $userData = $user->checkUser($gpUserData);
-    
-    //Storing user data into session
-    $_SESSION['userData'] = $userData;
-    
-    //Render facebook profile data
-    $output = '';
-    if(!empty($userData)){
-        $output .= '<h1>Welcome to UPOU Scribd!</h1>';
-        $output .= '<p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>';
-        $library .= '<a href="uploads.php">'.'<i class="glyphicon glyphicon-book">'.'</i>&nbsp;&nbsp;Library</a>';
-        $account .= '<p class="navbar-text" style="color:white;"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;'. $userData['first_name'].'&nbsp;'. $userData['last_name'].'</p>';
-        $logout .= '<a href="logout.php"><i class="glyphicon glyphicon-off">'.'</i>&nbsp;&nbsp;Logout</a>';
-    }else{
-        $output .= '<h3 style="color:red">Some problem occurred, please try again.</h3>';
+    // it will never let you open index(login) page if session is set
+    if ( isset($_SESSION['user'])!="" ) {
+        header("Location: dashboard.php");
+        exit;
     }
-
-} else {
-    $authUrl = $gClient->createAuthUrl();
-    $output = '<h1>Welcome to UPOU Scribd!</h1>';
-    $output .= '<p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>';
-    $output .= '<p><a class="btn btn-lg btn-danger" href="'.filter_var($authUrl, FILTER_SANITIZE_URL).'"><span class="fa fa-google-plus"></span>G+ Sign-in with Google</a></p>';
-}
+    
+    $error = false;
+    
+    if( isset($_POST['btn-login']) ) {  
+        
+        // prevent sql injections/ clear user invalid inputs
+        $email = trim($_POST['email']);
+        $email = strip_tags($email);
+        $email = htmlspecialchars($email);
+        
+        $pass = trim($_POST['pass']);
+        $pass = strip_tags($pass);
+        $pass = htmlspecialchars($pass);
+        // prevent sql injections / clear user invalid inputs
+        
+        if(empty($email)){
+            $error = true;
+            $emailError = "Please enter your email address.";
+        } else if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
+            $error = true;
+            $emailError = "Please enter valid email address.";
+        }
+        
+        if(empty($pass)){
+            $error = true;
+            $passError = "Please enter your password.";
+        }
+        
+        // if there's no error, continue to login
+        if (!$error) {
+            
+            $password = hash('sha256', $pass); // password hashing using SHA256
+        
+            $res=mysql_query("SELECT userId, userName, userPass FROM members WHERE userEmail='$email'");
+            $row=mysql_fetch_array($res);
+            $count = mysql_num_rows($res); // if uname/pass correct it returns must be 1 row
+            
+            if( $count == 1 && $row['userPass']==$password ) {
+                $_SESSION['user'] = $row['userId'];
+                header("Location: home.php");
+            } else {
+                $errMSG = "Incorrect Credentials, Try again...";
+            }
+                
+        }
+        
+    }
 ?>
