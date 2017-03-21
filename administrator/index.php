@@ -111,8 +111,8 @@
                                         ?>
                                         <div class="form-group">
                 <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                <input type="text" name="userName" class="form-control" placeholder="Your username" value="<?php echo $userName; ?>" maxlength="40" />
+                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                <input type="text" name="userName" class="form-control" placeholder="Username" value="<?php echo $userName; ?>" maxlength="40" autofocus />
                 </div>
                 <span class="text-danger"><?php echo $userNameError; ?></span>
             </div>
