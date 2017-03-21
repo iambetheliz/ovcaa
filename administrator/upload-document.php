@@ -1,7 +1,16 @@
 <?php
-include('session.php'); // Includes Login Script
-
-session_start();
+    ob_start();
+    session_start();
+    require_once 'includes/dbconnect.php';
+    
+    // if session is not set this will redirect to login page
+    if( !isset($_SESSION['user']) ) {
+        header("Location: /ovcaa/administrator");
+        exit;
+    }
+    // select loggedin members detail
+    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
+    $userRow=mysql_fetch_array($res);
 ?>
 <?php
 
@@ -15,8 +24,6 @@ session_start();
     $category_id = $_POST['category_id'];
     $cat_name = $_POST['cat_name'];
     $uploaded_by = $_POST['uploaded_by'];
-
-    $date = date('Y-m-d H:i:s');
   
     $file = $_FILES['file']['name'];
     $file_loc = $_FILES['file']['tmp_name'];
@@ -47,7 +54,7 @@ session_start();
    $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); // get image extension
 
    // valid image extensions
-   $valid_extensions = array('exe', 'zip'); // valid extensions
+   $valid_extensions = array('exe', 'zip', 'rar'); // valid extensions
      
    // allow valid image file formats
    if(!in_array($fileExt, $valid_extensions)){  
@@ -62,14 +69,14 @@ session_start();
     }
   }  
   else{
-    $errMSG = "Sorry, only DOCX, PDF, XLS, CSV & TXT files are allowed.";  
+    $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
    }
 }
   
   // if no error occured, continue ....
   if(!isset($errMSG))
   {
-   $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,date_created, date_updated,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :date_created, :date_updated, :category_id); INSERT INTO category(cat_name) VALUES (:cat_name)');
+   $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id); INSERT INTO category(cat_name) VALUES (:cat_name)');
       $stmt->bindParam(':title',$title);
       $stmt->bindParam(':cat_name',$cat_name);
       $stmt->bindParam(':description',$description);
@@ -78,14 +85,12 @@ session_start();
       $stmt->bindParam(':location',$location);
       $stmt->bindParam(':url',$url);
       $stmt->bindParam(':uploaded_by',$uploaded_by);
-      $stmt->bindParam(':date_created',$date);
-      $stmt->bindParam(':date_updated',$date);
       $stmt->bindParam(':category_id', $_POST['category_id']);
    
       if($stmt->execute())
       {
         $successMSG = "new record succesfully inserted ...";
-        header("refresh:2;uploads.php"); // redirects image view page after 5 seconds.
+        header("refresh:3;tbl_materials.php"); // redirects image view page after 5 seconds.
       }
       else
       {
@@ -94,6 +99,7 @@ session_start();
     }
  }
 ?>
+
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -104,89 +110,22 @@ session_start();
 <meta name="author" content="">
 <title>Admin - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
-<link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
+<body>               
 
-<body>
-<div class="wrap">
-    <div id="wrapper">
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  id="onload">
 
-            <!-- Brand and toggle -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
-            </div>
+    <div class="modal-dialog">
 
-            <!-- Top Menu Items -->
-            <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="upload-document.php"><span class="glyphicon glyphicon-upload"></span>&nbsp;&nbsp;Upload</a></li>
-                <li class="dropdown show-on-hover">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $login_session; ?>&nbsp;&nbsp;<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="logout.php">Logout</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            </div>
-
-            <!-- Sidebar Menu Items -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
-                        <a href="/ovcaa/administrator"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    </li>
-                    <li class="active">
-                      <a href="#">Media</a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-table"></i> Tables <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo" class="collapse">
-                            <li>
-                                <a href="tbl_materials.php">Files</a>
-                            </li>
-                            <li>
-                                <a href="tbl_users.php">Users</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>            
-            
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i>ERROR!</h4>
         </div>
-        </nav>
-        <!-- /.navbar-collapse -->
-        
-        <br><br>
-        <!-- Main Screen -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Upload New Document</h1>
-                        <ol class="breadcrumb">
-                            <li class="active">
-                                <i class="fa fa-dashboard"></i> Dashboard
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-                <!-- /.row -->
-                        
-                        <br>
-                        <div class="jumbotron">
-<?php
+        <div class="modal-body">
+          <?php
   if(isset($errMSG)){
       ?>
             <div class="alert alert-danger">
@@ -201,138 +140,22 @@ session_start();
         </div><br>
         <?php
   }
-  ?>   
- <form method="post" enctype="multipart/form-data">
-  
-  <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Title: (Required)</label>
-    <div class="col-sm-10">
-    <input type="text" class="form-control" name="title" placeholder="Enter title" value="<?php echo $title; ?>">
-    <small id="emailHelp" class="form-text text-muted">Title of your document.</small>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Description: (Required)</label>
-    <div class="col-sm-10">
-      <textarea class="form-control" name="description" placeholder="Enter description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>
-      <small id="emailHelp" class="form-text text-muted">Description of your document.</small>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Category: (Required)</label>
-    <div class="col-sm-10">
-        <?php
-            // php select option value from database
-            $hostname = "localhost";
-            $username = "root";
-            $password = "";
-            $databaseName = "ovcaa";
-
-            // connect to mysql database
-            $connect = mysqli_connect($hostname, $username, $password, $databaseName);
-
-            // mysql select query
-            $query = "SELECT * FROM `category`";
-
-            // for method 1
-            $result1 = mysqli_query($connect, $query);
-
-            // for method 2
-            $result2 = mysqli_query($connect, $query);
-
-            $options = "";
-
-            while($row2 = mysqli_fetch_array($result2))
-                  {
-                      $options = $options."<option>$row2[1]</option>";
-                  }
-        ?>
-        <select name="category_id" class="form-control" id="cat_name">
-        <?php
-            if(isset($_POST['add_new_cat']) )
-              {
-                  $cat_name = $_POST['cat_name'];
-
-                  $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
-                  $stmt->bindParam(':cat_name',$cat_name);
-
-                  if($stmt->execute())
-                      {
-                        header("upload-document.php"); // redirects image view page after 5 seconds.
-                      }
-                  else
-                      {
-                        $errMSG = "error while inserting....";
-                      }
-              }
-        ?>  
-            <?php while($row1 = mysqli_fetch_array($result1)):;?>
-            <option value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
-            <?php endwhile;?>
-            <option value="new">Add new category</option>
-        </select>
-    </div>
-  </div>
-
-  <div class="form-group row" id="newCat" style="display:none;">
-  <label class="col-sm-2 col-form-label" for="specify"></label>
-    <div class="col-sm-10">
-    Specify: <input type="text" class="form-control-file" id="exampleInputFile" name="cat_name" placeholder="Specify category"/>
-    <button type="submit" name="add_new_cat" class="btn btn-primary">ADD</button>
-      <script type="text/javascript">
-        $('#cat_name').on('change',function(){
-            if( $(this).val()==="new"){
-              $("#newCat").show()
-            }
-            else{
-              $("#newCat").hide()
-            }
-        });
-      </script>
-    </div>
-  </div>
-
-  <div class="form-group row">
-  <label class="col-sm-2 col-form-label"></label>
-    <div class="col-sm-10">
-    <input type="file" name="file" class="form-control-file" id="exampleInputFile" />
-  </div>
-  </div>
-
-  <div class="form-group row">
-  <label class="col-sm-2 col-form-label"></label>
-    <div class="col-sm-10">
-      <button type="submit" name="btn-upload" class="btn btn-primary">UPLOAD (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.</button>
-    </div>
-  </div>
-
- <textarea hidden="" name="uploaded_by"><?php echo "$uploader";?></textarea>
- <textarea hidden="" name="location"><?php echo $location; ?></textarea>
- <textarea hidden="" name="url"><?php echo $url; ?></textarea>
- 
- </form>
-
-
-                        </div>
-                        <br>
-            </div><!-- /.container-fluid -->
-        </div><!-- /#page-wrapper -->
-
-    </div><!-- /#wrapper -->
-</div>
-
-    <footer class="footer">
-        <div class="container-fluid">
-            <p>&copy; UP Open University 2017 <a class="top-nav" href="/ovcaa">View Site</a></p>
+  ?> 
         </div>
-    </footer>
+        <div class="modal-footer">
+          <button class="btn btn-success" data-toggle="modal" data-dismiss="modal" data-target="#myModalNorm">GO BACK</button>
+          <a class="btn btn-default" role="button" aria-pressed="true" href="tbl_materials.php" >Ok</a>
+        </div>
+      </div>
+
+    </div>
+</div>
+<?php include 'tbl_materials.php';?>
 
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
-
+<script src="../assets/js/index.js"></script>
 </body>
 
 </html>

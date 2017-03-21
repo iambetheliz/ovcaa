@@ -1,7 +1,16 @@
 <?php
-include('session.php'); // Includes Login Script
-
-session_start();
+    ob_start();
+    session_start();
+    require_once 'includes/dbconnect.php';
+    
+    // if session is not set this will redirect to login page
+    if( !isset($_SESSION['user']) ) {
+        header("Location: index.php");
+        exit;
+    }
+    // select loggedin members detail
+    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
+    $userRow=mysql_fetch_array($res);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -48,25 +57,41 @@ if ($page <= 0) $page = 1;
 
 $per_page = 5; // Set how many records do you want to display per page.
 
+if(isset($_POST['search']))
+{
+    $valueToSearch = $_POST['valueToSearch'];
+    // search in all table columns
+    // using concat mysql function
+    $results = mysqli_query($conDB,"SELECT * FROM `members` WHERE CONCAT(`userId`, `userName`, `userEmail`, `regDate`) LIKE '%".$valueToSearch."%'");
+}
+ else {
+
 $startpoint = ($page * $per_page) - $per_page;
 
-$statement = "`users` ORDER BY `id`"; // Change `records` according to your table name.
+$statement = "`members`"; // Change `records` according to your table name.
  
-$results = mysqli_query($conDB,"SELECT * FROM {$statement} LIMIT {$startpoint} , {$per_page}");
+$results = mysqli_query($conDB,"SELECT * FROM {$statement}  ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
 
- // displaying paginaiton.
-echo pagination($statement,$per_page,$page,$url='?');
-?>
-<table class="table table-bordered table-hover table-responsive">
+
+}
+
+?>  
+
+<div class="row">
+<?php echo pagination($statement,$per_page,$page,$url='?');?> 
+</div>
+
+<div class="row">
+<div class="table-responsive">
+<table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
-        <tr>
-            <td>Name</td>
-            <td>Email</td>
-            <td>Date Added</td>
-            <td>Status</td>
-            <td>Action</td>
-        </tr>
-    </thead>
+    <tr>
+        <th><center>Action</center></th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Date Added</th>
+    </tr>
+</thead>
 <?php
 if (mysqli_num_rows($results) != 0) {
     
@@ -75,27 +100,41 @@ if (mysqli_num_rows($results) != 0) {
 ?>  
     <tbody>
         <tr>
-        <td><?php echo $row['first_name'] ?> <?php echo $row['last_name'] ?></td>
-        <td><?php echo $row['email'] ?></td>
-        <td><?php echo $row['created'] ?></td>
-        <td><?php echo $row['status'] ?></td>
-        <td><a href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit" onclick="return confirm('sure to edit ?')"><span class="glyphicon glyphicon-edit"></span></a> | <a href="?delete_id=<?php echo $row['id']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-remove-circle"></span></a></td>
-        </tr>
-    </tbody>
+            <td><center>
+            <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['userId']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
+            </td>
+            <td><?php echo $row['userName'] ?></td>
+            <td><?php echo $row['userEmail'] ?></td>
+            <td><p><?php echo date('F j, Y g:i a', strtotime($row['regDate'])) ?></p></td>
 <?php
     }
  
 } 
+elseif (mysqli_num_rows($valueToSearch) == 0) {
+     $errMSG = "No results found for "."<strong>'$valueToSearch'</strong>"." ! Make sure you typed your search corrrectly.";
+     header ('Refresh:3; url=tbl_users.php');
+}
 else {
-     $errMSG = "No files to display. Click <a href='upload-document.php'>here</a> to upload new files.";
+     $errMSG = "No files to display. Click <a href='tbl_users.php'>here</a> to upload new files.";
+     header ('Refresh:3; url=tbl_users.php');
 }
 
 ?>
-</table>
+<?php
+                    if(isset($errMSG)){
+                ?>
+                    <td colspan="4" class="alert alert-danger">
+                        <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
+                    </td>
+                <?php
+                }
+                ?>
+        </tr>
+    </tbody>
+</table></div>
 <?php 
- // displaying paginaiton.
 echo pagination($statement,$per_page,$page,$url='?');
 ?>
-
+</div>
 </body>
 </html>

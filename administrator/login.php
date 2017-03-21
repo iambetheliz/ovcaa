@@ -1,42 +1,58 @@
 <?php
-
-session_start(); // Starting Session
-
-if (isset($_POST['signin'])) {
-    if (empty($_POST['userName']) || empty($_POST['userPass'])) {
-        $errMSG = "Fields cannot be empty! Try again<br><br>";
-        header("Refresh: 2; url=/ovcaa/administrator");
-    }
-    else 
-    {
-        // Define $userName and $userPass
-        $userName=$_POST['userName'];
-        $userPass=$_POST['userPass'];
-        // Establishing Connection with Server by passing server_name, user_id and userPass as a parameter
-        $connection = mysql_connect("localhost", "root", "");
-        // To protect MySQL injection for Security purpose
-        $userName = stripslashes($userName);
-        $userPass = stripslashes($userPass);
-        $userName = mysql_real_escape_string($userName);
-        $userPass = mysql_real_escape_string($userPass);
-        // Selecting Database
-        $db = mysql_select_db("ovcaa", $connection);
-        // SQL query to fetch information of registerd users and finds user match.
-        $query = mysql_query("select * from members where userPass='$userPass' AND userName='$userName'", $connection);
-        $rows = mysql_num_rows($query);
-        
-        if ($rows == 1) {
-            $_SESSION['login_admin']=$userName; // Initializing Session    
-            $successMSG = "Successfully logged in!";     
-            header("Refresh:2; url=dashboard.php");
-            
-        } 
-        else {
-            $errMSG = "Invalid credentials. Try again";
-            header("Refresh: 2; url=/ovcaa/administrator");
-        }
+    ob_start();
+    session_start();
+    require_once 'includes/dbconnect.php';
     
-    mysql_close($connection); // Closing Connection
+    // it will never let you open index(login) page if session is set
+    if ( isset($_SESSION['user'])!="" ) {
+        header("Location: dashboard.php");
+        exit;
     }
-}
+    
+    $error = false;
+    
+    if( isset($_POST['btn-login']) ) {  
+        
+        // prevent sql injections/ clear user invalid inputs
+        $email = trim($_POST['email']);
+        $email = strip_tags($email);
+        $email = htmlspecialchars($email);
+        
+        $pass = trim($_POST['pass']);
+        $pass = strip_tags($pass);
+        $pass = htmlspecialchars($pass);
+        // prevent sql injections / clear user invalid inputs
+        
+        if(empty($email)){
+            $error = true;
+            $emailError = "Please enter your email address.";
+        } else if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
+            $error = true;
+            $emailError = "Please enter valid email address.";
+        }
+        
+        if(empty($pass)){
+            $error = true;
+            $passError = "Please enter your password.";
+        }
+        
+        // if there's no error, continue to login
+        if (!$error) {
+            
+            $password = hash('sha256', $pass); // password hashing using SHA256
+        
+            $res=mysql_query("SELECT userId, userName, userPass FROM members WHERE userEmail='$email'");
+            $row=mysql_fetch_array($res);
+            $count = mysql_num_rows($res); // if uname/pass correct it returns must be 1 row
+            
+            if( $count == 1 && $row['userPass']==$password ) {
+                $_SESSION['user'] = $row['userId'];
+                header("Location: home.php");
+            } else {
+                $errMSG = "Incorrect Credentials, Try again...";
+            }
+                
+        }
+        
+    }
 ?>
