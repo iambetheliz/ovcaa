@@ -306,7 +306,7 @@
                         </div>
                     </div>
                     <div class="col-sm-4 right">
-                <form action="tbl_materials.php" method="get">
+                <form action="" method="get">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Search for terms..">
                             <span class="input-group-btn"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button></span>

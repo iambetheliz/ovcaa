@@ -60,7 +60,7 @@ $per_page = 5; // Set how many records do you want to display per page.
 if(isset($_POST['search']))
 {
     $valueToSearch = $_POST['valueToSearch'];
-    // search in all table columns
+    
     // using concat mysql function
     $results = mysqli_query($conDB,"SELECT * FROM `members` WHERE CONCAT(`userId`, `userName`, `userEmail`, `regDate`) LIKE '%".$valueToSearch."%'");
 }

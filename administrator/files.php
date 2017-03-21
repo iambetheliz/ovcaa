@@ -60,7 +60,6 @@ $per_page = 5; // Set how many records do you want to display per page.
 
     $search = $_GET['search'];
     $search = mysql_real_escape_string($search);
-    header("Location: tbl_materials.php?search=$search");
     $output = 'Showing results for "'.$search.'."';
     
     $startpoint = ($page * $per_page) - $per_page;
