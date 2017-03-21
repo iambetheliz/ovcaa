@@ -19,9 +19,9 @@
  if ( isset($_POST['btn-signup']) ) {
   
   // clean user inputs to prevent sql injections
-  $name = trim($_POST['name']);
-  $name = strip_tags($name);
-  $name = htmlspecialchars($name);
+  $userName = trim($_POST['userName']);
+  $userName = strip_tags($userName);
+  $userName = htmlspecialchars($userName);
   
   $email = trim($_POST['email']);
   $email = strip_tags($email);
@@ -32,15 +32,15 @@
   $pass = htmlspecialchars($pass);
   
   // basic name validation
-  if (empty($name)) {
+  if (empty($userName)) {
    $error = true;
-   $nameError = "Please enter full name.";
-  } else if (strlen($name) < 3) {
+   $userNameError = "Please enter full name.";
+  } else if (strlen($userName) < 3) {
    $error = true;
-   $nameError = "Name must have atleat 3 characters.";
-  } else if (!preg_match("/^[a-zA-Z ]+$/",$name)) {
+   $userNameError = "Name must have atleat 3 characters.";
+  } else if (!preg_match("/^[a-zA-Z ]+$/",$userName)) {
    $error = true;
-   $nameError = "Name must contain alphabets and space.";
+   $userNameError = "Name must contain alphabets and space.";
   }
   
   //basic email validation
@@ -72,14 +72,14 @@
   // if there's no error, continue to signup
   if( !$error ) {
    
-   $query = "INSERT INTO members(userName,userEmail,userPass) VALUES('$name','$email','$password')";
+   $query = "INSERT INTO members(userName,userEmail,userPass) VALUES('$userName','$email','$password')";
    $res = mysql_query($query);
     
    if ($res) {
     $errTyp = "success";
     $errMSG = "Successfully registered, you may login now";
     header("Location: tbl_users.php");
-    unset($name);
+    unset($userName);
     unset($email);
     unset($pass);
    } else {
@@ -128,7 +128,7 @@
 <?php
  }
 ?>
-          <p class="text-danger"><?php echo $nameError; ?></p>
+          <p class="text-danger"><?php echo $userNameError; ?></p>
           <p class="text-danger"><?php echo $emailError; ?></p>
           <p class="text-danger"><?php echo $passError; ?></p>
         </div>

@@ -267,6 +267,7 @@
                                 <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
+                                <li><a href="tbl_materials.php">Default</a></li>
                                 <li><a href="tbl_materials.php?sorting='.$sort.'&field=title">Title</a></li>
                                 <li><a href="tbl_materials.php?sorting='.$sort.'&field=cat_name">Category</a></li>
                                 <li><a href="tbl_materials.php?sorting='.$sort.'&field=uploaded_by">Uploader</a></li>

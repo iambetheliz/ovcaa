@@ -148,7 +148,7 @@
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                                    <input type="text" name="name" class="form-control" placeholder="Enter Name" maxlength="50" value="<?php echo $name ?>" />
+                                                    <input type="text" name="userName" class="form-control" placeholder="Enter userName" maxlength="50" value="<?php echo $userName ?>" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -180,13 +180,13 @@
                                 <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="tbl_users.php?sorting='.$sort.'&field=userName">Name</a></li>
+                                <li><a href="tbl_users.php?sorting='.$sort.'&field=userName">userName</a></li>
                                 <li><a href="tbl_users.php?sorting='.$sort.'&field=userEmail">Email</a></li>
                                 <li><a href="tbl_users.php?sorting='.$sort.'&field=regDate">Date Added</a></li>
                             </ul>
                             <?php 
-                                $field='userName';
-                                $sort='ASC';
+                                $field='regDate';
+                                $sort='DESC';
 
                                 if(isset($_GET['sorting']))
                                     {

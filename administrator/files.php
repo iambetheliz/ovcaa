@@ -84,7 +84,8 @@ $per_page = 5; // Set how many records do you want to display per page.
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
-        <th colspan="2">Action</th>
+        <th>Edit</th>
+        <th>Delete</th>
         <th>Title</th>
         <th>Description</th>
         <th>Category</th>
@@ -106,10 +107,10 @@ if (mysqli_num_rows($results) != 0){
     <tbody>
         <tr>
             <td>
-            <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span>&nbsp; Edit</a>
+            <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span></a>
             </td>
             <td>
-            <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['id']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a>
+            <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['id']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span></a>
             </td>
             <td><?php echo $row['title'] ?></td>
             <td><p><?php echo $row['description'] ?></p></td>
