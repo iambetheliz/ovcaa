@@ -15,21 +15,21 @@
         
         // prevent sql injections/ clear user invalid inputs
 
-        $email = trim($_POST['email']);
-        $email = strip_tags($email);
-        $email = htmlspecialchars($email);
+        $userName = trim($_POST['userName']);
+        $userName = strip_tags($userName);
+        $userName = htmlspecialchars($userName);
         
         $pass = trim($_POST['pass']);
         $pass = strip_tags($pass);
         $pass = htmlspecialchars($pass);
         // prevent sql injections / clear user invalid inputs
         
-        if(empty($email)){
+        if(empty($userName)){
             $error = true;
-            $emailError = "Please enter your email address.";
-        } else if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
+            $userNameError = "Please enter your username.";
+        } else if ( !filter_var($userName) ) {
             $error = true;
-            $emailError = "Please enter valid email address.";
+            $userNameError = "Please enter valid username.";
         }
         
         if(empty($pass)){
@@ -42,7 +42,7 @@
             
             $password = hash('sha256', $pass); // password hashing using SHA256
         
-            $res=mysql_query("SELECT userId, userName, userPass FROM members WHERE userEmail='$email'");
+            $res=mysql_query("SELECT userId, userName, userPass FROM members WHERE userName='$userName'");
             $row=mysql_fetch_array($res);
             $count = mysql_num_rows($res); // if uname/pass correct it returns must be 1 row
             
@@ -112,9 +112,9 @@
                                         <div class="form-group">
                 <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                <input type="text" name="email" class="form-control" placeholder="Your email" value="<?php echo $email; ?>" maxlength="40" />
+                <input type="text" name="userName" class="form-control" placeholder="Your username" value="<?php echo $userName; ?>" maxlength="40" />
                 </div>
-                <span class="text-danger"><?php echo $emailError; ?></span>
+                <span class="text-danger"><?php echo $userNameError; ?></span>
             </div>
                                         <div class="form-group">
                 <div class="input-group">

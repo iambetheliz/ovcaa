@@ -57,33 +57,27 @@ if ($page <= 0) $page = 1;
 
 $per_page = 5; // Set how many records do you want to display per page.
 
-if(isset($_POST['search']))
-{
-    $valueToSearch = $_POST['valueToSearch'];
+
+    $search = $_GET['search'];
+    $search = mysql_real_escape_string($search);
+    header("Location: tbl_materials.php?search=$search");
+    $output = 'Showing results for "'.$search.'."';
     
     $startpoint = ($page * $per_page) - $per_page;
 
-    $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `description`, `cat_name`) LIKE '%".$valueToSearch."%'";
+    $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `description`, `cat_name`, `uploaded_by`) LIKE '%".$search."%'";
 
     $results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
-
-    
-}
- else {
-
-$startpoint = ($page * $per_page) - $per_page;
-
-$statement = "`material` JOIN category ON category.category_id = material.category_id"; // Change `records` according to your table name.
- 
-$results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
-
-}
 
 ?>  
 
 <div class="row">
 <?php echo pagination($statement,$per_page,$page,$url='?');?> 
 </div>
+
+<?php if (isset($_GET['search'])) {
+    echo $output;
+}  ?>
 
 <div class="row">
 <div class="table-responsive">
@@ -136,7 +130,7 @@ else {
 }
 
 ?>
-<?php
+                <?php
                     if(isset($errMSG)){
                 ?>
                     <td colspan="12" class="alert alert-danger">
@@ -145,7 +139,6 @@ else {
                 <?php
                 }
                 ?>
-
         </tr>
     </tbody>
 </table></div>

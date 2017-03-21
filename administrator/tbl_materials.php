@@ -273,8 +273,8 @@
                                 <li><a href="tbl_materials.php?sorting='.$sort.'&field=date_updated">Latest</a></li>
                             </ul>
                             <?php 
-                                $field='title';
-                                $sort='ASC';
+                                $field='date_updated';
+                                $sort='DESC';
 
                                 if(isset($_GET['sorting']))
                                     {
@@ -305,10 +305,10 @@
                         </div>
                     </div>
                     <div class="col-sm-4 right">
-                <form action="" method="post">
+                <form action="tbl_materials.php" method="get">
                         <div class="input-group">
-                            <input type="text" name="valueToSearch" class="form-control" placeholder="Search for terms..">
-                            <span class="input-group-btn"><button class="btn btn-default" type="submit" name="search"><span class="glyphicon glyphicon-search"></span></button></span>
+                            <input type="text" name="search" class="form-control" placeholder="Search for terms..">
+                            <span class="input-group-btn"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button></span>
                         </div>
                     </div>
                 </div><br>
