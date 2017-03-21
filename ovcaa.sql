@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2017 at 11:14 AM
+-- Generation Time: Mar 21, 2017 at 09:01 AM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 5.6.24
 
@@ -36,13 +36,18 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`category_id`, `cat_name`) VALUES
+(26, ''),
 (1, 'article'),
 (2, 'category'),
-(3, 'news'),
-(5, 'feeds'),
-(6, 'comments'),
-(7, 'newsfeeds'),
-(8, 'test');
+(20, 'class'),
+(17, 'comments'),
+(13, 'feeds'),
+(23, 'files'),
+(24, 'new category'),
+(12, 'news'),
+(19, 'newsfeeds'),
+(25, 'sample'),
+(22, 'search');
 
 -- --------------------------------------------------------
 
@@ -59,8 +64,8 @@ CREATE TABLE `material` (
   `location` varchar(355) NOT NULL,
   `url` varchar(355) NOT NULL,
   `uploaded_by` varchar(355) NOT NULL,
-  `date_created` datetime NOT NULL,
-  `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -69,17 +74,42 @@ CREATE TABLE `material` (
 --
 
 INSERT INTO `material` (`id`, `title`, `description`, `filename`, `filesize`, `location`, `url`, `uploaded_by`, `date_created`, `date_updated`, `category_id`) VALUES
-(1, 'Sample', 'Testing', 'ovcaa.sql', 5, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/ovcaa.sql', 'beth punzalan', '2017-02-23 00:00:00', '2017-02-22 19:06:11', 3),
-(2, 'Read Me', 'read', 'pdfurl-guide.pdf', 99, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/pdfurl-guide.pdf', 'beth punzalan', '2017-02-23 00:00:00', '2017-02-23 00:26:12', 1),
-(3, 'Sample ulit', 'testing', '793245.jpg', 2477, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/793245.jpg', 'beth punzalan', '2017-02-23 00:00:00', '2017-02-23 01:30:36', 1),
-(4, 'Testing', 'Testing lang', 'best-nature-desktop-hd-wallpaper.jpg', 418, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/best-nature-desktop-hd-wallpaper.jpg', 'beth punzalan', '2017-02-23 02:55:36', '2017-02-23 01:55:36', 3),
-(5, 'Hey', 'hey', 'picture-nature-18.jpg', 185, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/picture-nature-18.jpg', 'beth punzalan', '2017-02-23 02:56:05', '2017-02-23 01:56:05', 1),
-(6, 'kjxkjK', 'KJKLJ', 'rfq_handheld-computer_spmo.pdf', 706, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/rfq_handheld-computer_spmo.pdf', 'beth punzalan', '2017-02-23 02:56:44', '2017-02-23 01:56:44', 2),
-(7, 'JOke', 'joke lang', 'sample.txt', 2, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/sample.txt', 'beth punzalan', '2017-02-23 02:57:10', '2017-02-23 01:57:10', 2),
-(11, 'New', 'new', 'pdfurl-guide.pdf', 99, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/pdfurl-guide.pdf', 'beth punzalan', '2017-02-23 02:58:52', '2017-02-23 01:58:52', 2),
-(12, 'Change', 'change', 'material.php', 2, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/material.php', 'beth punzalan', '2017-02-23 03:01:06', '2017-02-22 19:01:54', 2),
-(13, 'try ulit', 'try', 'authoringsoftware.pdf', 106, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/authoringsoftware.pdf', 'beth punzalan', '2017-02-23 03:18:46', '2017-02-22 19:18:46', 1),
-(14, 'Notepad++', 'Hello World', 'npp.7.2.1.installer.exe', 2820, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/npp.7.2.1.installer.exe', 'beth punzalan', '2017-02-23 03:31:02', '2017-02-22 21:09:02', 1);
+(6, 'Sample', 'Sample lang', 'tab-contents--and-links-for-website.docx', 18, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/tab-contents--and-links-for-website.docx', 'beth punzalan', '2017-03-15 07:25:49', '2017-03-15 07:25:49', 1),
+(7, 'Testing', 'Testing lang', 'dtr.xls', 147, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/dtr.xls', 'admin', '2017-03-16 05:57:59', '2017-03-16 05:57:59', 2),
+(8, 'Trial', 'Trial and Error', 'tab-contents--and-links-for-website.docx', 18, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/tab-contents--and-links-for-website.docx', 'admin', '2017-03-16 05:59:08', '2017-03-16 05:59:08', 2),
+(9, 'Hey', 'Hey', 'rfq-printer-ovcfa.pdf', 394, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/rfq-printer-ovcfa.pdf', 'admin', '2017-03-16 06:24:56', '2017-03-16 06:24:56', 1),
+(10, 'Yow', 'You', 'rfq-printers-our.pdf', 1008, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/rfq-printers-our.pdf', 'admin', '2017-03-16 06:31:50', '2017-03-16 06:31:50', 1),
+(11, 'Love', 'Love story', 'tab-contents--and-links-for-website.docx', 18, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/tab-contents--and-links-for-website.docx', 'admin', '2017-03-16 06:36:18', '2017-03-16 06:36:18', 2),
+(12, 'Oi', 'Oi', 'rfq_handheld-computer_spmo.pdf', 705, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/rfq_handheld-computer_spmo.pdf', 'admin', '2017-03-16 06:37:52', '2017-03-16 06:37:52', 1),
+(13, 'Title', 'Title', 'tab-contents--and-links-for-website.docx', 18, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/tab-contents--and-links-for-website.docx', 'admin', '2017-03-16 06:40:16', '2017-03-16 06:40:16', 1),
+(14, 'Success', 'Successful', 'tab-contents--and-links-for-website.docx', 18, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/tab-contents--and-links-for-website.docx', 'admin', '2017-03-16 06:41:33', '2017-03-16 06:41:33', 2),
+(15, 'Sample', 'Sample lang', '793245.jpg', 2479, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/793245.jpg', 'admin', '2017-03-21 05:57:37', '2017-03-21 05:57:37', 1),
+(16, 'Sample', 'Sample', 'picture-nature-18.jpg', 188, '/ovcaa/administrator/uploads/', 'http://localhost/ovcaa/administrator/uploads/picture-nature-18.jpg', 'admin', '2017-03-21 06:00:20', '2017-03-21 06:00:20', 22);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `members`
+--
+
+CREATE TABLE `members` (
+  `userId` int(11) NOT NULL,
+  `first_name` varchar(30) NOT NULL,
+  `last_name` varchar(30) NOT NULL,
+  `userName` varchar(30) NOT NULL,
+  `userEmail` varchar(60) NOT NULL,
+  `userPass` varchar(255) NOT NULL,
+  `regDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `members`
+--
+
+INSERT INTO `members` (`userId`, `first_name`, `last_name`, `userName`, `userEmail`, `userPass`, `regDate`) VALUES
+(1, 'beth', 'punzalan', 'admin', 'admin@gmail.com', '41e5653fc7aeb894026d6bb7b2db7f65902b454945fa8fd65a6327047b5277fb', '2017-02-23 00:21:28'),
+(2, '', '', 'Jessica', 'jessica@gmail.com', '41e5653fc7aeb894026d6bb7b2db7f65902b454945fa8fd65a6327047b5277fb', '2017-03-21 02:30:54'),
+(3, '', '', 'david', 'david@gmail.com', '41e5653fc7aeb894026d6bb7b2db7f65902b454945fa8fd65a6327047b5277fb', '2017-03-21 02:41:24');
 
 -- --------------------------------------------------------
 
@@ -107,8 +137,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `oauth_provider`, `oauth_uid`, `first_name`, `last_name`, `email`, `gender`, `locale`, `picture`, `link`, `created`, `modified`) VALUES
-(1, 'google', '110318400346904643557', 'beth', 'punzalan', 'bethelizganda22@gmail.com', 'female', 'en', 'https://lh3.googleusercontent.com/-m0iT_sgESO0/AAAAAAAAAAI/AAAAAAAAQn4/JEHOrHYLU54/photo.jpg', 'https://plus.google.com/110318400346904643557', '2017-02-09 07:55:13', '2017-02-23 11:05:05'),
-(2, 'google', '104521187602522629467', 'Betzy', 'Punzalan', 'iambethpunzalan@gmail.com', 'female', 'en', 'https://lh5.googleusercontent.com/-QyA3yldJkiQ/AAAAAAAAAAI/AAAAAAAAAFc/58jGwxgET7c/photo.jpg', 'https://plus.google.com/104521187602522629467', '2017-02-14 07:56:53', '2017-02-23 07:40:47');
+(1, 'google', '110318400346904643557', 'beth', 'punzalan', 'bethelizganda22@gmail.com', 'female', 'en', 'https://lh3.googleusercontent.com/-m0iT_sgESO0/AAAAAAAAAAI/AAAAAAAAQn4/JEHOrHYLU54/photo.jpg', 'https://plus.google.com/110318400346904643557', '2017-03-07 04:11:28', '2017-03-21 01:47:19'),
+(2, 'google', '104521187602522629467', 'Betzy', 'Punzalan', 'iambethpunzalan@gmail.com', 'female', 'en', 'https://lh5.googleusercontent.com/-QyA3yldJkiQ/AAAAAAAAAAI/AAAAAAAAAFc/58jGwxgET7c/photo.jpg', 'https://plus.google.com/104521187602522629467', '2017-03-07 04:59:58', '2017-03-21 01:48:45');
 
 --
 -- Indexes for dumped tables
@@ -118,7 +148,8 @@ INSERT INTO `users` (`id`, `oauth_provider`, `oauth_uid`, `first_name`, `last_na
 -- Indexes for table `category`
 --
 ALTER TABLE `category`
-  ADD PRIMARY KEY (`category_id`);
+  ADD PRIMARY KEY (`category_id`),
+  ADD UNIQUE KEY `cat_name` (`cat_name`);
 
 --
 -- Indexes for table `material`
@@ -126,6 +157,13 @@ ALTER TABLE `category`
 ALTER TABLE `material`
   ADD PRIMARY KEY (`id`),
   ADD KEY `category_id` (`category_id`);
+
+--
+-- Indexes for table `members`
+--
+ALTER TABLE `members`
+  ADD PRIMARY KEY (`userId`),
+  ADD UNIQUE KEY `userEmail` (`userEmail`);
 
 --
 -- Indexes for table `users`
@@ -141,12 +179,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 --
 -- AUTO_INCREMENT for table `material`
 --
 ALTER TABLE `material`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+--
+-- AUTO_INCREMENT for table `members`
+--
+ALTER TABLE `members`
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `users`
 --
