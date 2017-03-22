@@ -1,0 +1,2 @@
+No	TMNo	EnNo	Name		GMNo	Mode	IN/OUT	Antipass	DaiGong		Date		Time
+1	1	00000067		1	1	E	0		0		2014-03-04  	12:01:01

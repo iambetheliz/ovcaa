@@ -37,16 +37,11 @@
  
     $final_file=str_replace(' ','-',$new_file_name);
     
-
   if(empty($title)){
    $errMSG = "Please Enter Title.";
   }
-  else if (strlen($title) < 5) {
-   $errMSG = "Title must have atleat 5 characters.";
- }
-  else if (!empty($title)){
-   // check username exist or not
-   $query = "SELECT title FROM material WHERE title='$title'";
+  elseif (!empty($title)) {
+    $query = "SELECT title FROM material WHERE title='$title'";
    $result = mysql_query($query);
    $count = mysql_num_rows($result);
    if($count!=0){
@@ -158,11 +153,11 @@
         <div class="modal-body">
 
   <div class="form-group">
-      <?php echo $successMSG; ?>
+      <p class="text-success"><?php echo $successMSG; ?></p>
   </div>
 <?php
  }
-?>
+?> 
         </div>
         <div class="modal-footer">
           <button class="btn btn-success" data-toggle="modal" data-dismiss="modal" data-target="#myModalNorm">GO BACK</button>
