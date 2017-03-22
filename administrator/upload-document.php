@@ -132,29 +132,37 @@
 
       <!-- Modal content-->
       <div class="modal-content">
-        <div class="modal-header">
+        <?php
+  if ( isset($errMSG)) {
+?>
+        <div class="modal-header alert alert-danger">
           <button type="button" class="close" data-dismiss="modal">×</button>
-          <h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span>ERROR!</h4>
+          <h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span> ERROR!</h4>
         </div>
         <div class="modal-body">
-          <?php
-  if(isset($errMSG)){
-      ?>
-            <div class="alert alert-danger">
-              <span class="glyphicon glyphicon-info-sign"></span> 
-              <?php echo $errMSG; ?>
-            </div><br>
-            <?php
-  }
-  else if(isset($successMSG)){
-    ?>
-        <div class="alert alert-success">
-              <span class="glyphicon glyphicon-info-sign"></span> 
-              <?php echo $successMSG; ?>
-        </div><br>
-        <?php
-  }
-  ?> 
+          
+  <div class="form-group">
+          <p class="text-danger"><?php echo $errMSG; ?></p>
+  </div>
+<?php
+ }
+?>
+
+<?php
+  if ( isset($successMSG) ) {
+?>
+<div class="modal-header alert alert-success">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+<h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span> SUCCESS!</h4>
+        </div>
+        <div class="modal-body">
+
+  <div class="form-group">
+      <?php echo $successMSG; ?>
+  </div>
+<?php
+ }
+?>
         </div>
         <div class="modal-footer">
           <button class="btn btn-success" data-toggle="modal" data-dismiss="modal" data-target="#myModalNorm">GO BACK</button>

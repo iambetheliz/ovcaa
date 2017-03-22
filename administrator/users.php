@@ -57,29 +57,26 @@ if ($page <= 0) $page = 1;
 
 $per_page = 5; // Set how many records do you want to display per page.
 
-if(isset($_POST['search']))
-{
-    $valueToSearch = $_POST['valueToSearch'];
-    
-    // using concat mysql function
-    $results = mysqli_query($conDB,"SELECT * FROM `members` WHERE CONCAT(`userId`, `userName`, `userEmail`, `regDate`) LIKE '%".$valueToSearch."%'");
-}
- else {
 
-$startpoint = ($page * $per_page) - $per_page;
+    $search = $_GET['search'];
+    $search = mysql_real_escape_string($search);
+    $output = 'Showing results for "'.$search.'."';
 
-$statement = "`members`"; // Change `records` according to your table name.
+    $startpoint = ($page * $per_page) - $per_page;
+
+    $statement = "`members` WHERE CONCAT(`userId`, `userName`, `first_name`, `last_name`, `userEmail`, `regDate`) LIKE '%".$search."%'"; 
  
-$results = mysqli_query($conDB,"SELECT * FROM {$statement}  ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
-
-
-}
+    $results = mysqli_query($conDB,"SELECT * FROM {$statement}  ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
 
 ?>  
 
 <div class="row">
 <?php echo pagination($statement,$per_page,$page,$url='?');?> 
 </div>
+
+<?php if (isset($_GET['search'])) {
+    echo $output;
+}  ?>
 
 <div class="row">
 <div class="table-responsive">
@@ -114,17 +111,12 @@ if (mysqli_num_rows($results) != 0) {
     }
  
 } 
-elseif (mysqli_num_rows($valueToSearch) == 0) {
-     $errMSG = "No results found for "."<strong>'$valueToSearch'</strong>"." ! Make sure you typed your search corrrectly.";
-     header ('Refresh:3; url=tbl_users.php');
-}
 else {
-     $errMSG = "No files to display. Click <a href='tbl_users.php'>here</a> to upload new files.";
-     header ('Refresh:3; url=tbl_users.php');
+     $errMSG = "No files to display.";
 }
 
 ?>
-<?php
+                <?php
                     if(isset($errMSG)){
                 ?>
                     <td colspan="6" class="alert alert-danger">
