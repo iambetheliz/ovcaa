@@ -145,9 +145,8 @@
             <!-- Top Menu Items -->
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="upload-document.php"><span class="glyphicon glyphicon-upload"></span>&nbsp;&nbsp;Upload</a></li>
                 <li class="dropdown show-on-hover">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $login_session; ?>&nbsp;&nbsp;<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['first_name']."&nbsp;&nbsp;".$userRow['last_name'] ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="logout.php">Logout</a>
@@ -161,10 +160,10 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li>
-                        <a href="/ovcaa/administrator"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
                     </li>
                     <li class="active">
-                      <a href="#">Media</a>
+                      <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
                     </li>
                     <li>
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-table"></i> Tables <i class="fa fa-fw fa-caret-down"></i></a>
@@ -297,7 +296,7 @@
   </div>
   </div>
 
-  <textarea hidden="" name="uploaded_by"><?php echo $userRow['userName']; ?></textarea>
+  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']."&nbsp;&nbsp;".$userRow['last_name'] ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea>
 

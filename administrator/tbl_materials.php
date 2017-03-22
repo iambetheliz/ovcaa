@@ -68,7 +68,7 @@
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userEmail']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['first_name']."&nbsp;&nbsp;".$userRow['last_name'] ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="logout.php?logout">Logout</a>
@@ -129,9 +129,7 @@
                         <button class="btn btn-success" data-toggle="modal" data-target="#myModalNorm">
                             <span class="glyphicon glyphicon-plus"></span> Upload New File
                         </button>
-
                         <!-- Modal -->
-<form method="post" enctype="multipart/form-data" action="upload-document.php" autocomplete="off">
 <div class="modal fade" id="myModalNorm" tabindex="-1" role="dialog" 
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -148,6 +146,8 @@
             
             <!-- Modal Body -->
             <div class="modal-body">
+                
+                <form method="post" enctype="multipart/form-data" action="upload-document.php" autocomplete="off">
     
     <div class="form-group row">
     <div class="col-sm-4">
@@ -157,7 +157,7 @@
 
     <div class="form-group">
     <label>Title: (Required)</label>
-    <input type="text" class="form-control" name="title" value="<?php echo $filename; ?>">
+    <input type="text" class="form-control" name="title" value="<?php echo $filename; ?>" />
     <small class="form-text text-muted">This is the title of your document.</small>
   </div>
 
@@ -227,24 +227,24 @@
   <div class="form-group" id="newCat" style="display:none;">
   <label class="col-sm-4 col-form-label"></label>
         <div class="col-sm-4 form-group">
-                <input type="text" class="form-control" id="category" name="cat_name" placeholder="Specify category"/>
+                <input type="text" class="form-control" id="category" name="cat_name" placeholder="Specify category" autofocus />
         </div>
         <div class="form-inline">
             <button type="submit" name="add_new_cat" class="btn btn-primary">ADD</button>
-                <script type="text/javascript">
-                    $('#cat_name').on('change',function(){
-                        if( $(this).val()==="new"){
-                            $("#newCat").show()
-                        }
-                        else{
-                            $("#newCat").hide()
-                        }
-                    });
-                </script>
-        </div>
-        </div>
+      <script type="text/javascript">
+        $('#cat_name').on('change',function(){
+            if( $(this).val()==="new"){
+              $("#newCat").show()
+            }
+            else{
+              $("#newCat").hide()
+            }
+        });
+      </script>
+    </div>
+  </div>
 
- <textarea hidden="" name="uploaded_by"><?php echo $userRow['userName']; ?></textarea>
+ <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']."&nbsp;&nbsp;".$userRow['last_name'] ?></textarea>
  <textarea hidden="" name="location"><?php echo $location; ?></textarea>
  <textarea hidden="" name="url"><?php echo $url; ?></textarea>                
                 
@@ -254,11 +254,11 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"> Cancel </button>
                 <button type="submit" name="btn-upload" class="btn btn-primary"><span class="glyphicon glyphicon-upload"></span> UPLOAD </button> 
+                </form>
             </div>
         </div>
     </div>
 </div>
-</form>
 <!-- End of Modal -->
                 </div>
                     <div class="col-sm-1" right" style="right: 30px;"">
