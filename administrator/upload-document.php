@@ -37,16 +37,9 @@
  
     $final_file=str_replace(' ','-',$new_file_name);
     
+
   if(empty($title)){
    $errMSG = "Please Enter Title.";
-  }
-  elseif (!empty($title)) {
-    $query = "SELECT title FROM material WHERE title='$title'";
-   $result = mysql_query($query);
-   $count = mysql_num_rows($result);
-   if($count!=0){
-    $errMSG = "Provided title is already in use.";
-   }
   }
   else if(empty($description)){
    $errMSG = "Please Enter Description.";
