@@ -244,7 +244,7 @@
     </div>
   </div>
 
- <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']."&nbsp;&nbsp;".$userRow['last_name'] ?></textarea>
+ <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
  <textarea hidden="" name="location"><?php echo $location; ?></textarea>
  <textarea hidden="" name="url"><?php echo $url; ?></textarea>                
                 
