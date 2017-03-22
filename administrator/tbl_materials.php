@@ -231,18 +231,18 @@
         </div>
         <div class="form-inline">
             <button type="submit" name="add_new_cat" class="btn btn-primary">ADD</button>
-      <script type="text/javascript">
-        $('#cat_name').on('change',function(){
-            if( $(this).val()==="new"){
-              $("#newCat").show()
-            }
-            else{
-              $("#newCat").hide()
-            }
-        });
-      </script>
-    </div>
-  </div>
+                <script type="text/javascript">
+                    $('#cat_name').on('change',function(){
+                        if( $(this).val()==="new"){
+                            $("#newCat").show()
+                        }
+                        else{
+                            $("#newCat").hide()
+                        }
+                    });
+                </script>
+        </div>
+        </div>
 
  <textarea hidden="" name="uploaded_by"><?php echo $userRow['userName']; ?></textarea>
  <textarea hidden="" name="location"><?php echo $location; ?></textarea>
