@@ -129,7 +129,9 @@
                         <button class="btn btn-success" data-toggle="modal" data-target="#myModalNorm">
                             <span class="glyphicon glyphicon-plus"></span> Upload New File
                         </button>
+
                         <!-- Modal -->
+<form method="post" enctype="multipart/form-data" action="upload-document.php" autocomplete="off">
 <div class="modal fade" id="myModalNorm" tabindex="-1" role="dialog" 
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -146,8 +148,6 @@
             
             <!-- Modal Body -->
             <div class="modal-body">
-                
-                <form method="post" enctype="multipart/form-data" action="upload-document.php" autocomplete="off">
     
     <div class="form-group row">
     <div class="col-sm-4">
@@ -254,11 +254,11 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"> Cancel </button>
                 <button type="submit" name="btn-upload" class="btn btn-primary"><span class="glyphicon glyphicon-upload"></span> UPLOAD </button> 
-                </form>
             </div>
         </div>
     </div>
 </div>
+</form>
 <!-- End of Modal -->
                 </div>
                     <div class="col-sm-1" right" style="right: 30px;"">
