@@ -41,6 +41,18 @@
   if(empty($title)){
    $errMSG = "Please Enter Title.";
   }
+  else if (strlen($title) < 5) {
+   $errMSG = "Title must have atleat 5 characters.";
+ }
+  else if (!empty($title)){
+   // check username exist or not
+   $query = "SELECT title FROM material WHERE title='$title'";
+   $result = mysql_query($query);
+   $count = mysql_num_rows($result);
+   if($count!=0){
+    $errMSG = "Provided title is already in use.";
+   }
+  }
   else if(empty($description)){
    $errMSG = "Please Enter Description.";
   }
@@ -122,21 +134,23 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">×</button>
-          <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i>ERROR!</h4>
+          <h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span>ERROR!</h4>
         </div>
         <div class="modal-body">
           <?php
   if(isset($errMSG)){
       ?>
             <div class="alert alert-danger">
-              <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
+              <span class="glyphicon glyphicon-info-sign"></span> 
+              <?php echo $errMSG; ?>
             </div><br>
             <?php
   }
   else if(isset($successMSG)){
     ?>
         <div class="alert alert-success">
-              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
+              <span class="glyphicon glyphicon-info-sign"></span> 
+              <?php echo $successMSG; ?>
         </div><br>
         <?php
   }

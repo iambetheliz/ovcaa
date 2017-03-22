@@ -66,7 +66,7 @@
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userEmail']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>
                             <li><a href="logout.php?logout">Logout</a></li>
@@ -148,19 +148,19 @@
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                                    <input type="text" name="userName" class="form-control" placeholder="Enter userName" maxlength="50" value="<?php echo $userName ?>" />
+                                                    <input type="text" name="userName" class="form-control" placeholder="Username" maxlength="10" value="<?php echo $userName ?>" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                                                    <input type="email" name="email" class="form-control" placeholder="Enter Your Email" maxlength="40" value="<?php echo $email ?>" />
+                                                    <input type="email" name="email" class="form-control" placeholder="Email" maxlength="20" value="<?php echo $email ?>" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                                    <input type="password" name="pass" class="form-control" placeholder="Enter Password" maxlength="15" />
+                                                    <input type="password" name="pass" class="form-control" placeholder="Password" maxlength="15" />
                                                 </div>
                                             </div>    
                                     </div><!-- /.modal-body -->
@@ -180,7 +180,7 @@
                                 <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="tbl_users.php?sorting='.$sort.'&field=userName">userName</a></li>
+                                <li><a href="tbl_users.php?sorting='.$sort.'&field=userName">Username</a></li>
                                 <li><a href="tbl_users.php?sorting='.$sort.'&field=userEmail">Email</a></li>
                                 <li><a href="tbl_users.php?sorting='.$sort.'&field=regDate">Date Added</a></li>
                             </ul>

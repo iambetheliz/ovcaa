@@ -31,16 +31,25 @@
   $pass = strip_tags($pass);
   $pass = htmlspecialchars($pass);
   
-  // basic name validation
+  // basic username validation
   if (empty($userName)) {
    $error = true;
-   $userNameError = "Please enter full name.";
-  } else if (strlen($userName) < 3) {
+   $userNameError = "Please enter a username.";
+  } else if (strlen($userName) < 5) {
    $error = true;
-   $userNameError = "Name must have atleat 3 characters.";
+   $userNameError = "Name must have atleat 5 characters.";
   } else if (!preg_match("/^[a-zA-Z ]+$/",$userName)) {
    $error = true;
    $userNameError = "Name must contain alphabets and space.";
+  }else {
+   // check username exist or not
+   $query = "SELECT userName FROM members WHERE userName='$userName'";
+   $result = mysql_query($query);
+   $count = mysql_num_rows($result);
+   if($count!=0){
+    $error = true;
+    $userNameError = "Provided username is already in use.";
+   }
   }
   
   //basic email validation
@@ -77,8 +86,8 @@
     
    if ($res) {
     $errTyp = "success";
-    $errMSG = "Successfully registered, you may login now";
-    header("Location: tbl_users.php");
+    $successMSG = "Successfully registered, you may login now";
+    header("refresh:3; tbl_users.php");
     unset($userName);
     unset($email);
     unset($pass);
@@ -87,8 +96,7 @@
     $errMSG = "Something went wrong, try again later..."; 
    } 
     
-  }
-  
+  }  
   
  }
 ?>
@@ -112,25 +120,41 @@
 
       <!-- Modal content-->
       <div class="modal-content">
-        <div class="modal-header">
+          <?php
+  if ( isset($errMSG) || ($error == true)) {
+?>
+        <div class="modal-header alert alert-danger">
           <button type="button" class="close" data-dismiss="modal">×</button>
-          <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i>ERROR!</h4>
+          <h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span> ERROR!</h4>
         </div>
         <div class="modal-body">
-          <?php
-  if ( isset($errMSG) ) {
-?>
+          
   <div class="form-group">
-      <div class="alert alert-<?php echo ($errTyp=="success") ? "success" : $errTyp; ?>">
-          <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
-      </div>
+          <?php echo $errMSG; ?>
+          <p class="text-danger"><?php echo $userNameError; ?></p>
+          <p class="text-danger"><?php echo $emailError; ?></p>
+          <p class="text-danger"><?php echo $passError; ?></p>
   </div>
 <?php
  }
 ?>
-          <p class="text-danger"><?php echo $userNameError; ?></p>
-          <p class="text-danger"><?php echo $emailError; ?></p>
-          <p class="text-danger"><?php echo $passError; ?></p>
+
+<?php
+  if ( isset($successMSG) ) {
+?>
+<div class="modal-header alert alert-success">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+<h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span> SUCCESS!</h4>
+        </div>
+        <div class="modal-body">
+
+  <div class="form-group">
+      <?php echo $successMSG; ?>
+  </div>
+<?php
+ }
+?>
+          
         </div>
         <div class="modal-footer">
           <button class="btn btn-success" data-toggle="modal" data-dismiss="modal" data-target="#myModalNorm">GO BACK</button>

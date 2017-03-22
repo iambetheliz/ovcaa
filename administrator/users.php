@@ -87,7 +87,9 @@ $results = mysqli_query($conDB,"SELECT * FROM {$statement}  ORDER BY $field $sor
 <thead>
     <tr>
         <th><center>Action</center></th>
-        <th>Name</th>
+        <th>Username</th>
+        <th>First Name</th>
+        <th>Last Name</th>
         <th>Email</th>
         <th>Date Added</th>
     </tr>
@@ -104,6 +106,8 @@ if (mysqli_num_rows($results) != 0) {
             <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['userId']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
             </td>
             <td><?php echo $row['userName'] ?></td>
+            <td><?php echo $row['first_name'] ?></td>
+            <td><?php echo $row['last_name'] ?></td>
             <td><?php echo $row['userEmail'] ?></td>
             <td><p><?php echo date('F j, Y g:i a', strtotime($row['regDate'])) ?></p></td>
 <?php
@@ -123,7 +127,7 @@ else {
 <?php
                     if(isset($errMSG)){
                 ?>
-                    <td colspan="4" class="alert alert-danger">
+                    <td colspan="6" class="alert alert-danger">
                         <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
                     </td>
                 <?php

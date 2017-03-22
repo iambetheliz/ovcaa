@@ -19,3 +19,5 @@ $("#table-id #checkall").click(function () {
     
     $("[data-toggle=tooltip]").tooltip();
 });
+
+
