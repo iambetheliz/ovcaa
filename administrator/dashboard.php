@@ -90,9 +90,6 @@
                         <h1 class="page-header">Welcome <?php echo $userRow['userName'] ; ?>!</h1>
                     </div>
                 </div>
-                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#processing-modal">
-            <i class="glyphicon glyphicon-play"></i> Start Processing
-        </button> 
                 <!-- /.row -->
                 
             </div><!-- /.container-fluid -->
@@ -109,20 +106,6 @@
             <p align="right">&copy; UP Open University 2017 <a class="top-nav" href="/ovcaa">View Site</a></p>
         </div>
     </footer>
-
-<!-- Static Modal -->
-<div class="modal modal-static fade" id="processing-modal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="text-center">
-                    <img src="../images/ajax_loader_gray_48.gif" class="icon" />
-                    <h4>Processing...</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

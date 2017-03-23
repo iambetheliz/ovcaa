@@ -1,14 +1,13 @@
 <?php
     ob_start();
+    session_start();
     require_once 'includes/dbconnect.php';
     
-    if(isset($_POST['userName']))
-{
-        session_start();
-        $_SESSION['user']=$_POST['userName'];
-        //Storing the name of user in SESSION variable.
-        header("location: dashboard.php");
-}
+    // it will never let you open index(login) page if session is set
+    if ( isset($_SESSION['user'])!="" ) {
+        header("Location: dashboard.php");
+        exit;
+    }
     
     $error = false;
     
@@ -49,10 +48,10 @@
             
             if( $count == 1 && $row['userPass']==$password ) {
                 $_SESSION['user'] = $row['userId'];
-                header("refresh:5;dashboard.php");
+                $successMSG = "<h3 align='center'>Signing in ...</h3>";
+                header("refresh:3;dashboard.php");
             } else {
                 $errMSG = "Incorrect Credentials, Try again...";
-                header("refresh:3;index.php");
             }
                 
         }
@@ -111,6 +110,21 @@
                                         <?php
                                             }
                                         ?>
+                                        <?php
+                                            if ( isset($successMSG) ) {
+                                        ?>
+                                        <div class="form-group">
+                                            <div class="alert alert-success">
+                                                    <?php echo $successMSG; ?>
+                                                    <div class="center-block">
+                                                        <center><img src="../images/ajax_loader_blue_32.gif" class="icon" /></center><br>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <?php
+                                            }
+                                        ?>
+
                                         <div class="form-group">
                 <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
@@ -124,29 +138,15 @@
                 <input type="password" name="pass" class="form-control" placeholder="Password" maxlength="15" />
                 </div>
                 <span class="text-danger"><?php echo $passError; ?></span>
-            </div><br>
-                                        <div class="form-group">
-                <button type="submit" class="btn btn-lg btn-block btn-primary" name="btn-login" data-toggle="modal" data-target="#processing-modal">Sign In</button>
+            </div>
+                                        <div class="form-group"><br>
+                <button class="btn btn-lg btn-block btn-primary" name="btn-login">Sign In</button><br>
             </div>
                                     </div>
                                 </div>
                             </fieldset>
                         </form>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Static Modal -->
-<div class="modal modal-static fade" id="processing-modal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="text-center">
-                    <img src="../images/ajax_loader_gray_48.gif" class="icon" />
-                    <h4>Signing you in ...</h4>
                 </div>
             </div>
         </div>
@@ -163,6 +163,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
+<script src="../assets/js/bootstrap.js"></script>
 
 </body>
 </html>
