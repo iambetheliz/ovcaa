@@ -147,7 +147,7 @@
             <!-- Modal Body -->
             <div class="modal-body">
                 
-                <form method="post" enctype="multipart/form-data" action="upload-document.php" autocomplete="off">
+<form method="post" enctype="multipart/form-data" action="upload-document.php" autocomplete="off">
     
     <div class="form-group row">
     <div class="col-sm-4">
@@ -218,7 +218,7 @@
               }
         ?>  <option value="Uncategorized">Select</option>
             <?php while($row1 = mysqli_fetch_array($result1)):;?>
-            <option value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
+            <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
             <option value="new">Add new category</option>
         </select>
@@ -231,7 +231,7 @@
                 <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
         </div>
         <div class="form-inline">
-            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#myModalNorm">ADD</button>
+            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
       <script type="text/javascript">
         $('#cat_name').on('change',function(){
             if( $(this).val()==="new"){
@@ -255,7 +255,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"> Cancel </button>
                 <button type="submit" name="btn-upload" class="btn btn-primary"><span class="glyphicon glyphicon-upload"></span> UPLOAD </button> 
-                </form>
+</form>
             </div>
         </div>
     </div>
