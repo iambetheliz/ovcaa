@@ -5,7 +5,7 @@
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header('Location:index.php?error'); // Redirecting To Home Page
+        header("Location: index.php");
         exit;
     }
     // select loggedin members detail
@@ -86,7 +86,7 @@
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Welcome Admin!</h1>
+                        <h1 class="page-header">Welcome <?php echo $userRow['userName'] ; ?>!</h1>
                     </div>
                 </div>
                 <!-- /.row -->

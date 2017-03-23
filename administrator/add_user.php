@@ -27,9 +27,9 @@
   $email = strip_tags($email);
   $email = htmlspecialchars($email);
   
-  $pass = trim($_POST['pass']);
-  $pass = strip_tags($pass);
-  $pass = htmlspecialchars($pass);
+  $userPass = trim($_POST['userPass']);
+  $userPass = strip_tags($userPass);
+  $userPass = htmlspecialchars($userPass);
   
   // basic username validation
   if (empty($userName)) {
@@ -67,21 +67,21 @@
    }
   }
   // password validation
-  if (empty($pass)){
+  if (empty($userPass)){
    $error = true;
    $passError = "Please enter password.";
-  } else if(strlen($pass) < 6) {
+  } else if(strlen($userPass) < 6) {
    $error = true;
    $passError = "Password must have atleast 6 characters.";
   }
   
   // password encrypt using SHA256();
-  $password = hash('sha256', $pass);
+  $userPass = hash('sha256', $userPass);
   
   // if there's no error, continue to signup
   if( !$error ) {
    
-   $query = "INSERT INTO members(userName,userEmail,userPass) VALUES('$userName','$email','$password')";
+   $query = "INSERT INTO members(userName,userEmail,userPass) VALUES('$userName','$email','$userPass')";
    $res = mysql_query($query);
     
    if ($res) {
@@ -90,7 +90,7 @@
     header("refresh:3; tbl_users.php");
     unset($userName);
     unset($email);
-    unset($pass);
+    unset($userPass);
    } else {
     $errTyp = "danger";
     $errMSG = "Something went wrong, try again later..."; 

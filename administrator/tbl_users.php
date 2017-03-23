@@ -160,7 +160,7 @@
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                                    <input type="password" name="pass" class="form-control" placeholder="Password" maxlength="15" />
+                                                    <input type="userPass" name="userPass" class="form-control" placeholder="Password" maxlength="15" />
                                                 </div>
                                             </div>    
                                     </div><!-- /.modal-body -->

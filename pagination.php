@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Pagination - OTallu.com</title>
+<title>Pagination</title>
 <style type="text/css">
 ul.pagination li.page_info {
     display: inline;

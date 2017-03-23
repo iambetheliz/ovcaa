@@ -4,7 +4,7 @@
     require_once 'includes/dbconnect.php';
     
     // it will never let you open index(login) page if session is set
-    if ( isset($_SESSION['user'])!="" ) {
+    if ((isset($_COOKIE['user']) && $_COOKIE['user'] != '') || (isset($_SESSION['user']) && $_SESSION['user'] !='')) {
         header("Location: dashboard.php");
         exit;
     }
@@ -19,9 +19,9 @@
         $userName = strip_tags($userName);
         $userName = htmlspecialchars($userName);
         
-        $pass = trim($_POST['pass']);
-        $pass = strip_tags($pass);
-        $pass = htmlspecialchars($pass);
+        $userPass = trim($_POST['userPass']);
+        $userPass = strip_tags($userPass);
+        $userPass = htmlspecialchars($userPass);
         // prevent sql injections / clear user invalid inputs
         
         if(empty($userName)){
@@ -32,7 +32,7 @@
             $userNameError = "Please enter valid username.";
         }
         
-        if(empty($pass)){
+        if(empty($userPass)){
             $error = true;
             $passError = "Please enter your password.";
         }
@@ -40,13 +40,13 @@
         // if there's no error, continue to login
         if (!$error) {
             
-            $password = hash('sha256', $pass); // password hashing using SHA256
+            $userPass = hash('sha256', $userPass); // userPass hashing using SHA256
         
             $res=mysql_query("SELECT userId, userName, userPass FROM members WHERE userName='$userName'");
             $row=mysql_fetch_array($res);
             $count = mysql_num_rows($res); // if uname/pass correct it returns must be 1 row
             
-            if( $count == 1 && $row['userPass']==$password ) {
+            if( $count == 1 && $row['userPass']==$userPass ) {
                 $_SESSION['user'] = $row['userId'];
                 header("Location: dashboard.php");
             } else {
@@ -119,10 +119,10 @@
                                         <div class="form-group">
                 <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                <input type="password" name="pass" class="form-control" placeholder="Your Password" maxlength="15" />
+                <input type="password" name="userPass" class="form-control" placeholder="Password" maxlength="15" />
                 </div>
                 <span class="text-danger"><?php echo $passError; ?></span>
-            </div>
+            </div><br>
                                         <div class="form-group">
                 <button type="submit" class="btn btn-lg btn-block btn-primary" name="btn-login">Sign In</button>
             </div>
