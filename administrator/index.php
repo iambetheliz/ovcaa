@@ -3,9 +3,9 @@
     session_start();
     require_once 'includes/dbconnect.php';
     
-    // it will never let you open index(login) page if session is set
-    if ((isset($_COOKIE['user']) && $_COOKIE['user'] != '') || (isset($_SESSION['user']) && $_SESSION['user'] !='')) {
-        header("Location: dashboard.php");
+    // if session is not set this will redirect to login page
+    if( !isset($_SESSION['user']) ) {
+        header("Location: index.php");
         exit;
     }
     
