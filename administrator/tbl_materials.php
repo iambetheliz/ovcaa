@@ -208,14 +208,15 @@
 
                   if($stmt->execute())
                       {
-                        header("Refresh:3; url=tbl_materials.php"); // redirects image view page after 5 seconds.
+                        header('refresh:3;tbl_materials.php');
                       }
                   else
                       {
-                        $errMSG = "error while inserting....";
+                        $errMSG = "Error!";
+                        header('refresh:3;tbl_materials.php');
                       }
               }
-        ?>  <option>Select</option>
+        ?>  <option value="Uncategorized">Select</option>
             <?php while($row1 = mysqli_fetch_array($result1)):;?>
             <option value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
@@ -226,11 +227,11 @@
 
   <div class="form-group" id="newCat" style="display:none;">
   <label class="col-sm-4 col-form-label"></label>
-        <div class="col-sm-4 form-group">
-                <input type="text" class="form-control" id="category" name="cat_name" placeholder="Specify category" autofocus />
+        <div class="col-sm-4 form-group" id="cname">
+                <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
         </div>
         <div class="form-inline">
-            <button type="submit" name="add_new_cat" class="btn btn-primary">ADD</button>
+            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#myModalNorm">ADD</button>
       <script type="text/javascript">
         $('#cat_name').on('change',function(){
             if( $(this).val()==="new"){
