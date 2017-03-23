@@ -3,7 +3,7 @@
 	session_start();
 	
 	if (!isset($_SESSION['user'])) {
-		header("Location: index.php");
+		header("Location: /ovcaa/administrator");
 	} else if(isset($_SESSION['user'])!="") {
 		header("Location: dashboard.php");
 	}
@@ -11,7 +11,7 @@
 	if (isset($_GET['logout'])) {
 		unset($_SESSION['user']);
 		session_unset();
-		session_destroy();
+		session_destroy($_SESSION['user']);
 		header("Location: /ovcaa/administrator");
 		exit;
 	}

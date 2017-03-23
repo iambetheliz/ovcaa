@@ -1,13 +1,14 @@
 <?php
     ob_start();
-    session_start();
     require_once 'includes/dbconnect.php';
     
-    // it will never let you open index(login) page if session is set
-    if ( isset($_SESSION['user'])!="" ) {
-        header("Location: dashboard.php");
-        exit;
-    }
+    if(isset($_POST['userName']))
+{
+        session_start();
+        $_SESSION['user']=$_POST['userName'];
+        //Storing the name of user in SESSION variable.
+        header("location: dashboard.php");
+}
     
     $error = false;
     
@@ -111,18 +112,18 @@
                                         ?>
                                         <div class="form-group">
                 <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                <input type="text" name="userName" class="form-control" placeholder="Your username" value="<?php echo $userName; ?>" maxlength="40" />
+                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                <input type="text" name="userName" class="form-control" placeholder="Username" value="<?php echo $userName; ?>" maxlength="40" autofocus />
                 </div>
                 <span class="text-danger"><?php echo $userNameError; ?></span>
             </div>
                                         <div class="form-group">
                 <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                <input type="password" name="pass" class="form-control" placeholder="Your Password" maxlength="15" />
+                <input type="password" name="pass" class="form-control" placeholder="Password" maxlength="15" />
                 </div>
                 <span class="text-danger"><?php echo $passError; ?></span>
-            </div>
+            </div><br>
                                         <div class="form-group">
                 <button type="submit" class="btn btn-lg btn-block btn-primary" name="btn-login">Sign In</button>
             </div>
