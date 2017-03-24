@@ -246,7 +246,16 @@
     </div>
   </div>
 
- <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
+ <textarea name="uploaded_by">
+    <?php 
+        if (($userRow['first_name'] && $userRow['last_name']) != 'not specified') {
+            echo $userRow['first_name']." ".$userRow['last_name'];
+        }
+        else {
+            echo $userRow['userName'];
+        }
+    ?>
+ </textarea>
  <textarea hidden="" name="location"><?php echo $location; ?></textarea>
  <textarea hidden="" name="url"><?php echo $url; ?></textarea>                
                 
