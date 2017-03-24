@@ -1,3 +1,13 @@
+<?php
+    ob_start();
+    require_once 'includes/dbconnect.php';
+    
+    // if session is not set this will redirect to login page
+    if(!isset($_SESSION['token'])){
+header("location: 403-error.html");
+        exit;
+    }
+?>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -44,8 +54,8 @@ if ($page <= 0) $page = 1;
 
 $per_page = 5; // Set how many records do you want to display per page.
 
-    $search .= $_GET['search'];
-    $search .= mysql_real_escape_string($search);
+    $search = $_GET['search'];
+    $search = mysql_real_escape_string($search);
     $output = 'Showing results for "'.$search.'."';
     
     $startpoint = ($page * $per_page) - $per_page;
