@@ -3,8 +3,6 @@
 include_once 'gpConfig.php';
 include_once 'User.php';
 
-session_start();
-
 if(isset($_GET['code'])){
     $gClient->authenticate($_GET['code']);
     $_SESSION['token'] = $gClient->getAccessToken();
