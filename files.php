@@ -44,28 +44,26 @@ if ($page <= 0) $page = 1;
 
 $per_page = 5; // Set how many records do you want to display per page.
 
-if(isset($_POST['search']))
-{
-    $valueToSearch = $_POST['valueToSearch'];
-    // search in all table columns
-    // using concat mysql function
-    $results = mysqli_query($conDB,"SELECT * FROM `material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `description`, `cat_name`) LIKE '%".$valueToSearch."%'");
-}
- else {
 
-$startpoint = ($page * $per_page) - $per_page;
+    $search = $_GET['search'];
+    $search = mysql_real_escape_string($search);
+    $output = 'Showing results for "'.$search.'."';
+    
+    $startpoint = ($page * $per_page) - $per_page;
 
-$statement = "`material` JOIN category ON category.category_id = material.category_id"; // Change `records` according to your table name.
- 
-$results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+    $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `description`, `cat_name`, `uploaded_by`) LIKE '%".$search."%'";
 
-}
+    $results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
 
-?>  
+?>   
 
 <div class="row">
 <?php echo pagination($statement,$per_page,$page,$url='?');?> 
 </div>
+
+<?php if (isset($_GET['search'])) {
+    echo $output;
+}  ?>
 
 <div class="row">
 <div class="table-responsive">
@@ -93,21 +91,31 @@ if (mysqli_num_rows($results) != 0) {
             <small><p>URL: <a target="_blank" href="<?php echo $row['url'] ?>"><?php echo $row['url'] ?></a></p></small>
         </td>
         <td><br>
-        <small><p>Uploaded by: <?php echo $row['uploaded_by'] ?></p></small>
+        <small><p><?php echo $row['uploaded_by'] ?></p></small>
         </td>
         <td><br>
-        <small><p>Published on: <?php echo date("F j, Y g:i a", strtotime($row["date_updated"])); ?></p></small>
+        <small><p><?php echo date("F j, Y g:i a", strtotime($row["date_updated"])); ?></p></small>
         </td>
-        </tr>
-    </tbody>
-<?php
+        <?php
     }
  
 } 
 else {
-     $errMSG = "No results to display.";
+     $errMSG = "No files to display.";
 }
+
 ?>
+                <?php
+                    if(isset($errMSG)){
+                ?>
+                    <td colspan="4" class="alert alert-danger">
+                        <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
+                    </td>
+                <?php
+                }
+                ?>
+        </tr>
+    </tbody>
 </table></div>
 <?php echo pagination($statement,$per_page,$page,$url='?');?>
 </div>

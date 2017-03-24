@@ -1,7 +1,7 @@
 <?php
     ob_start();
     session_start();
-    require_once 'includes/dbconnect.php';
+    require_once '../includes/dbconnect.php';
     
     // it will never let you open index(login) page if session is set
     if ( isset($_SESSION['user'])!="" ) {
@@ -155,7 +155,7 @@
 
 <footer class="footer">
 <div class="container">
-        <p>&copy; UP Open University 2017</p>
+        <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
 </div>
 </footer>
 

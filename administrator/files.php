@@ -1,7 +1,7 @@
 <?php
     ob_start();
     session_start();
-    require_once 'includes/dbconnect.php';
+    require_once '../includes/dbconnect.php';
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
@@ -16,38 +16,6 @@
 <html>
 <head>
 <meta charset="utf-8">
-<style type="text/css">
-ul.pagination li.page_info {
-    display: inline;
-    -webkit-margin-before: 1em;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
-    -webkit-padding-start: 40px;
-}
-
-/* For pagination function. */
-ul.pagination {
-    text-align:center;
-    color:#829994;
-}
-ul.pagination li {
-    display:inline;
-    padding:0 3px;
-}
-ul.pagination a {
-    color:#014421;
-    display:inline-block;
-    padding:5px 10px;
-    border:1px solid #cde0dc;
-    text-decoration:none;
-}
-ul.pagination a:hover,
-ul.pagination a.current {
-    background:#014421;
-    color:#fff;
-}
-</style>
 </head>
 <body>
 
@@ -117,7 +85,7 @@ if (mysqli_num_rows($results) != 0){
             <td><p><?php echo $row['filename'] ?></p></td>
             <td><p><?php echo $row['filesize'] ?>&nbsp;kb</p></td>
             <td><p><?php echo $row['location'] ?></p></td>
-            <td><p><a href="<?php echo $row['url'] ?>"><?php echo $row['url'] ?></a></p></td>
+            <td><p><a href="<?php echo $row['url'] ?>" target="_blank"><?php echo $row['url'] ?></a></p></td>
             <td><p><?php echo $row['uploaded_by'] ?></p></td>
             <td><p><?php echo date('F j, Y g:i a', strtotime($row['date_created'])) ?></p></td>
             <td><p><?php echo date('F j, Y g:i a', strtotime($row['date_updated'])) ?></p></td>

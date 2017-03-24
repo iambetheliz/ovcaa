@@ -13,8 +13,9 @@ header("location: 403-error.html");
 <head>
 <title>UP Open University</title>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
-<link href="../assets/css/bootstrap.min.css" rel="stylesheet">
-<link href="../assets/css/font-awesome.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/custom.css" rel="stylesheet">
+<link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <style type="text/css">
  a[href="/absolute/path/to/index/root/parent/"] {display: none;}
 </style>
@@ -24,7 +25,7 @@ header("location: 403-error.html");
 
 <div class="wrap">
 <div class="container">
-<form action="" method="post">
+
                 <?php    
                 $stmt = $DB_con->prepare('SELECT *, category.category_id, category.cat_name FROM material JOIN 
                 category ON category.category_id = material.category_id ORDER BY date_created DESC');
@@ -88,22 +89,10 @@ header("location: 403-error.html");
                         </div>
                     </div>
                     <div class="col-sm-4 right">
+                <form action="" method="get">
                         <div class="input-group">
-                            <div class="input-group-btn search-panel">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="glyphicon glyphicon-filter"></span> Filter by <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#contains">Contains</a></li>
-                                    <li><a href="#its_equal">It's equal</a></li>
-                                    <li><a href="#greather_than">Greather than ></a></li>
-                                    <li><a href="#less_than">Less than < </a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#all">Anything</a></li>
-                                </ul>
-                            </div>            
-                            <input type="text" name="valueToSearch" class="form-control" placeholder="Search for terms..">
-                            <span class="input-group-btn"><button class="btn btn-default" type="submit" name="search"><span class="glyphicon glyphicon-search"></span></button></span>
+                            <input type="text" name="search" class="form-control" placeholder="Search for terms..">
+                            <span class="input-group-btn"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button></span>
                         </div>
                     </div>
                 </div><br>
@@ -111,37 +100,22 @@ header("location: 403-error.html");
  
  <!-- Table and Pagination -->
  <?php 
-    include 'function.php';
-    include 'pagination.php';
+    include 'includes/pagination.php';
+    include 'files.php';
  ?>
-  <!-- End of Table and Pagination -->
-                
-                <?php
-                    if(isset($errMSG)){
-                ?>
-                    <div class="alert alert-danger">
-                        <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
-                    </div>
-                <?php
-                }
-                ?>
-                </form>
-            </div><!-- /.container-fluid -->
-        </div><!-- /#page-wrapper -->
-        <!-- End of Main Screen -->
+<!-- End of Table and Pagination -->
 
     </div><!-- /#wrapper -->
 </div><!-- /#wrap -->
 
     <footer class="footer">
     <div class="container-fluid">
-        <p>&copy; UP Open University 2017</p>
+        <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
     </div>
     </footer>
 
-<script src="assets/js/bootstrap.js"></script>
-<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
 <script src="assets/js/index.js"></script>
-    <script src='https://code.jquery.com/jquery-1.12.4.min.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </body>
 </html>

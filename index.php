@@ -23,7 +23,7 @@
 
 <footer class="footer">
 <div class="container-fluid">
-        <p>&copy; UP Open University 2017</p>
+        <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
 </div>
 </footer>
 

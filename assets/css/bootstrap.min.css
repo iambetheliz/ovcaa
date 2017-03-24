@@ -29,9 +29,6 @@
 .modal-static .modal-content .icon {
 }
 
-.pagination li:hover{
-    cursor: pointer;
-}
 .highlight {
     border: 1px solid red;
 }

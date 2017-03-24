@@ -14,6 +14,8 @@ $redirectURL = 'http://localhost/ovcaa/'; //Callback URL
 
 //Call Google API
 $gClient = new Google_Client();
+$gClient->setApprovalPrompt('auto');
+$gClient->setAccessType('online');
 $gClient->setApplicationName('UPOU Scribd');
 $gClient->setClientId($clientId);
 $gClient->setClientSecret($clientSecret);

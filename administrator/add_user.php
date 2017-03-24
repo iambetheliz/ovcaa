@@ -1,7 +1,7 @@
 <?php
     ob_start();
     session_start();
-    require_once 'includes/dbconnect.php';
+    require_once '../includes/dbconnect.php';
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
@@ -37,8 +37,13 @@
    $userNameError = "Please enter a username.";
   } else if (strlen($userName) < 5) {
    $error = true;
-   $userNameError = "Name must have atleat 5 characters.";
-  } else if (!preg_match("/^[a-zA-Z ]+$/",$userName)) {
+   $userNameError = "Username must have atleat 5 characters.";
+  } 
+  else if (strlen($userName) > 10) {
+   $error = true;
+   $userNameError = "Username must have maximum of 10 characters only.";
+  }
+  else if (!preg_match("/^[a-zA-Z ]+$/",$userName)) {
    $error = true;
    $userNameError = "Name must contain alphabets and space.";
   }else {
@@ -56,7 +61,12 @@
   if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
    $error = true;
    $emailError = "Please enter a valid email address.";
-  } else {
+  } 
+  else if (strlen($userEmail) > 30) {
+   $error = true;
+   $userNameError = "That was a very long email address! Please try a shorter one";
+  }
+  else {
    // check email exist or not
    $query = "SELECT userEmail FROM members WHERE userEmail='$email'";
    $result = mysql_query($query);
@@ -66,11 +76,12 @@
     $emailError = "Provided Email is already in use.";
    }
   }
+
   // password validation
   if (empty($userPass)){
    $error = true;
    $passError = "Please enter password.";
-  } else if(strlen($userPass) < 6) {
+  } else if(strlen($userPass) < 8) {
    $error = true;
    $passError = "Password must have atleast 6 characters.";
   }

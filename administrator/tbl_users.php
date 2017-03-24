@@ -1,7 +1,7 @@
 <?php
     ob_start();
     session_start();
-    require_once 'includes/dbconnect.php';
+    require_once '../includes/dbconnect.php';
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
@@ -86,7 +86,7 @@
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
                         <ul id="demo" class="collapse">
                             <li>
-                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Files</a>
+                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
                             </li>
                             <li class="active">
                                 <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
@@ -148,19 +148,19 @@
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                                    <input type="text" name="userName" class="form-control" placeholder="Username" maxlength="10" value="<?php echo $userName ?>" />
+                                                    <input type="text" name="userName" class="form-control" placeholder="Username" maxlength="30" value="<?php echo $userName ?>" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                                                    <input type="email" name="email" class="form-control" placeholder="Email" maxlength="20" value="<?php echo $email ?>" />
+                                                    <input type="email" name="email" class="form-control" placeholder="Email" maxlength="30" value="<?php echo $email ?>" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                                    <input type="userPass" name="userPass" class="form-control" placeholder="Password" maxlength="15" />
+                                                    <input type="password" name="userPass" class="form-control" placeholder="Password" maxlength="8" />
                                                 </div>
                                             </div>    
                                     </div><!-- /.modal-body -->
@@ -224,7 +224,7 @@
                 
                 <!-- Table and Pagination -->
                 <?php 
-                    include 'function.php';
+                    include '../includes/pagination.php';
                     include 'users.php';
                 ?>               
                 
@@ -239,7 +239,7 @@
 
     <footer class="footer">
         <div class="container-fluid">
-            <p align="right">&copy; UP Open University 2017 <a class="top-nav" href="/ovcaa">View Site</a></p>
+            <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
         </div>
     </footer>
 
