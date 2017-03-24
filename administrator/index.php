@@ -124,7 +124,6 @@
                                         <?php
                                             }
                                         ?>
-
                                         <div class="form-group">
                 <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
@@ -140,7 +139,7 @@
                 <span class="text-danger"><?php echo $passError; ?></span>
             </div>
                                         <div class="form-group"><br>
-                <button class="btn btn-lg btn-block btn-primary" name="btn-login">Sign In</button><br>
+                <button type="submit" class="btn btn-lg btn-block btn-primary" name="btn-login">Sign In</button><br>
             </div>
                                     </div>
                                 </div>

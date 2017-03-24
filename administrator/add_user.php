@@ -39,10 +39,6 @@
    $error = true;
    $userNameError = "Username must have atleat 5 characters.";
   } 
-  else if (strlen($userName) > 10) {
-   $error = true;
-   $userNameError = "Username must have maximum of 10 characters only.";
-  }
   else if (!preg_match("/^[a-zA-Z ]+$/",$userName)) {
    $error = true;
    $userNameError = "Name must contain alphabets and space.";
@@ -83,7 +79,7 @@
    $passError = "Please enter password.";
   } else if(strlen($userPass) < 8) {
    $error = true;
-   $passError = "Password must have atleast 6 characters.";
+   $passError = "Password must have atleast 8 characters.";
   }
   
   // password encrypt using SHA256();
