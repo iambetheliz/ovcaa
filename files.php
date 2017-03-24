@@ -44,9 +44,8 @@ if ($page <= 0) $page = 1;
 
 $per_page = 5; // Set how many records do you want to display per page.
 
-
-    $search = $_GET['search'];
-    $search = mysql_real_escape_string($search);
+    $search .= $_GET['search'];
+    $search .= mysql_real_escape_string($search);
     $output = 'Showing results for "'.$search.'."';
     
     $startpoint = ($page * $per_page) - $per_page;
