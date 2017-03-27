@@ -139,33 +139,135 @@
 <?php
   if ( isset($successMSG) ) {
 ?>
-<div class="modal-header alert alert-success">
-          <button type="button" class="close" data-dismiss="modal">×</button>
-<h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span> SUCCESS!</h4>
-        </div>
-        <div class="modal-body">
-
   <div class="form-group">
       <p class="text-success"><?php echo $successMSG; ?></p>
   </div>
 <?php
  }
 ?> 
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-success" data-toggle="modal" data-dismiss="modal" data-target="#myModalNorm">GO BACK</button>
-          <a class="btn btn-default" role="button" aria-pressed="true" href="tbl_materials.php" >Ok</a>
-        </div>
       </div>
 
     </div>
 </div>
-<?php include 'tbl_materials.php';?>
+
+                
+<form method="post" enctype="multipart/form-data" action="upload-document.php" autocomplete="off">
+    
+    <div class="form-group row">
+    <div class="col-sm-4">
+    <input type="file" name="file" class="form-control-file" />
+  </div>
+  </div>
+
+    <div class="form-group">
+    <label>Title: (Required)</label>
+    <input type="text" class="form-control" name="title" value="<?php echo $filename; ?>" />
+    <small class="form-text text-muted">This is the title of your document.</small>
+  </div>
+
+        <div class="form-group">
+    <label>Description: (Required)</label>
+    <textarea class="form-control" name="description" rows="3"><?php echo $description; ?></textarea>
+    <small class="form-text text-muted">This is the description of your document.</small>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">Category: (Required)</label>
+    <div class="col-sm-8">
+        <?php
+            // php select option value from database
+            $hostname = "localhost";
+            $username = "root";
+            $password = "";
+            $databaseName = "ovcaa";
+
+            // connect to mysql database
+            $connect = mysqli_connect($hostname, $username, $password, $databaseName);
+
+            // mysql select query
+            $query = "SELECT * FROM `category`";
+
+            // for method 1
+            $result1 = mysqli_query($connect, $query);
+
+            // for method 2
+            $result2 = mysqli_query($connect, $query);
+
+            $options = "";
+
+            while($row2 = mysqli_fetch_array($result2))
+                  {
+                      $options = $options."<option>$row2[1]</option>";
+                  }
+        ?>
+        <script src="../assets/js/jquery.min.js"></script>
+        <select name="category_id" class="form-control" id="cat_name">
+        <?php
+            if(isset($_POST['add_new_cat']) )
+              {
+                  $cat_name = $_POST['cat_name'];
+
+                  $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
+                  $stmt->bindParam(':cat_name',$cat_name);
+
+                  if($stmt->execute())
+                      {
+                        header('refresh:3;tbl_materials.php');
+                      }
+                  else
+                      {
+                        $errMSG = "Error!";
+                        header('refresh:3;tbl_materials.php');
+                      }
+              }
+        ?>  <option value="Uncategorized">Select</option>
+            <?php while($row1 = mysqli_fetch_array($result1)):;?>
+            <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
+            <?php endwhile;?>
+            <option value="new">Add new category</option>
+        </select>
+    </div>
+  </div>
+
+  <div class="form-group" id="newCat" style="display:none;">
+  <label class="col-sm-4 col-form-label"></label>
+        <div class="col-sm-4 form-group" id="cname">
+                <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
+        </div>
+        <div class="form-inline">
+            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
+      <script type="text/javascript">
+        $('#cat_name').on('change',function(){
+            if( $(this).val()==="new"){
+              $("#newCat").show()
+            }
+            else{
+              $("#newCat").hide()
+            }
+        });
+      </script>
+    </div>
+  </div>
+
+ <textarea name="uploaded_by">
+    <?php 
+        if (($userRow['first_name'] && $userRow['last_name']) != 'not specified') {
+            echo $userRow['first_name']." ".$userRow['last_name'];
+        }
+        else {
+            echo $userRow['userName'];
+        }
+    ?>
+ </textarea>
+ <textarea hidden="" name="location"><?php echo $location; ?></textarea>
+ <textarea hidden="" name="url"><?php echo $url; ?></textarea>                
+    </form>
 
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
-</body>
 
+</body>
 </html>
+<?php ob_end_flush(); ?>

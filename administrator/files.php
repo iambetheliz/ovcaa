@@ -32,7 +32,7 @@ $per_page = 5; // Set how many records do you want to display per page.
     
     $startpoint = ($page * $per_page) - $per_page;
 
-    $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `description`, `cat_name`, `uploaded_by`) LIKE '%".$search."%'";
+    $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `filename`,`description`, `cat_name`, `uploaded_by`) LIKE '%".$search."%'";
 
     $results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
 
