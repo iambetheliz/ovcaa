@@ -108,7 +108,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>Admin - UP Open University</title>
+<title>Upload New File - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
@@ -213,7 +213,7 @@
   <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >
+        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
         <small class="form-text text-muted">Title of your document.</small>
       </div>
   </div>

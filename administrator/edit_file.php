@@ -188,7 +188,7 @@
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Edit</h1>
+                        <h3 class="page-header"><strong>Update:</strong> <?php echo $title; ?></h3>
                     </div>
                 </div>
                 <!-- /.row -->
@@ -216,7 +216,7 @@
  <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >
+        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus >
         <small class="form-text text-muted">Title of your document.</small>
       </div>
   </div>
