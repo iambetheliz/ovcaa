@@ -184,6 +184,7 @@
         <!-- Main Screen -->
         <div id="page-wrapper">
             <div class="container-fluid">
+
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -191,6 +192,7 @@
                     </div>
                 </div>
                 <!-- /.row -->
+
 <br>               
 <?php
   if(isset($errMSG)){
@@ -212,10 +214,10 @@
 
  <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
-    <div class="col-sm-4">
-    <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >
-    <small id="emailHelp" class="form-text text-muted">Title of your document.</small>
-    </div>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >
+        <small id="emailHelp" class="form-text text-muted">Title of your document.</small>
+      </div>
   </div>
 
   <div class="form-group row">

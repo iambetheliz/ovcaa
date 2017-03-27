@@ -110,56 +110,106 @@
 <meta name="author" content="">
 <title>Admin - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
-<link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
-<body>               
 
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  id="onload">
+<body>
+<div class="wrap">
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
 
-    <div class="modal-dialog">
+            <!-- Brand and toggle -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
+            </div>
 
-      <!-- Modal content-->
-      <div class="modal-content">
-        <?php
-  if ( isset($errMSG)) {
-?>
-        <div class="modal-header alert alert-danger">
-          <button type="button" class="close" data-dismiss="modal">×</button>
-          <h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span> ERROR!</h4>
+            <!-- Top Menu Items -->
+            <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="logout.php">Logout</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            </div>
+
+            <!-- Sidebar Menu Items -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
+                    </li>
+                    <li class="active">
+                      <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
+                        <ul id="demo" class="collapse">
+                            <li>
+                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                            </li>
+                            <li>
+                                <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>            
+            
         </div>
-        <div class="modal-body">
-          
-  <div class="form-group">
-          <p class="text-danger"><?php echo $errMSG; ?></p>
-  </div>
+        </nav>
+        <!-- /.navbar-collapse -->
+        
+        <br><br>
+        <!-- Main Screen -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Upload</h1>
+                    </div>
+                </div>
+                <!-- /.row -->              
+
+<!-- Main Form -->
+<br>
 <?php
- }
+  if(isset($errMSG)){
+      ?>
+            <div class="alert alert-danger">
+              <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
+            </div><br>
+            <?php
+  }
+  else if(isset($successMSG)){
+    ?>
+        <div class="alert alert-success">
+              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
+        </div><br>
+        <?php
+  }
 ?>
 
-<?php
-  if ( isset($successMSG) ) {
-?>
-  <div class="form-group">
-      <p class="text-success"><?php echo $successMSG; ?></p>
-  </div>
-<?php
- }
-?> 
-      </div>
+<form method="post" enctype="multipart/form-data" action="" autocomplete="off">
 
-    </div>
-</div>
-
-                
-<form method="post" enctype="multipart/form-data" action="upload-document.php" autocomplete="off">
-    
-    <div class="form-group row">
+  <div class="form-group row">
     <div class="col-sm-4">
-    <input type="file" name="file" class="form-control-file" />
-  </div>
+      <input type="file" name="file" class="form-control-file" />
+    </div>
   </div>
 
-    <div class="form-group">
+  <div class="form-group">
     <label>Title: (Required)</label>
     <input type="text" class="form-control" name="title" value="<?php echo $filename; ?>" />
     <small class="form-text text-muted">This is the title of your document.</small>
@@ -260,8 +310,29 @@
     ?>
  </textarea>
  <textarea hidden="" name="location"><?php echo $location; ?></textarea>
- <textarea hidden="" name="url"><?php echo $url; ?></textarea>                
-    </form>
+ <textarea hidden="" name="url"><?php echo $url; ?></textarea>    
+
+<div class="form-group row">
+  <label class="col-sm-2 col-form-label"></label>
+    <div class="col-sm-4">
+   <button type="submit" name="btn-upload" class="btn btn-primary"><span class="glyphicon glyphicon-upload"></span>
+  &nbsp;&nbsp;UPLOAD (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.</button>
+  </div>
+  </div>
+
+</form>
+
+</div><!-- /.container-fluid -->
+        </div><!-- /#page-wrapper -->
+
+    </div><!-- /#wrapper -->
+</div>
+
+    <footer class="footer">
+        <div class="container-fluid">
+            <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
+        </div>
+    </footer>
 
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
