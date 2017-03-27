@@ -177,7 +177,7 @@
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">Upload</h1>
+                        <h3 class="page-header"><strong>Upload New File</strong></h3>
                     </div>
                 </div>
                 <!-- /.row -->              
@@ -310,8 +310,10 @@
 <div class="form-group row">
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
-   <button type="submit" name="btn-upload" class="btn btn-primary"><span class="glyphicon glyphicon-upload"></span>
-  &nbsp;&nbsp;UPLOAD (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.</button>
+    <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
+  CANCEL </a>
+   <button type="submit" name="btn-upload" class="btn btn-success"><span class="glyphicon glyphicon-upload"></span>
+  &nbsp;UPLOAD</button> (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.
   </div>
   </div>
 

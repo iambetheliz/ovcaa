@@ -243,7 +243,7 @@
             $connect = mysqli_connect($hostname, $username, $password, $databaseName);
 
             // mysql select query
-            $query = "SELECT * FROM `category`";
+            $query = "SELECT * FROM `category` ORDER BY category_id";
 
             // for method 1
             $result1 = mysqli_query($connect, $query);
@@ -278,8 +278,7 @@
                         header('refresh:3;tbl_materials.php');
                       }
               }
-        ?>  <option value="Uncategorized">Select</option>
-            <?php while($row1 = mysqli_fetch_array($result1)):;?>
+        ?>  <?php while($row1 = mysqli_fetch_array($result1)):;?>
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
             <option value="new">Add new category</option>
@@ -324,8 +323,10 @@
   <div class="form-group row">
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
-  <button type="submit" name="btn_save_updates" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span>
-  &nbsp;&nbsp;UPDATE (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.</button>
+    <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
+  CANCEL </a>
+  <button type="submit" name="btn_save_updates" class="btn btn-success"><span class="glyphicon glyphicon-save"></span>
+  UPDATE </button> (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.
   </div>
   </div>
 
