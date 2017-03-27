@@ -193,30 +193,31 @@
                 </div>
                 <!-- /.row -->
 
-<br>               
+<br>          
+ <form method="post" enctype="multipart/form-data">
+
 <?php
   if(isset($errMSG)){
       ?>
             <div class="alert alert-danger">
               <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
-            </div><br>
+            </div>
             <?php
   }
   else if(isset($successMSG)){
     ?>
         <div class="alert alert-success">
               <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
-        </div><br>
+        </div>
         <?php
   }
   ?>   
- <form method="post" enctype="multipart/form-data">
 
  <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
         <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >
-        <small id="emailHelp" class="form-text text-muted">Title of your document.</small>
+        <small class="form-text text-muted">Title of your document.</small>
       </div>
   </div>
 
@@ -224,7 +225,7 @@
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
     <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>
-    <small id="emailHelp" class="form-text text-muted">Description of your document.</small>
+    <small class="form-text text-muted">Description of your document.</small>
     </div>
   </div>
 
@@ -257,13 +258,52 @@
                       $options = $options."<option>$row2[1]</option>";
                   }
         ?>
-        <select name="category_id" class="form-control" id="exampleSelect1">
-            <option>(old) <?php echo $cat_name;?></option>
+        <script src="../assets/js/jquery.min.js"></script>
+        <select name="category_id" class="form-control" id="cat_name">
+        <?php
+            if(isset($_POST['add_new_cat']) )
+              {
+                  $cat_name = $_POST['cat_name'];
+
+                  $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
+                  $stmt->bindParam(':cat_name',$cat_name);
+
+                  if($stmt->execute())
+                      {
+                        header('refresh:3;tbl_materials.php');
+                      }
+                  else
+                      {
+                        $errMSG = "Error!";
+                        header('refresh:3;tbl_materials.php');
+                      }
+              }
+        ?>  <option value="Uncategorized">Select</option>
             <?php while($row1 = mysqli_fetch_array($result1)):;?>
-            <option value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
+            <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
+            <option value="new">Add new category</option>
         </select>
-    <small id="emailHelp" class="form-text text-muted">Title of your document.</small>
+    </div>
+  </div>
+
+  <div class="form-group" id="newCat" style="display:none;">
+  <label class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4 form-group" id="cname">
+                <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
+        </div>
+        <div class="form-inline">
+            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
+      <script type="text/javascript">
+        $('#cat_name').on('change',function(){
+            if( $(this).val()==="new"){
+              $("#newCat").show()
+            }
+            else{
+              $("#newCat").hide()
+            }
+        });
+      </script>
     </div>
   </div>
 
@@ -275,10 +315,10 @@
   </div>  
 
   <div class="form-group row">
-  <label class="col-sm-2 col-form-label">New File: </label>
-    <div class="col-sm-4">
-    <input type="file" name="file" class="form-control-file" />
-  </div>
+    <label class="col-sm-2 col-form-label">New File: </label>
+      <div class="col-sm-4">
+        <input type="file" name="file" class="form-control-file" />
+      </div>
   </div>
   
   <div class="form-group row">

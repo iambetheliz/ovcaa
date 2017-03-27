@@ -184,6 +184,8 @@
 
 <!-- Main Form -->
 <br>
+<form method="post" enctype="multipart/form-data" action="" autocomplete="off">
+
 <?php
   if(isset($errMSG)){
       ?>
@@ -201,29 +203,32 @@
   }
 ?>
 
-<form method="post" enctype="multipart/form-data" action="" autocomplete="off">
+  <div class="form-group row">
+  <label class="col-sm-2 col-form-label"></label>
+    <div class="col-sm-4">
+    <input type="file" name="file" class="form-control-file" />
+  </div>
+  </div>
+
+  <div class="form-group row"> 
+    <label class="col-sm-2 col-form-label">Title: (Required)</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >
+        <small class="form-text text-muted">Title of your document.</small>
+      </div>
+  </div>
 
   <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-      <input type="file" name="file" class="form-control-file" />
+    <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>
+    <small class="form-text text-muted">Description of your document.</small>
     </div>
   </div>
 
-  <div class="form-group">
-    <label>Title: (Required)</label>
-    <input type="text" class="form-control" name="title" value="<?php echo $filename; ?>" />
-    <small class="form-text text-muted">This is the title of your document.</small>
-  </div>
-
-        <div class="form-group">
-    <label>Description: (Required)</label>
-    <textarea class="form-control" name="description" rows="3"><?php echo $description; ?></textarea>
-    <small class="form-text text-muted">This is the description of your document.</small>
-  </div>
-
   <div class="form-group row">
-    <label class="col-sm-4 col-form-label">Category: (Required)</label>
-    <div class="col-sm-8">
+    <label class="col-sm-2 col-form-label">Category: (Required)</label>
+    <div class="col-sm-4">
         <?php
             // php select option value from database
             $hostname = "localhost";
@@ -235,7 +240,7 @@
             $connect = mysqli_connect($hostname, $username, $password, $databaseName);
 
             // mysql select query
-            $query = "SELECT * FROM `category`";
+            $query = "SELECT * FROM `category` ORDER BY category_id";
 
             // for method 1
             $result1 = mysqli_query($connect, $query);
@@ -270,8 +275,7 @@
                         header('refresh:3;tbl_materials.php');
                       }
               }
-        ?>  <option value="Uncategorized">Select</option>
-            <?php while($row1 = mysqli_fetch_array($result1)):;?>
+        ?>  <?php while($row1 = mysqli_fetch_array($result1)):;?>
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
             <option value="new">Add new category</option>
@@ -280,7 +284,7 @@
   </div>
 
   <div class="form-group" id="newCat" style="display:none;">
-  <label class="col-sm-4 col-form-label"></label>
+  <label class="col-sm-2 col-form-label"></label>
         <div class="col-sm-4 form-group" id="cname">
                 <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
         </div>
@@ -299,18 +303,9 @@
     </div>
   </div>
 
- <textarea name="uploaded_by">
-    <?php 
-        if (($userRow['first_name'] && $userRow['last_name']) != 'not specified') {
-            echo $userRow['first_name']." ".$userRow['last_name'];
-        }
-        else {
-            echo $userRow['userName'];
-        }
-    ?>
- </textarea>
- <textarea hidden="" name="location"><?php echo $location; ?></textarea>
- <textarea hidden="" name="url"><?php echo $url; ?></textarea>    
+ <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
+  <textarea hidden="" name="location"><?php echo $location; ?></textarea>
+  <textarea hidden="" name="url"><?php echo $url; ?></textarea> 
 
 <div class="form-group row">
   <label class="col-sm-2 col-form-label"></label>
