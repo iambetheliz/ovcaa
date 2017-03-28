@@ -16,6 +16,11 @@
 <html>
 <head>
 <meta charset="utf-8">
+<!-- jQuery -->
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/js/index.js"></script>
+<script src="../assets/js/jquery.min.js"></script>
+<!-- end of jQuery -->
 <style type="text/css">
 ul.pagination li.page_info {
     display: inline;
@@ -83,6 +88,9 @@ $per_page = 5; // Set how many records do you want to display per page.
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
+        <th><center><input class="second" id="selectall" name="check" type="checkbox">
+<label class="label2" for="selectall"></label>
+</center></th>
         <th><center>Action</center></th>
         <th>Username</th>
         <th>First Name</th>
@@ -99,6 +107,7 @@ if (mysqli_num_rows($results) != 0) {
 ?>  
     <tbody>
         <tr>
+            <td><center><input class="second" id="Item A" name="option2" type="checkbox"></center></td>
             <td><center>
             <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['userId']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
             </td>
@@ -106,7 +115,7 @@ if (mysqli_num_rows($results) != 0) {
             <td><?php echo $row['first_name'] ?></td>
             <td><?php echo $row['last_name'] ?></td>
             <td><?php echo $row['userEmail'] ?></td>
-            <td><p><?php echo date('F j, Y g:i a', strtotime($row['regDate'])) ?></p></td>
+            <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['regDate'])) ?></p></td>
 <?php
     }
  
@@ -134,3 +143,27 @@ echo pagination($statement,$per_page,$page,$url='?');
 </div>
 </body>
 </html>
+
+<script type="text/javascript">    
+$(document).ready(function() {
+$(".first").click(function() {
+$("#checkAll").attr("data-type", "uncheck");
+});
+$("input[name=option2]").click(function() {
+$("#selectall").prop("checked", false);
+});
+$("#checkAll").attr("data-type", "check");
+$("#checkAll").click(function() {
+if ($("#checkAll").attr("data-type") === "check") {
+$(".first").prop("checked", true);
+$("#checkAll").attr("data-type", "uncheck");
+} else {
+$(".first").prop("checked", false);
+$("#checkAll").attr("data-type", "check");
+}
+})
+$("#selectall").click(function() {
+$(".second").prop("checked", $("#selectall").prop("checked"))
+})
+});
+</script>

@@ -16,6 +16,10 @@
 <html>
 <head>
 <meta charset="utf-8">
+<!-- jQuery -->
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/js/index.js"></script>
+<script src="../assets/js/jquery.min.js"></script>
 </head>
 <body>
 
@@ -51,6 +55,9 @@ $per_page = 5; // Set how many records do you want to display per page.
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
+        <th><center><input class="second" id="selectall" name="check" type="checkbox">
+<label class="label2" for="selectall"></label>
+</center></th>
         <th>Edit</th>
         <th>Delete</th>
         <th>Title</th>
@@ -73,6 +80,7 @@ if (mysqli_num_rows($results) != 0){
 ?>
     <tbody>
         <tr>
+            <td><center><input class="second" id="Item A" name="option2" type="checkbox"></center></td>
             <td>
             <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span></a>
             </td>
@@ -87,8 +95,8 @@ if (mysqli_num_rows($results) != 0){
             <td><p><?php echo $row['location'] ?></p></td>
             <td><p><a href="<?php echo $row['url'] ?>" target="_blank"><?php echo $row['url'] ?></a></p></td>
             <td><p><?php echo $row['uploaded_by'] ?></p></td>
-            <td><p><?php echo date('F j, Y g:i a', strtotime($row['date_created'])) ?></p></td>
-            <td><p><?php echo date('F j, Y g:i a', strtotime($row['date_updated'])) ?></p></td>
+            <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['date_created'])) ?></p></td>
+            <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['date_updated'])) ?></p></td>
         <?php
     }
  
@@ -112,6 +120,30 @@ else {
 </table></div>
 <?php echo pagination($statement,$per_page,$page,$url='?');?>
 </div>
+
+<script type="text/javascript">    
+$(document).ready(function() {
+$(".first").click(function() {
+$("#checkAll").attr("data-type", "uncheck");
+});
+$("input[name=option2]").click(function() {
+$("#selectall").prop("checked", false);
+});
+$("#checkAll").attr("data-type", "check");
+$("#checkAll").click(function() {
+if ($("#checkAll").attr("data-type") === "check") {
+$(".first").prop("checked", true);
+$("#checkAll").attr("data-type", "uncheck");
+} else {
+$(".first").prop("checked", false);
+$("#checkAll").attr("data-type", "check");
+}
+})
+$("#selectall").click(function() {
+$(".second").prop("checked", $("#selectall").prop("checked"))
+})
+});
+</script>
 
 </body>
 </html>
