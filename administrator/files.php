@@ -42,6 +42,16 @@ $per_page = 5; // Set how many records do you want to display per page.
 
 ?>  
 
+<?php
+                    if(isset($successMSG)){
+                ?>
+                    <p class="alert alert-danger">
+                        <span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?>
+                    </p>
+                <?php
+                }
+                ?>
+
 <div class="row">
 <?php echo pagination($statement,$per_page,$page,$url='?');?> 
 </div>
@@ -55,9 +65,7 @@ $per_page = 5; // Set how many records do you want to display per page.
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
-        <th><center><input class="second" id="selectall" name="check" type="checkbox">
-<label class="label2" for="selectall"></label>
-</center></th>
+        <th><input type="checkbox" name="select_all" id="select_all" value=""/></th>
         <th>Edit</th>
         <th>Delete</th>
         <th>Title</th>
@@ -80,7 +88,7 @@ if (mysqli_num_rows($results) != 0){
 ?>
     <tbody>
         <tr>
-            <td><center><input class="second" id="Item A" name="option2" type="checkbox"></center></td>
+            <td align="center"><input type="checkbox" name="checked_id[]" class="checkbox" value="<?php echo $row['id']; ?>"/></td>
             <td>
             <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span></a>
             </td>
@@ -121,27 +129,36 @@ else {
 <?php echo pagination($statement,$per_page,$page,$url='?');?>
 </div>
 
-<script type="text/javascript">    
-$(document).ready(function() {
-$(".first").click(function() {
-$("#checkAll").attr("data-type", "uncheck");
-});
-$("input[name=option2]").click(function() {
-$("#selectall").prop("checked", false);
-});
-$("#checkAll").attr("data-type", "check");
-$("#checkAll").click(function() {
-if ($("#checkAll").attr("data-type") === "check") {
-$(".first").prop("checked", true);
-$("#checkAll").attr("data-type", "uncheck");
-} else {
-$(".first").prop("checked", false);
-$("#checkAll").attr("data-type", "check");
+<script type="text/javascript">
+function deleteConfirm(){
+    var result = confirm("Are you sure to delete users?");
+    if(result){
+        return true;
+    }else{
+        return false;
+    }
 }
-})
-$("#selectall").click(function() {
-$(".second").prop("checked", $("#selectall").prop("checked"))
-})
+
+$(document).ready(function(){
+    $('#select_all').on('click',function(){
+        if(this.checked){
+            $('.checkbox').each(function(){
+                this.checked = true;
+            });
+        }else{
+             $('.checkbox').each(function(){
+                this.checked = false;
+            });
+        }
+    });
+    
+    $('.checkbox').on('click',function(){
+        if($('.checkbox:checked').length == $('.checkbox').length){
+            $('#select_all').prop('checked',true);
+        }else{
+            $('#select_all').prop('checked',false);
+        }
+    });
 });
 </script>
 

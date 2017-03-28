@@ -32,6 +32,15 @@
   header("Location: tbl_materials.php");
  }
 
+ if(isset($_POST['bulk_delete_submit'])){
+        $idArr = $_POST['checked_id'];
+        foreach($idArr as $id){
+            mysqli_query($conn,"DELETE FROM material WHERE id=".$id);
+        }
+        $successMSG = 'Users have been deleted successfully.';
+        header("Location:index.php");
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -129,7 +138,8 @@
                     <div class="col-sm-7">
                         <a href="upload-document.php" class="btn btn-success" type="button" role="button" >
                             <span class="glyphicon glyphicon-plus"></span> Upload New File
-                        </a>    
+                        </a>   
+                        <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete"/> 
                     </div>
                     <div class="col-sm-1" right" style="right: 30px;"">
                         <div class="input-group-btn">
