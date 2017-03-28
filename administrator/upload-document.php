@@ -17,6 +17,8 @@
  error_reporting( ~E_NOTICE ); // avoid notice
  require_once 'Material.php';
  
+$error = false;
+
  if(isset($_POST['btn-upload']))
  {
     $title = $_POST['title'];
@@ -36,15 +38,17 @@
     $new_file_name = strtolower($file);
  
     $final_file=str_replace(' ','-',$new_file_name);
-    
 
   if(empty($title)){
-   $errMSG = "Please Enter Title.";
+    $error = true;
+    $errMSG = "Please Enter Title.";
   }
   else if(empty($description)){
+    $error = true;
    $errMSG = "Please Enter Description.";
   }
   else if(empty($final_file)){
+    $error = true;
    $errMSG = "Please Select FIle.";
   }
   else
@@ -55,14 +59,14 @@
 
    // valid image extensions
    $valid_extensions = array('exe', 'zip', 'rar'); // valid extensions
-     
+  
    // allow valid image file formats
    if(!in_array($fileExt, $valid_extensions)){  
    // Check file size '5MB'
     if($new_size < 5000000)    {     
       $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
       $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-     move_uploaded_file($file_loc,$folder.$final_file);
+          move_uploaded_file($file_loc,$folder.$final_file); 
     }
     else{
      $errMSG = "Sorry, your file is too large.";
@@ -188,15 +192,19 @@
 
 <?php
   if(isset($errMSG)){
-      ?>
-            <div class="alert alert-danger">
-              <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
-            </div><br>
-            <?php
-  }
-  else if(isset($successMSG)){
     ?>
-        <div class="alert alert-success">
+    <div class="form-group row">
+        <div class="alert alert-danger col-sm-6">
+              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?></strong>
+        </div>
+    </div>
+        <?php
+  }
+?>
+<?php
+  if(isset($successMSG)){
+    ?>
+        <div class="alert alert-success col-sm-4">
               <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
         </div><br>
         <?php
@@ -207,6 +215,7 @@
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
     <input type="file" name="file" class="form-control-file" />
+    <p class="text-danger"><?php echo $FileError; ?></p>
   </div>
   </div>
 
@@ -214,15 +223,15 @@
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
         <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
-        <small class="form-text text-muted">Title of your document.</small>
+        <p class="text-danger"><?php echo $TitleError; ?></p>
       </div>
   </div>
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-    <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>
-    <small class="form-text text-muted">Description of your document.</small>
+    <textarea class="form-control" type="textarea" name="description" maxlength="140" rows="3"></textarea>
+    <p class="text-danger"><?php echo $DescError; ?></p>
     </div>
   </div>
 

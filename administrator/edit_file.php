@@ -62,7 +62,7 @@
       if($new_size < 5000000)
         {
           $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
-      $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
+          $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
           unlink($folder.$edit_row['filename']);
           move_uploaded_file($file_loc,$folder.$final_file);
         }
@@ -76,8 +76,7 @@
       // if no image selected the old image remain as it is.
       $final_file = $edit_row['filename']; // old file from database
       $new_size = $edit_row['filesize'];// old file from database
-    } 
-            
+    }             
     
     // if no error occured, continue ....
     if(!isset($errMSG))

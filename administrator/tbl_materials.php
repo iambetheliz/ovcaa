@@ -198,7 +198,7 @@
 
     </div><!-- /#wrapper -->
 </div><!-- /#wrap -->
-
+<br>
     <footer class="footer">
         <div class="container-fluid">
             <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>

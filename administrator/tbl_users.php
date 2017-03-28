@@ -39,7 +39,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>Admin - UP Open University</title>
+<title>Table: Users - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
@@ -124,56 +124,10 @@
                 <div class="row">
                     <div class="col-sm-7"> 
                         <!-- Button trigger modal -->
-                        <button class="btn btn-success" data-toggle="modal" data-target="#myModalNorm">
+                        <a href="add_user.php" class="btn btn-success">
                             <span class="glyphicon glyphicon-plus"></span> Add New User
-                        </button>
-                        <!-- Modal -->
-                        <div class="modal fade" id="myModalNorm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <!-- Modal Header -->
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">
-                                            <span aria-hidden="true">&times;</span>
-                                            <span class="sr-only">Close</span>
-                                        </button>
-                                        <h4 class="modal-title" id="myModalLabel">
-                                            Adding New User
-                                        </h4>
-                                    </div>            
-                                    <!-- Modal Body -->
-                                    <div class="modal-body">                
-                                        <form method="post" action="add_user.php" autocomplete="off">
-                                            
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                                    <input type="text" name="userName" class="form-control" placeholder="Username" maxlength="30" value="<?php echo $userName ?>" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                                                    <input type="email" name="email" class="form-control" placeholder="Email" maxlength="30" value="<?php echo $email ?>" />
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                                    <input type="password" name="userPass" class="form-control" placeholder="Password" maxlength="8" />
-                                                </div>
-                                            </div>    
-                                    </div><!-- /.modal-body -->
-                                    <!-- Modal Footer -->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-primary" name="btn-signup">Save and Close</button>
-                                        </form>
-                                </div><!-- End of Modal Content-->
-                            </div><!-- End of Modal Dialog-->
-                        </div><!-- End of Modal -->                       
-                    </div><!-- /.col... --> 
-                </div>
+                        </a>                
+                    </div>
                     <div class="col-sm-1" right" style="right: 30px;"">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

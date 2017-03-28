@@ -115,63 +115,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>Admin - UP Open University</title>
+<title>Users: New - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
-<link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
+<div class="wrap">
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
 
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  id="onload">
+            <!-- Brand and toggle -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
+            </div>
 
-    <div class="modal-dialog">
+            <!-- Top Menu Items -->
+            <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="logout.php">Logout</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            </div>
 
-      <!-- Modal content-->
-      <div class="modal-content">
-          <?php
-  if ( isset($errMSG) || ($error == true)) {
-?>
-        <div class="modal-header alert alert-danger">
-          <button type="button" class="close" data-dismiss="modal">×</button>
-          <h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span> ERROR!</h4>
+            <!-- Sidebar Menu Items -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
+                    </li>
+                    <li class="active">
+                      <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
+                        <ul id="demo" class="collapse">
+                            <li>
+                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                            </li>
+                            <li>
+                                <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>            
+            
         </div>
-        <div class="modal-body">
-          
-  <div class="form-group">
-          <?php echo $errMSG; ?>
-          <p class="text-danger"><?php echo $userNameError; ?></p>
-          <p class="text-danger"><?php echo $emailError; ?></p>
-          <p class="text-danger"><?php echo $passError; ?></p>
-  </div>
-<?php
- }
-?>
+        </nav>
+        <!-- /.navbar-collapse -->
+        
+        <br><br>
+        <!-- Main Screen -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3 class="page-header"><strong>Add New User</strong></h3>
+                    </div>
+                </div>
+                <!-- /.row -->              
+
+<!-- Main Form -->
+<br>
+<form name="my_form" method="post" action="add_user.php" autocomplete="off">
 
 <?php
   if ( isset($successMSG) ) {
 ?>
-<div class="modal-header alert alert-success">
-          <button type="button" class="close" data-dismiss="modal">×</button>
-<h4 class="modal-title"><span class="glyphicon glyphicon-info-sign"></span> SUCCESS!</h4>
-        </div>
-        <div class="modal-body">
-
-  <div class="form-group">
+<div class="form-group">
       <?php echo $successMSG; ?>
-  </div>
+</div>
 <?php
  }
 ?>
-          
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-success" data-toggle="modal" data-dismiss="modal" data-target="#myModalNorm">GO BACK</button>
-          <a class="btn btn-default" role="button" aria-pressed="true" href="tbl_users.php" >Ok</a>
-        </div>
-      </div>
 
+<?php
+  if ( isset($errMSG) || ($error == true)) {
+    echo $errMSG; 
+  }
+?>
+
+<script type="text/javascript">
+//<![CDATA[
+function check(Obj, Objmax) {
+var maxnum = Obj.value.length;
+  if(Obj.value.length >= Objmax) {
+    alert("Character limit reached.");
+    Obj.value = Obj.value.substring(0, 15);
+  }
+}
+//]]>
+</script>
+
+  <div class="form-group">
+    <div class="input-group col-sm-4">
+      <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+      <input type="text" name="userName" class="form-control" placeholder="Username" maxlength="15" value="<?php echo $userName ?>" onkeyup="check(this, '15');" autofocus />
     </div>
+      <p class="text-danger"><?php echo $userNameError; ?></p>
+  </div>
+  <div class="form-group">
+    <div class="input-group col-sm-4">
+     <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+      <input type="email" name="email" class="form-control" placeholder="Email" maxlength="30" value="<?php echo $email ?>" />
+     </div>
+      <p class="text-danger"><?php echo $emailError; ?></p>
+  </div>
+  <div class="form-group">
+    <div class="input-group col-sm-4">
+      <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+      <input type="password" name="userPass" class="form-control" placeholder="Password" maxlength="8" />
+    </div>
+      <p class="text-danger"><?php echo $passError; ?></p>
+  </div>
+  <br>
+  <div class="form-group">
+    <a type="button" href="tbl_users.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
+  CANCEL </a>
+    <button type="submit" class="btn btn-success" name="btn-signup">Save and Close</button>
+  </div>
+</form>
+
+</div><!-- /.container-fluid -->
+        </div><!-- /#page-wrapper -->
+
+    </div><!-- /#wrapper -->
 </div>
-<?php include 'tbl_users.php'; ?>
+
+    <footer class="footer">
+        <div class="container-fluid">
+            <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
+        </div>
+    </footer>
+
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
