@@ -178,6 +178,20 @@
                 <!-- /.row -->              
 
 <!-- Main Form -->
+<script type="text/javascript">
+//<![CDATA[
+function check(Obj, Objmax) {
+var maxnum = Obj.value.length;
+  if(Obj.value.length >= Objmax) {
+    alert("Character limit reached.");
+    Obj.value = Obj.value.substring(0, 20);
+  }
+}
+//]]>
+
+</script>
+
+
 <br>
 <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
 
@@ -205,25 +219,10 @@
   </div>
   </div>
 
-
-<textarea id="ta" rows="6" style="width:340px;" onKeyDown="textCounter(this.form.ta,this.form.countDisplay);" onKeyUp="textCounter(this.form.ta,this.form.countDisplay);"></textarea>
-<br>
-<input readonly type="text" name="countDisplay" size="3" maxlength="3" value="20"> Characters Remaining<br>
-<br> </input>
-
-<input id="go" rows="6" style="width:340px;" onKeyDown="textCounter(this.form.go,this.form.countDisplay1);" onKeyUp="textCounter(this.form.go,this.form.countDisplay1);"></input>
-<br>
-<input readonly type="text" name="countDisplay1" size="3" maxlength="3" value="20"> Characters Remaining </input> <br>
-<br>
-
-
-
-  
-
-  <div class="form-group row"> 
+<div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
+        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" maxlength="20" onkeyup="check(this, '20');" autofocus />
         <small class="form-text text-muted">Title of your document.</small>
       </div>
   </div>
@@ -231,7 +230,7 @@
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-    <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>
+    <textarea class="form-control" name="description" id="exampleTextarea" rows="3" maxlength="20" onkeyup="check(this, '20');" ><?php echo $description; ?></textarea>
     <small class="form-text text-muted">Description of your document.</small>
     </div>
   </div>
@@ -338,16 +337,6 @@
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
 
-<script> 
-var maxAmount = 20;
-function textCounter(textField, showCountField) {
-    if (textField.value.length > maxAmount) {
-        textField.value = textField.value.substring(0, maxAmount);
-  } else { 
-        showCountField.value = maxAmount - textField.value.length;
-  }
-}
-</script>
 </body>
 </html>
 <?php ob_end_flush(); ?>

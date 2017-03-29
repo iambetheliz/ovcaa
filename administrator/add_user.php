@@ -42,7 +42,9 @@
   else if (!preg_match("/^[a-zA-Z ]+$/",$userName)) {
    $error = true;
    $userNameError = "Name must contain alphabets and space.";
-  }else {
+  }
+ 
+  else {
    // check username exist or not
    $query = "SELECT userName FROM members WHERE userName='$userName'";
    $result = mysql_query($query);
@@ -193,6 +195,20 @@
 <br>
 <form name="my_form" method="post" action="add_user.php" autocomplete="off">
 
+<script type="text/javascript">
+//<![CDATA[
+function check(Obj, Objmax) {
+var maxnum = Obj.value.length;
+  if(Obj.value.length >= Objmax) {
+    alert("Character limit reached.");
+    Obj.value = Obj.value.substring(0, 20);
+  }
+}
+//]]>
+
+</script>
+
+
 <?php
   if ( isset($successMSG) ) {
 ?>
@@ -209,48 +225,24 @@
   }
 ?>
 
-<script type="text/javascript">
-//<![CDATA[
-function check(Obj, Objmax) {
-var maxnum = Obj.value.length;
-  if(Obj.value.length >= Objmax) {
-    alert("Character limit reached.");
-    Obj.value = Obj.value.substring(0, 20);
-  }
-}
-//]]>
-
-var maxAmount = 20;
-function textCounter(textField, showCountField) {
-    if (textField.value.length > maxAmount) {
-        textField.value = textField.value.substring(0, maxAmount);
-  } else { 
-        showCountField.value = maxAmount - textField.value.length;
-  }
-}
-</script>
-
  <div class="form-group">
     <div class="input-group col-sm-4">
       <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-      <input id="go" type="text" name="userName" class="form-control" placeholder="Username" maxlength="20" value="<?php echo $userName ?>" onkeyup="check(this, '20');" onKeyDown="textCounter(this.form.go,this.form.countDisplay1);" onKeyUp="textCounter(this.form.go,this.form.countDisplay1);" autofocus />
-<input readonly type="text" name="countDisplay1" size="3" maxlength="3" value="20"> Characters Remaining </input> <br>
-<br>
+      <input type="text" name="userName" class="form-control" placeholder="Username" maxlength="20" value="<?php echo $userName ?>" onkeyup="check(this, '20');" autofocus />
     </div>
-      <p class="text-danger"><?php echo $userNameError; ?></p>   
-
-  </div>
+      <p class="text-danger"><?php echo $userNameError; ?></p>
+        </div>
   <div class="form-group">
     <div class="input-group col-sm-4">
      <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-      <input type="email" name="email" class="form-control" placeholder="Email" maxlength="30" value="<?php echo $email ?>" />
+      <input type="email" name="email" class="form-control" placeholder="Email" maxlength="20" value="<?php echo $email ?>" onkeyup="check(this, '20');" />
      </div>
       <p class="text-danger"><?php echo $emailError; ?></p>
   </div>
   <div class="form-group">
     <div class="input-group col-sm-4">
       <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-      <input type="password" name="userPass" class="form-control" placeholder="Password" maxlength="8" />
+      <input type="password" name="userPass" class="form-control" placeholder="Password" maxlength="10" onkeyup="check(this, '10');"/>
     </div>
       <p class="text-danger"><?php echo $passError; ?></p>
   </div>

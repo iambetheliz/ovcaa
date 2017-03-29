@@ -64,8 +64,7 @@ $per_page = 5; // Set how many records do you want to display per page.
 <div class="table-responsive">
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
-    <tr>
-        <th><input type="checkbox" name="select_all" id="select_all" value=""/></th>
+    <tr>       
         <th>Edit</th>
         <th>Delete</th>
         <th>Title</th>
@@ -87,8 +86,7 @@ if (mysqli_num_rows($results) != 0){
     while ($row = mysqli_fetch_array($results)){
 ?>
     <tbody>
-        <tr>
-            <td align="center"><input type="checkbox" name="checked_id[]" class="checkbox" value="<?php echo $row['id']; ?>"/></td>
+        <tr>            
             <td>
             <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span></a>
             </td>

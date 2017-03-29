@@ -88,9 +88,6 @@ $per_page = 5; // Set how many records do you want to display per page.
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
-        <th><center><input class="second" id="selectall" name="check" type="checkbox">
-<label class="label2" for="selectall"></label>
-</center></th>
         <th><center>Action</center></th>
         <th>Username</th>
         <th>First Name</th>
@@ -107,7 +104,7 @@ if (mysqli_num_rows($results) != 0) {
 ?>  
     <tbody>
         <tr>
-            <td><center><input class="second" id="Item A" name="option2" type="checkbox"></center></td>
+            
             <td><center>
             <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['userId']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
             </td>
