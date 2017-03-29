@@ -267,7 +267,6 @@ $error = false;
                   }
         ?>
         <script src="../assets/js/jquery.min.js"></script>
-        <select name="category_id" class="form-control" id="cat_name">
         <?php
             if(isset($_POST['add_new_cat']) )
               {
@@ -278,15 +277,16 @@ $error = false;
 
                   if($stmt->execute())
                       {
-                        header('refresh:3;tbl_materials.php');
+                        $successMSG = "New category added!";
                       }
                   else
                       {
                         $errMSG = "Error!";
-                        header('refresh:3;tbl_materials.php');
                       }
               }
-        ?>  <?php while($row1 = mysqli_fetch_array($result1)):;?>
+        ?>  
+        <select name="category_id" class="form-control" id="cat_name">
+        <?php while($row1 = mysqli_fetch_array($result1)):;?>
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
             <option value="new">Add new category</option>
@@ -300,7 +300,7 @@ $error = false;
                 <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
         </div>
         <div class="form-inline">
-            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
+            <button type="submit" name="add_new_cat" class="btn btn-primary" formaction="upload-document.php">ADD</button>
         <script type="text/javascript">
         $('#cat_name').on('change',function(){
             if( $(this).val()==="new"){
@@ -318,12 +318,13 @@ $error = false;
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea> 
 
+<br>
 <div class="form-group row">
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
     <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
   CANCEL </a>
-   <button type="submit" name="btn-upload" class="btn btn-success"><span class="glyphicon glyphicon-upload"></span>
+   <button type="submit" name="btn-upload" class="btn btn-success" formaction="upload-document.php"><span class="glyphicon glyphicon-upload"></span>
   &nbsp;UPLOAD</button> (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.
   </div>
   </div>
