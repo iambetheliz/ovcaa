@@ -221,11 +221,16 @@ var maxnum = Obj.value.length;
 //]]>
 </script>
 
-  <div class="form-group">
+ <div class="form-group">
     <div class="input-group col-sm-4">
       <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-      <input type="text" name="userName" class="form-control" placeholder="Username" maxlength="15" value="<?php echo $userName ?>" onkeyup="check(this, '15');" autofocus />
+      <input id="go" type="text" name="userName" class="form-control" placeholder="Username" maxlength="15" value="<?php echo $userName ?>" onkeyup="check(this, '15');" onKeyDown="textCounter(this.form.go,this.form.countDisplay1);" onKeyUp="textCounter(this.form.go,this.form.countDisplay1);" autofocus />
+<input readonly type="text" name="countDisplay1" size="3" maxlength="3" value="20"> Characters Remaining </input> <br>
+<br>
     </div>
+
+
+
       <p class="text-danger"><?php echo $userNameError; ?></p>
   </div>
   <div class="form-group">

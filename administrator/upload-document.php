@@ -13,12 +13,9 @@
     $userRow=mysql_fetch_array($res);
 ?>
 <?php
-
  error_reporting( ~E_NOTICE ); // avoid notice
  require_once 'Material.php';
  
-$error = false;
-
  if(isset($_POST['btn-upload']))
  {
     $title = $_POST['title'];
@@ -30,7 +27,6 @@ $error = false;
     $file = $_FILES['file']['name'];
     $file_loc = $_FILES['file']['tmp_name'];
     $file_size = $_FILES['file']['size'];
-
     // new file size in KB
     $new_size = $file_size/1024;  
  
@@ -38,35 +34,30 @@ $error = false;
     $new_file_name = strtolower($file);
  
     $final_file=str_replace(' ','-',$new_file_name);
-
+    
   if(empty($title)){
-    $error = true;
-    $errMSG = "Please Enter Title.";
+   $errMSG = "Please Enter Title.";
   }
   else if(empty($description)){
-    $error = true;
    $errMSG = "Please Enter Description.";
   }
   else if(empty($final_file)){
-    $error = true;
    $errMSG = "Please Select FIle.";
   }
   else
   {
    $folder = 'uploads/'; // upload directory 
-
    $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); // get image extension
-
    // valid image extensions
    $valid_extensions = array('exe', 'zip', 'rar'); // valid extensions
-  
+     
    // allow valid image file formats
    if(!in_array($fileExt, $valid_extensions)){  
    // Check file size '5MB'
     if($new_size < 5000000)    {     
       $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
       $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-          move_uploaded_file($file_loc,$folder.$final_file); 
+     move_uploaded_file($file_loc,$folder.$final_file);
     }
     else{
      $errMSG = "Sorry, your file is too large.";
@@ -192,19 +183,15 @@ $error = false;
 
 <?php
   if(isset($errMSG)){
-    ?>
-    <div class="form-group row">
-        <div class="alert alert-danger col-sm-6">
-              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?></strong>
-        </div>
-    </div>
-        <?php
+      ?>
+            <div class="alert alert-danger">
+              <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
+            </div><br>
+            <?php
   }
-?>
-<?php
-  if(isset($successMSG)){
+  else if(isset($successMSG)){
     ?>
-        <div class="alert alert-success col-sm-4">
+        <div class="alert alert-success">
               <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
         </div><br>
         <?php
@@ -215,23 +202,37 @@ $error = false;
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
     <input type="file" name="file" class="form-control-file" />
-    <p class="text-danger"><?php echo $FileError; ?></p>
   </div>
   </div>
+
+
+<textarea id="ta" rows="6" style="width:340px;" onKeyDown="textCounter(this.form.ta,this.form.countDisplay);" onKeyUp="textCounter(this.form.ta,this.form.countDisplay);"></textarea>
+<br>
+<input readonly type="text" name="countDisplay" size="3" maxlength="3" value="20"> Characters Remaining<br>
+<br> </input>
+
+<input id="go" rows="6" style="width:340px;" onKeyDown="textCounter(this.form.go,this.form.countDisplay1);" onKeyUp="textCounter(this.form.go,this.form.countDisplay1);"></input>
+<br>
+<input readonly type="text" name="countDisplay1" size="3" maxlength="3" value="20"> Characters Remaining </input> <br>
+<br>
+
+
+
+  
 
   <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
         <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
-        <p class="text-danger"><?php echo $TitleError; ?></p>
+        <small class="form-text text-muted">Title of your document.</small>
       </div>
   </div>
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-    <textarea class="form-control" type="textarea" name="description" maxlength="140" rows="3"></textarea>
-    <p class="text-danger"><?php echo $DescError; ?></p>
+    <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>
+    <small class="form-text text-muted">Description of your document.</small>
     </div>
   </div>
 
@@ -244,21 +245,15 @@ $error = false;
             $username = "root";
             $password = "";
             $databaseName = "ovcaa";
-
             // connect to mysql database
             $connect = mysqli_connect($hostname, $username, $password, $databaseName);
-
             // mysql select query
             $query = "SELECT * FROM `category` ORDER BY category_id";
-
             // for method 1
             $result1 = mysqli_query($connect, $query);
-
             // for method 2
             $result2 = mysqli_query($connect, $query);
-
             $options = "";
-
             while($row2 = mysqli_fetch_array($result2))
                   {
                       $options = $options."<option>$row2[1]</option>";
@@ -270,10 +265,8 @@ $error = false;
             if(isset($_POST['add_new_cat']) )
               {
                   $cat_name = $_POST['cat_name'];
-
                   $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
                   $stmt->bindParam(':cat_name',$cat_name);
-
                   if($stmt->execute())
                       {
                         header('refresh:3;tbl_materials.php');
@@ -345,6 +338,16 @@ $error = false;
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
 
+<script> 
+var maxAmount = 20;
+function textCounter(textField, showCountField) {
+    if (textField.value.length > maxAmount) {
+        textField.value = textField.value.substring(0, maxAmount);
+  } else { 
+        showCountField.value = maxAmount - textField.value.length;
+  }
+}
+</script>
 </body>
 </html>
 <?php ob_end_flush(); ?>
