@@ -232,8 +232,8 @@ $error = false;
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-    <textarea class="form-control" type="textarea" name="description" maxlength="140" rows="3"></textarea>
-    <p class="text-danger"><?php echo $DescError; ?></p>
+        <textarea id="textarea" class="form-control" type="textarea" name="description" maxlength="100" rows="3"></textarea>
+        <p class="text-danger"><?php echo $DescError; ?></p>
     </div>
   </div>
 

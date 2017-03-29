@@ -224,7 +224,7 @@ var maxnum = Obj.value.length;
   <div class="form-group">
     <div class="input-group col-sm-4">
       <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-      <input type="text" name="userName" class="form-control" placeholder="Username" maxlength="15" value="<?php echo $userName ?>" onkeyup="check(this, '15');" autofocus />
+      <input type="text" id="userName" name="userName" class="form-control" placeholder="Username" maxlength="15" value="<?php echo $userName ?>" onkeyup="check(this, '15');" autofocus />
     </div>
       <p class="text-danger"><?php echo $userNameError; ?></p>
   </div>
