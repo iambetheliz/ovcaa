@@ -301,7 +301,7 @@ $error = false;
         </div>
         <div class="form-inline">
             <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
-      <script type="text/javascript">
+        <script type="text/javascript">
         $('#cat_name').on('change',function(){
             if( $(this).val()==="new"){
               $("#newCat").show()
@@ -310,8 +310,8 @@ $error = false;
               $("#newCat").hide()
             }
         });
-      </script>
-    </div>
+        </script>
+      </div>
   </div>
 
  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
