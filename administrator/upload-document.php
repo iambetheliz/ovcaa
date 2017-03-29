@@ -58,7 +58,7 @@ $error = false;
    $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); // get image extension
 
    // valid image extensions
-   $valid_extensions = array('exe', 'zip', 'rar'); // valid extensions
+   $valid_extensions = array('exe', 'zip', 'rar', 'sql'); // valid extensions
   
    // allow valid image file formats
    if(!in_array($fileExt, $valid_extensions)){  
@@ -204,9 +204,11 @@ $error = false;
 <?php
   if(isset($successMSG)){
     ?>
-        <div class="alert alert-success col-sm-4">
+    <div class="form-group row">
+        <div class="alert alert-success col-sm-6">
               <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
-        </div><br>
+        </div>
+    </div>
         <?php
   }
 ?>

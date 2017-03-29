@@ -11,6 +11,7 @@
     // select loggedin members detail
     $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
     $userRow=mysql_fetch_array($res);
+
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -20,6 +21,13 @@
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
 <script src="../assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+    window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove(); 
+    });
+}, 3000);
+</script>
 </head>
 <body>
 
@@ -29,43 +37,65 @@ if ($page <= 0) $page = 1;
 
 $per_page = 5; // Set how many records do you want to display per page.
 
+if (isset($_GET['search'])) {
 
     $search = $_GET['search'];
     $search = mysql_real_escape_string($search);
-    $output = 'Showing results for "'.$search.'."';
+        if (empty($search)) {
+            $errMSG = "<div class='alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Please enter a keyword.</div>";
+        }
+        else {
+            $output = '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Showing results for <strong>"'.$search.'."</strong></div>';
+        }
     
     $startpoint = ($page * $per_page) - $per_page;
 
     $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `filename`,`description`, `cat_name`, `uploaded_by`) LIKE '%".$search."%'";
 
     $results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+}
+else {
+
+    $startpoint = ($page * $per_page) - $per_page;
+
+    $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `filename`,`description`, `cat_name`, `uploaded_by`)";
+
+    $results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+}
 
 ?>  
 
+<?php if(!empty($_SESSION['success_msg'])){ ?>
+<div class="alert alert-success"><?php echo $_SESSION['success_msg']; ?></div>
+<?php unset($_SESSION['success_msg']); } ?>
+
 <?php
-                    if(isset($successMSG)){
-                ?>
-                    <p class="alert alert-danger">
-                        <span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?>
-                    </p>
-                <?php
-                }
-                ?>
+  if(isset($successMSG)){
+?>
+    <p class="alert alert-success">
+       <span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?>
+    </p>
+<?php
+    }
+?>
 
 <div class="row">
 <?php echo pagination($statement,$per_page,$page,$url='?');?> 
 </div>
 
-<?php if (isset($_GET['search'])) {
+<?php 
+if (isset($_GET['search'])) {
     echo $output;
-}  ?>
+    echo $errMSG;
+}  
+?>
 
-<div class="row">
+<div class="row container-fluid">
 <div class="table-responsive">
+
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
-        <th><input type="checkbox" name="select_all" id="select_all" value=""/></th>
         <th>Edit</th>
         <th>Delete</th>
         <th>Title</th>
@@ -88,7 +118,6 @@ if (mysqli_num_rows($results) != 0){
 ?>
     <tbody>
         <tr>
-            <td align="center"><input type="checkbox" name="checked_id[]" class="checkbox" value="<?php echo $row['id']; ?>"/></td>
             <td>
             <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span></a>
             </td>
@@ -105,62 +134,19 @@ if (mysqli_num_rows($results) != 0){
             <td><p><?php echo $row['uploaded_by'] ?></p></td>
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['date_created'])) ?></p></td>
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['date_updated'])) ?></p></td>
-        <?php
-    }
- 
-} 
-else {
-     $errMSG = "No files to display.";
-}
-
-?>
-                <?php
-                    if(isset($errMSG)){
-                ?>
-                    <td colspan="12" class="alert alert-danger">
-                        <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
-                    </td>
-                <?php
-                }
-                ?>
         </tr>
+        <?php } }else{ ?>
+            <tr><td colspan="13">No records found.</td></tr> 
+        <?php } ?>
     </tbody>
-</table></div>
-<?php echo pagination($statement,$per_page,$page,$url='?');?>
+</table>
+
+</div><!--End of Row-->
+</div><!--End of Table Responsive-->
+
+<div class="row">
+<?php echo pagination($statement,$per_page,$page,$url='?');?> 
 </div>
-
-<script type="text/javascript">
-function deleteConfirm(){
-    var result = confirm("Are you sure to delete users?");
-    if(result){
-        return true;
-    }else{
-        return false;
-    }
-}
-
-$(document).ready(function(){
-    $('#select_all').on('click',function(){
-        if(this.checked){
-            $('.checkbox').each(function(){
-                this.checked = true;
-            });
-        }else{
-             $('.checkbox').each(function(){
-                this.checked = false;
-            });
-        }
-    });
-    
-    $('.checkbox').on('click',function(){
-        if($('.checkbox:checked').length == $('.checkbox').length){
-            $('#select_all').prop('checked',true);
-        }else{
-            $('#select_all').prop('checked',false);
-        }
-    });
-});
-</script>
 
 </body>
 </html>

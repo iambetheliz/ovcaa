@@ -84,7 +84,7 @@ $per_page = 5; // Set how many records do you want to display per page.
 }  ?>
 
 <div class="row">
-<div class="table-responsive">
+<div class="table-responsive container-fluid">
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>

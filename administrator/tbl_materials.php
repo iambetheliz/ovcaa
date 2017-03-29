@@ -32,15 +32,6 @@
   header("Location: tbl_materials.php");
  }
 
- if(isset($_POST['bulk_delete_submit'])){
-        $idArr = $_POST['checked_id'];
-        foreach($idArr as $id){
-            mysqli_query($conn,"DELETE FROM material WHERE id=".$id);
-        }
-        $successMSG = 'Users have been deleted successfully.';
-        header("Location:index.php");
-    }
-
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -139,7 +130,6 @@
                         <a href="upload-document.php" class="btn btn-success" type="button" role="button" >
                             <span class="glyphicon glyphicon-plus"></span> Upload New File
                         </a>   
-                        <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete"/> 
                     </div>
                     <div class="col-sm-1" right" style="right: 30px;"">
                         <div class="input-group-btn">
@@ -185,8 +175,8 @@
                             ?>
                         </div>
                     </div>
-                    <div class="col-sm-4 right">
                 <form action="" method="get">
+                    <div class="col-sm-4 right">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Search for terms..">
                             <span class="input-group-btn"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button></span>
@@ -208,7 +198,7 @@
 
     </div><!-- /#wrapper -->
 </div><!-- /#wrap -->
-<br>
+
     <footer class="footer">
         <div class="container-fluid">
             <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
@@ -219,6 +209,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
-</body>
 
+</body>
 </html>

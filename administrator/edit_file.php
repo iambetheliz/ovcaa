@@ -93,12 +93,8 @@
       $stmt->bindParam(':id',$id);
         
       if($stmt->execute()){
-        ?>
-                <script>
-        alert('Successfully Updated ...');
-        window.location.href='tbl_materials.php';
-        </script>
-                <?php
+        $successMSG = "Successfully updated...";
+        header("refresh:3;tbl_materials.php");
       }
       else{
         $errMSG = "Sorry Data Could Not Updated !";
@@ -197,17 +193,19 @@
 
 <?php
   if(isset($errMSG)){
-      ?>
-            <div class="alert alert-danger">
-              <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
+      ?><div class="form-group row">
+            <div class="alert alert-danger col-sm-6" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $errMSG; ?>
             </div>
+        </div>
             <?php
   }
   else if(isset($successMSG)){
-    ?>
-        <div class="alert alert-success">
-              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
+    ?><div class="form-group row">
+        <div class="alert alert-success col-sm-6" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <?php echo $successMSG; ?>
         </div>
+      </div>
         <?php
   }
   ?>   
