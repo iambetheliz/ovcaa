@@ -215,23 +215,30 @@ function check(Obj, Objmax) {
 var maxnum = Obj.value.length;
   if(Obj.value.length >= Objmax) {
     alert("Character limit reached.");
-    Obj.value = Obj.value.substring(0, 15);
+    Obj.value = Obj.value.substring(0, 20);
   }
 }
 //]]>
+
+var maxAmount = 20;
+function textCounter(textField, showCountField) {
+    if (textField.value.length > maxAmount) {
+        textField.value = textField.value.substring(0, maxAmount);
+  } else { 
+        showCountField.value = maxAmount - textField.value.length;
+  }
+}
 </script>
 
  <div class="form-group">
     <div class="input-group col-sm-4">
       <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-      <input id="go" type="text" name="userName" class="form-control" placeholder="Username" maxlength="15" value="<?php echo $userName ?>" onkeyup="check(this, '15');" onKeyDown="textCounter(this.form.go,this.form.countDisplay1);" onKeyUp="textCounter(this.form.go,this.form.countDisplay1);" autofocus />
+      <input id="go" type="text" name="userName" class="form-control" placeholder="Username" maxlength="20" value="<?php echo $userName ?>" onkeyup="check(this, '20');" onKeyDown="textCounter(this.form.go,this.form.countDisplay1);" onKeyUp="textCounter(this.form.go,this.form.countDisplay1);" autofocus />
 <input readonly type="text" name="countDisplay1" size="3" maxlength="3" value="20"> Characters Remaining </input> <br>
 <br>
     </div>
+      <p class="text-danger"><?php echo $userNameError; ?></p>   
 
-
-
-      <p class="text-danger"><?php echo $userNameError; ?></p>
   </div>
   <div class="form-group">
     <div class="input-group col-sm-4">
