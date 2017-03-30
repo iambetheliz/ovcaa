@@ -71,6 +71,9 @@
                             <li>
                                 <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
                             </li>
+                            <li>
+                                <a href="tbl_category.php"><span class="glyphicon glyphicon-tag"></span>&nbsp;&nbsp; Category</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

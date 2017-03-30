@@ -314,7 +314,7 @@ var maxnum = Obj.value.length;
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea> 
 
-  <div class="form-group row">
+<div class="form-group row">
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
     <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
