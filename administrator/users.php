@@ -75,6 +75,7 @@ $per_page = 5; // Set how many records do you want to display per page.
 
 ?>  
 
+<div class="table-responsive container-fluid">
 <div class="row">
 <?php echo pagination($statement,$per_page,$page,$url='?');?> 
 </div>
@@ -84,7 +85,6 @@ $per_page = 5; // Set how many records do you want to display per page.
 }  ?>
 
 <div class="row">
-<div class="table-responsive container-fluid">
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
@@ -136,11 +136,14 @@ else {
                 ?>
         </tr>
     </tbody>
-</table></div>
-<?php 
-echo pagination($statement,$per_page,$page,$url='?');
-?>
+</table>
 </div>
+
+<div class="row">
+<?php echo pagination($statement,$per_page,$page,$url='?');?> 
+</div>
+
+</div> <!-- end of container-fluid -->
 </body>
 </html>
 

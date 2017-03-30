@@ -34,14 +34,11 @@
   // basic username validation
   if (empty($userName)) {
    $error = true;
-   $userNameError = "Please enter a username.";
+   $userNameError .= "<span class='glyphicon glyphicon-exclamation-sign'></span> ";
+   $userNameError .= "Please enter a username.";
   } else if (strlen($userName) < 5) {
    $error = true;
-   $userNameError = "Username must have atleat 5 characters.";
-  } 
-  else if (!preg_match("/^[a-zA-Z ]+$/",$userName)) {
-   $error = true;
-   $userNameError = "Name must contain alphabets and space.";
+   $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Username must have atleat 5 characters.";
   }else {
    // check username exist or not
    $query = "SELECT userName FROM members WHERE userName='$userName'";
@@ -49,18 +46,18 @@
    $count = mysql_num_rows($result);
    if($count!=0){
     $error = true;
-    $userNameError = "Provided username is already in use.";
+    $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Provided username is already in use.";
    }
   }
   
   //basic email validation
   if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
    $error = true;
-   $emailError = "Please enter a valid email address.";
+   $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter a valid email address.";
   } 
   else if (strlen($userEmail) > 30) {
    $error = true;
-   $userNameError = "That was a very long email address! Please try a shorter one";
+   $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> That was a very long email address! Please try a shorter one";
   }
   else {
    // check email exist or not
@@ -69,17 +66,17 @@
    $count = mysql_num_rows($result);
    if($count!=0){
     $error = true;
-    $emailError = "Provided Email is already in use.";
+    $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Provided email is already in use.";
    }
   }
 
   // password validation
   if (empty($userPass)){
    $error = true;
-   $passError = "Please enter password.";
+   $passError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter password.";
   } else if(strlen($userPass) < 8) {
    $error = true;
-   $passError = "Password must have atleast 8 characters.";
+   $passError = "<span class='glyphicon glyphicon-info-sign'></span> Password must have atleast 8 characters.";
   }
   
   // password encrypt using SHA256();
@@ -118,6 +115,33 @@
 <title>Users: New - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+  .input-group-addon.primary {
+    color: rgb(255, 255, 255);
+    background-color: rgb(50, 118, 177);
+    border-color: rgb(40, 94, 142);
+}
+.input-group-addon.success {
+    color: rgb(255, 255, 255);
+    background-color: rgb(92, 184, 92);
+    border-color: rgb(76, 174, 76);
+}
+.input-group-addon.info {
+    color: rgb(255, 255, 255);
+    background-color: rgb(57, 179, 215);
+    border-color: rgb(38, 154, 188);
+}
+.input-group-addon.warning {
+    color: rgb(255, 255, 255);
+    background-color: rgb(240, 173, 78);
+    border-color: rgb(238, 162, 54);
+}
+.input-group-addon.danger {
+    color: rgb(255, 255, 255);
+    background-color: rgb(217, 83, 79);
+    border-color: rgb(212, 63, 58);
+}
+</style>
 </head>
 
 <body>
@@ -191,7 +215,8 @@
 
 <!-- Main Form -->
 <br>
-<form name="my_form" method="post" action="add_user.php" autocomplete="off">
+<div class="col-sm-4">
+<form id="regValidate" method="post" action="add_user.php" autocomplete="off">
 
 <?php
   if ( isset($successMSG) ) {
@@ -208,47 +233,41 @@
     echo $errMSG; 
   }
 ?>
-
-<script type="text/javascript">
-//<![CDATA[
-function check(Obj, Objmax) {
-var maxnum = Obj.value.length;
-  if(Obj.value.length >= Objmax) {
-    alert("Character limit reached.");
-    Obj.value = Obj.value.substring(0, 15);
-  }
-}
-//]]>
-</script>
-
-  <div class="form-group">
-    <div class="input-group col-sm-4">
-      <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-      <input type="text" id="userName" name="userName" class="form-control" placeholder="Username" maxlength="15" value="<?php echo $userName ?>" onkeyup="check(this, '15');" autofocus />
-    </div>
-      <p class="text-danger"><?php echo $userNameError; ?></p>
+  
+<div class="form-group">
+  <label>Username</label>
+  <div class="input-group" data-validate="userName">
+      <input type="text" id="userName" name="userName" class="form-control" maxlength="15" value="<?php echo $userName ?>" autofocus />
+      <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
   </div>
+      <p class="text-danger"><?php echo $userNameError; ?></p>
+</div>
+
   <div class="form-group">
-    <div class="input-group col-sm-4">
-     <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-      <input type="email" name="email" class="form-control" placeholder="Email" maxlength="30" value="<?php echo $email ?>" />
+  <label>Email</label>
+  <div class="input-group" data-validate="email">
+      <input type="text" id="email" name="email" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $email ?>" />
+      <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
      </div>
       <p class="text-danger"><?php echo $emailError; ?></p>
   </div>
+
   <div class="form-group">
-    <div class="input-group col-sm-4">
-      <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-      <input type="password" name="userPass" class="form-control" placeholder="Password" maxlength="8" />
-    </div>
-      <p class="text-danger"><?php echo $passError; ?></p>
-  </div>
+  <label>Password</label> (atleast 8 characters)
+    <div class="input-group" data-validate="userPass">
+      <input type="password" class="form-control" name="userPass" id="userPass" autocomplete="off" /><span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
+    </div>      
+    <p class="text-danger"><?php echo $passError; ?></p>
+</div>
+
   <br>
   <div class="form-group">
     <a type="button" href="tbl_users.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
-  CANCEL </a>
-    <button type="submit" class="btn btn-success" name="btn-signup">Save and Close</button>
+  CANCEL </a>&nbsp;
+    <button type="submit" class="btn btn-success send" name="btn-signup" data-loading-text="Saving info"><span class='glyphicon glyphicon-thumbs-up'></span> Save </button>
   </div>
 </form>
+</div>
 
 </div><!-- /.container-fluid -->
         </div><!-- /#page-wrapper -->

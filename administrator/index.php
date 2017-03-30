@@ -48,7 +48,7 @@
             
             if( $count == 1 && $row['userPass']==$password ) {
                 $_SESSION['user'] = $row['userId'];
-                $successMSG = "<h3 align='center'>Signing in ...</h3>";
+                $successMSG = "<h3 align='center'>Signing in</h3>";
                 header("refresh:3;dashboard.php");
             } else {
                 $errMSG = "Incorrect Credentials, Try again...";
@@ -75,8 +75,7 @@
     display: block;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
-    border-radius: 50%;
-}
+    border-radius: 50%; }
 </style>
 <body>
 
@@ -94,7 +93,7 @@
                                 <div class="row">
                                     <div class="center-block"><br>
                                         <img class="profile-img"
-                                            src="../images/logo.png" alt=""><br>
+                                            src="../images/logo.png" alt="">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -114,33 +113,36 @@
                                             if ( isset($successMSG) ) {
                                         ?>
                                         <div class="form-group">
-                                            <div class="alert alert-success">
-                                                    <?php echo $successMSG; ?>
+                                            <div class="alert alert-default">
+                                                    <?php echo $successMSG; ?><br>
                                                     <div class="center-block">
-                                                        <center><img src="../images/ajax_loader_blue_32.gif" class="icon" /></center><br>
-                                                    </div>
+                                                        <center><img src="../images/ajax_loader_blue_32.gif" class="icon" /></center>
+                                                    </div><br><br>
                                             </div>
                                         </div>
                                         <?php
-                                            }
-                                        ?>
-                                        <div class="form-group">
+                                            } else { ?>
+            <br>     
+            <div class="form-group">
                 <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                 <input type="text" name="userName" class="form-control" placeholder="Username" value="<?php echo $userName; ?>" maxlength="40" autofocus />
                 </div>
                 <span class="text-danger"><?php echo $userNameError; ?></span>
             </div>
-                                        <div class="form-group">
+            <div class="form-group">
                 <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
                 <input type="password" name="pass" class="form-control" placeholder="Password" maxlength="15" />
                 </div>
                 <span class="text-danger"><?php echo $passError; ?></span>
             </div>
-                                        <div class="form-group"><br>
+            <div class="form-group"><br>
                 <button type="submit" class="btn btn-lg btn-block btn-primary" name="btn-login">Sign In</button><br>
             </div>
+                                        <?php
+                                            }
+                                        ?>
                                     </div>
                                 </div>
                             </fieldset>
@@ -159,7 +161,7 @@
 </footer>
 
 <!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="../assets/js/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
 <script src="../assets/js/bootstrap.js"></script>
