@@ -36,7 +36,11 @@
     $final_file=str_replace(' ','-',$new_file_name);
     
   if(empty($title)){
-   $errMSG = "Please Enter Title.";
+   $errMSG = "Please Enter Title.";   
+  }
+  else if (strlen($title) < 5) {
+   $error = true;
+   $userNameError = "Username must have atleat 5 characters.";
   }
   else if(empty($description)){
    $errMSG = "Please Enter Description.";
@@ -224,6 +228,8 @@ var maxnum = Obj.value.length;
       <div class="col-sm-4">
         <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" maxlength="20" onkeyup="check(this, '20');" autofocus />
         <small class="form-text text-muted">Title of your document.</small>
+        <p class="text-danger"><?php echo $userNameError; ?></p>
+
       </div>
   </div>
 

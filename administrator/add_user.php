@@ -32,6 +32,7 @@
   $userPass = htmlspecialchars($userPass);
   
   // basic username validation
+
   if (empty($userName)) {
    $error = true;
    $userNameError = "Please enter a username.";
@@ -54,6 +55,7 @@
     $userNameError = "Provided username is already in use.";
    }
   }
+
   
   //basic email validation
   if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
@@ -82,8 +84,8 @@
   } else if(strlen($userPass) < 8) {
    $error = true;
    $passError = "Password must have atleast 8 characters.";
-  }
-  
+  } 
+
   // password encrypt using SHA256();
   $userPass = hash('sha256', $userPass);
   
@@ -109,6 +111,7 @@
   
  }
 ?>
+
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -120,6 +123,9 @@
 <title>Users: New - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
 </head>
 
 <body>
@@ -191,23 +197,10 @@
                 </div>
                 <!-- /.row -->              
 
-<!-- Main Form -->
+<!-- Main Form --> 
 <br>
+
 <form name="my_form" method="post" action="add_user.php" autocomplete="off">
-
-<script type="text/javascript">
-//<![CDATA[
-function check(Obj, Objmax) {
-var maxnum = Obj.value.length;
-  if(Obj.value.length >= Objmax) {
-    alert("Character limit reached.");
-    Obj.value = Obj.value.substring(0, 20);
-  }
-}
-//]]>
-
-</script>
-
 
 <?php
   if ( isset($successMSG) ) {
@@ -232,6 +225,17 @@ var maxnum = Obj.value.length;
     </div>
       <p class="text-danger"><?php echo $userNameError; ?></p>
         </div>
+
+<script type="text/javascript">
+  function check(Obj, Objmax) {
+var maxnum = Obj.value.length;
+  if(Obj.value.length >= Objmax) {
+    alert("Character limit reached.");
+    Obj.value = Obj.value.substring(0, 20);
+  }
+}
+</script>
+
   <div class="form-group">
     <div class="input-group col-sm-4">
      <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
