@@ -66,7 +66,7 @@ $error = false;
     if($new_size < 5000000)    {     
       $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
       $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-          move_uploaded_file($file_loc,$folder.$final_file); 
+     move_uploaded_file($file_loc,$folder.$final_file);
     }
     else{
      $errMSG = "Sorry, your file is too large.";
