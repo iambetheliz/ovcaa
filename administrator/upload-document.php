@@ -181,6 +181,24 @@ $error = false;
                 <!-- /.row -->              
 
 <!-- Main Form -->
+ <?php
+            if(isset($_POST['add_new_cat']) )
+              {
+                  $cat_name = $_POST['cat_name'];
+                  $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
+                  $stmt->bindParam(':cat_name',$cat_name);
+                  if($stmt->execute())
+                      {
+                        header('refresh:1;upload-document.php');
+                      }
+                  else
+                      {
+                        $errMSG = "Error!";
+                        header('refresh:1;upload-document.php');
+                      }
+              }
+ ?>
+
 <br>
 <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
 
@@ -214,26 +232,10 @@ $error = false;
     <p class="text-danger"><?php echo $FileError; ?></p>
   </div>
   </div>
-
-  <div class="form-group row"> 
-    <label class="col-sm-2 col-form-label">Title: (Required)</label>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
-        <p class="text-danger"><?php echo $TitleError; ?></p>
-      </div>
-  </div>
-
-  <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Description: (Required)</label>
-    <div class="col-sm-4">
-        <textarea id="textarea" class="form-control" type="textarea" name="description" maxlength="100" rows="3"></textarea>
-        <p class="text-danger"><?php echo $DescError; ?></p>
-    </div>
-  </div>
-
+  
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Category: (Required)</label>
-    <div class="col-sm-4">
+     <div class="col-sm-4">
         <?php
             // php select option value from database
             $hostname = "localhost";
@@ -255,30 +257,52 @@ $error = false;
                   }
         ?>
         <script src="../assets/js/jquery.min.js"></script>
-        <?php
-            if(isset($_POST['add_new_cat']) )
-              {
-                  $cat_name = $_POST['cat_name'];
-                  $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
-                  $stmt->bindParam(':cat_name',$cat_name);
-                  if($stmt->execute())
-                      {
-                        $successMSG = "New category added!";
-                      }
-                  else
-                      {
-                        $errMSG = "Error!";
-                      }
-              }
-        ?>  
         <select name="category_id" class="form-control" id="cat_name">
-        <?php while($row1 = mysqli_fetch_array($result1)):;?>
+       
+         <?php while($row1 = mysqli_fetch_array($result1)):;?>
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
-      </select>
+            <option value="new">Add new category</option>
+        </select>
     </div>
   </div>
-  
+
+  <div class="form-group" id="newCat" style="display:none;">
+  <label class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4 form-group" id="cname">
+                <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
+        </div>
+        <div class="form-inline">
+            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
+      <script type="text/javascript">
+        $('#cat_name').on('change',function(){
+            if( $(this).val()==="new"){
+              $("#newCat").show()
+            }
+            else{
+              $("#newCat").hide()
+            }
+        });
+      </script>
+    </div>
+  </div>
+
+<div class="form-group row"> 
+    <label class="col-sm-2 col-form-label">Title: (Required)</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
+        <p class="text-danger"><?php echo $TitleError; ?></p>
+      </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Description: (Required)</label>
+    <div class="col-sm-4">
+        <textarea id="textarea" class="form-control" type="textarea" name="description" maxlength="100" rows="3"></textarea>
+        <p class="text-danger"><?php echo $DescError; ?></p>
+    </div>
+  </div>
+
  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea> 

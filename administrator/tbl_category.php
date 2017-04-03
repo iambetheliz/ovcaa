@@ -135,7 +135,7 @@
                 <div class="row">
                     <div class="col-sm-7">
 
- <?php  include 'refresh_addcat.php';   ?>
+<?php  include 'refresh_addcat.php';   ?>
 
 <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
 
@@ -212,9 +212,6 @@
   </div>                  
  </div>
  </form>  
-
-
-
 
   <div class="col-sm-1"  style="right: 30px;" hidden="">
                         <div class="input-group-btn" hidden="">
