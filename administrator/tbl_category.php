@@ -135,8 +135,7 @@
                 <div class="row">
                     <div class="col-sm-7">
 
-
-                    <br>
+ <?php  include 'refresh_addcat.php';   ?>
 
 <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
 
@@ -181,23 +180,10 @@
         ?>
         <script src="../assets/js/jquery.min.js"></script>
         <select name="category_id" class="form-control" id="cat_name">
-        <?php
-            if(isset($_POST['add_new_cat']) )
-              {
-                  $cat_name = $_POST['cat_name'];
-                  $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
-                  $stmt->bindParam(':cat_name',$cat_name);
-                  if($stmt->execute())
-                      {
-                        header('refresh:3;tbl_category.php');
-                      }
-                  else
-                      {
-                        $errMSG = "Error!";
-                        header('refresh:3;tbl_category.php');
-                      }
-              }
-        ?>  <?php while($row1 = mysqli_fetch_array($result1)):;?>
+       
+
+
+         <?php while($row1 = mysqli_fetch_array($result1)):;?>
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
             <option value="new">Add new category</option>
@@ -226,6 +212,8 @@
   </div>                  
  </div>
  </form>  
+
+
 
 
   <div class="col-sm-1"  style="right: 30px;" hidden="">

@@ -246,7 +246,7 @@ var maxnum = Obj.value.length;
   <div class="form-group">
     <div class="input-group col-sm-4">
       <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-      <input type="password" name="userPass" class="form-control" placeholder="Password" maxlength="10" onkeyup="check(this, '10');"/>
+      <input type="password" name="userPass" class="form-control" placeholder="Password" maxlength="15" onkeyup="check(this, '15');"/>
     </div>
       <p class="text-danger"><?php echo $passError; ?></p>
   </div>
