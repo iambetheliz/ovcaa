@@ -64,9 +64,9 @@ $per_page = 5; // Set how many records do you want to display per page.
 <div class="table-responsive">
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
-    <tr>       
-        <th>Action</th>
-        <th>Name</th>
+    <tr>               
+        <th>Delete</th>
+        <th>Category</th>
         
     </tr>
 </thead>
@@ -77,19 +77,18 @@ if (mysqli_num_rows($results) != 0){
     while ($row = mysqli_fetch_array($results)){
 ?>
     <tbody>
-        <tr>            
-            <td><center>
-            <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['category_id']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
+        <tr>       
+            <td class="delete_row">
+            <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['category_id']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span></a>
             </td>
-                      
-            <td><p><?php echo $row['cat_name'] ?></p></td>
-           
+            <td><?php echo $row['cat_name'] ?></td>
+            
         <?php
     }
  
 } 
 else {
-     $errMSG = "No files to display.";
+     $errMSG = "No Category to display.";
 }
 
 ?>
@@ -107,39 +106,5 @@ else {
 </table></div>
 <?php echo pagination($statement,$per_page,$page,$url='?');?>
 </div>
-
-<script type="text/javascript">
-function deleteConfirm(){
-    var result = confirm("Are you sure to delete users?");
-    if(result){
-        return true;
-    }else{
-        return false;
-    }
-}
-
-$(document).ready(function(){
-    $('#select_all').on('click',function(){
-        if(this.checked){
-            $('.checkbox').each(function(){
-                this.checked = true;
-            });
-        }else{
-             $('.checkbox').each(function(){
-                this.checked = false;
-            });
-        }
-    });
-    
-    $('.checkbox').on('click',function(){
-        if($('.checkbox:checked').length == $('.checkbox').length){
-            $('#select_all').prop('checked',true);
-        }else{
-            $('#select_all').prop('checked',false);
-        }
-    });
-});
-</script>
-
 </body>
 </html>

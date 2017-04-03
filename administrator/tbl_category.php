@@ -21,6 +21,7 @@
   $stmt_select = $DB_con->prepare('SELECT * FROM category WHERE category_id =:id');
   $stmt_select->execute(array(':id'=>$_GET['delete_id']));
   $fileRow=$stmt_select->fetch(PDO::FETCH_ASSOC);
+  unlink("../administrator/uploads/".$fileRow['filename']);
   
   // it will delete an actual record from db
   $stmt_delete = $DB_con->prepare('DELETE FROM category WHERE category_id =:id');
@@ -29,6 +30,16 @@
   
   header("Location: tbl_category.php");
  }
+
+ if(isset($_POST['bulk_delete_submit'])){
+        $idArr = $_POST['checked_id'];
+        foreach($idArr as $id){
+            mysqli_query($conn,"DELETE FROM category WHERE category_id=".$id);
+        }
+        $successMSG = 'Users have been deleted successfully.';
+        header("Location:tbl_category.php");
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -92,9 +103,6 @@
                             <li>
                                 <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
                             </li>
-                            <li>
-                                <a href="tbl_category.php"><span class="glyphicon glyphicon-tag"></span>&nbsp;&nbsp; Category</a>
-                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -126,25 +134,23 @@
                 <!-- Buttons -->
                 <div class="row">
                     <div class="col-sm-7">
-                        <a href="add_category.php" class="btn btn-success" type="button" role="button" >
-                            <span class="glyphicon glyphicon-plus"></span> Add New Category
-                        </a>   
-                        <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete"/> 
-                    </div>
-                    <div class="col-sm-1" right" style="right: 30px;"">
+  
+  <?php  include 'category1.php';  ?>
+
+ </div>
+
+
+  <div class="col-sm-1" right" style="right: 30px;"">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="tbl_category.php">Default</a></li>
-                                <li><a href="tbl_category.php?sorting='.$sort.'&field=title">Title</a></li>
+                                <li><a href="tbl_category.php">Default</a></li>                               
                                 <li><a href="tbl_category.php?sorting='.$sort.'&field=cat_name">Category</a></li>
-                                <li><a href="tbl_category.php?sorting='.$sort.'&field=uploaded_by">Uploader</a></li>
-                                <li><a href="tbl_category.php?sorting='.$sort.'&field=date_updated">Latest</a></li>
                             </ul>
                             <?php 
-                                $field='date_updated';
+                                $field='cat_name';
                                 $sort='DESC';
 
                                 if(isset($_GET['sorting']))
@@ -154,27 +160,16 @@
                                                 $sort='DESC';
                                             }
                                         else { $sort='ASC'; }
-                                    }
-                                if($_GET['field']=='title')
-                                    { 
-                                        $field = "title";  
-                                    }
+                                    }                               
                                 elseif($_GET['field']=='cat_name')
                                     {
                                         $field = "cat_name"; 
                                     }
-                                elseif($_GET['field']=='uploaded_by')
-                                    { 
-                                        $field="uploaded_by"; 
-                                    }
-                                elseif($_GET['field']=='date_updated')
-                                    { 
-                                        $field="date_updated"; 
-                                        $sort="DESC";
-                                    }
+                               
                             ?>
                         </div>
                     </div>
+                 
                     <div class="col-sm-4 right">
                 <form action="" method="get">
                         <div class="input-group">
@@ -188,7 +183,8 @@
                 <!-- Table and Pagination -->
                 <?php 
                     include '../includes/pagination.php';
-                    include 'category.php';
+                    include 'category.php';     
+                    include 'add_category.php';               
                 ?>
                 <!-- End of Table and Pagination -->
                 </form>
