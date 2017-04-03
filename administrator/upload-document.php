@@ -16,6 +16,7 @@
  error_reporting( ~E_NOTICE ); // avoid notice
  require_once 'Material.php';
  
+$error = false;
  if(isset($_POST['btn-upload']))
  {
     $title = $_POST['title'];
@@ -34,18 +35,16 @@
     $new_file_name = strtolower($file);
  
     $final_file=str_replace(' ','-',$new_file_name);
-    
   if(empty($title)){
-   $errMSG = "Please Enter Title.";   
-  }
-  else if (strlen($title) < 5) {
-   $error = true;
-   $userNameError = "Username must have atleat 5 characters.";
+    $error = true;
+    $errMSG = "Please Enter Title.";
   }
   else if(empty($description)){
+    $error = true;
    $errMSG = "Please Enter Description.";
   }
   else if(empty($final_file)){
+    $error = true;
    $errMSG = "Please Select FIle.";
   }
   else
@@ -53,8 +52,8 @@
    $folder = 'uploads/'; // upload directory 
    $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); // get image extension
    // valid image extensions
-   $valid_extensions = array('exe', 'zip', 'rar'); // valid extensions
-     
+   $valid_extensions = array('exe', 'zip', 'rar', 'sql'); // valid extensions
+  
    // allow valid image file formats
    if(!in_array($fileExt, $valid_extensions)){  
    // Check file size '5MB'
@@ -182,36 +181,28 @@
                 <!-- /.row -->              
 
 <!-- Main Form -->
-<script type="text/javascript">
-//<![CDATA[
-function check(Obj, Objmax) {
-var maxnum = Obj.value.length;
-  if(Obj.value.length >= Objmax) {
-    alert("Character limit reached.");
-    Obj.value = Obj.value.substring(0, 20);
-  }
-}
-//]]>
-
-</script>
-
-
 <br>
 <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
 
 <?php
   if(isset($errMSG)){
-      ?>
-            <div class="alert alert-danger">
-              <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
-            </div><br>
-            <?php
-  }
-  else if(isset($successMSG)){
     ?>
-        <div class="alert alert-success">
+    <div class="form-group row">
+        <div class="alert alert-danger col-sm-6">
+              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?></strong>
+        </div>
+    </div>
+        <?php
+  }
+?>
+<?php
+  if(isset($successMSG)){
+    ?>
+    <div class="form-group row">
+        <div class="alert alert-success col-sm-6">
               <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
-        </div><br>
+        </div>
+    </div>
         <?php
   }
 ?>
@@ -220,24 +211,23 @@ var maxnum = Obj.value.length;
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
     <input type="file" name="file" class="form-control-file" />
+    <p class="text-danger"><?php echo $FileError; ?></p>
   </div>
   </div>
 
-<div class="form-group row"> 
+  <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" maxlength="20" onkeyup="check(this, '20');" autofocus />
-        <small class="form-text text-muted">Title of your document.</small>
-        <p class="text-danger"><?php echo $userNameError; ?></p>
-
+        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
+        <p class="text-danger"><?php echo $TitleError; ?></p>
       </div>
   </div>
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-    <textarea class="form-control" name="description" id="exampleTextarea" rows="3" maxlength="20" onkeyup="check(this, '20');" ><?php echo $description; ?></textarea>
-    <small class="form-text text-muted">Description of your document.</small>
+        <textarea id="textarea" class="form-control" type="textarea" name="description" maxlength="100" rows="3"></textarea>
+        <p class="text-danger"><?php echo $DescError; ?></p>
     </div>
   </div>
 
@@ -265,7 +255,6 @@ var maxnum = Obj.value.length;
                   }
         ?>
         <script src="../assets/js/jquery.min.js"></script>
-        <select name="category_id" class="form-control" id="cat_name">
         <?php
             if(isset($_POST['add_new_cat']) )
               {
@@ -274,52 +263,33 @@ var maxnum = Obj.value.length;
                   $stmt->bindParam(':cat_name',$cat_name);
                   if($stmt->execute())
                       {
-                        header('refresh:3;tbl_materials.php');
+                        $successMSG = "New category added!";
                       }
                   else
                       {
                         $errMSG = "Error!";
-                        header('refresh:3;tbl_materials.php');
                       }
               }
-        ?>  <?php while($row1 = mysqli_fetch_array($result1)):;?>
+        ?>  
+        <select name="category_id" class="form-control" id="cat_name">
+        <?php while($row1 = mysqli_fetch_array($result1)):;?>
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
-            <option value="new">Add new category</option>
-        </select>
+      </select>
     </div>
   </div>
-
-  <div class="form-group" id="newCat" style="display:none;">
-  <label class="col-sm-2 col-form-label"></label>
-        <div class="col-sm-4 form-group" id="cname">
-                <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
-        </div>
-        <div class="form-inline">
-            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
-      <script type="text/javascript">
-        $('#cat_name').on('change',function(){
-            if( $(this).val()==="new"){
-              $("#newCat").show()
-            }
-            else{
-              $("#newCat").hide()
-            }
-        });
-      </script>
-    </div>
-  </div>
-
+  
  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea> 
 
-  <div class="form-group row">
+<br>
+<div class="form-group row">
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
     <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
   CANCEL </a>
-   <button type="submit" name="btn-upload" class="btn btn-success"><span class="glyphicon glyphicon-upload"></span>
+   <button type="submit" name="btn-upload" class="btn btn-success" formaction="upload-document.php"><span class="glyphicon glyphicon-upload"></span>
   &nbsp;UPLOAD</button> (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.
   </div>
   </div>

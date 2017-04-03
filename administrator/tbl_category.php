@@ -134,20 +134,108 @@
                 <!-- Buttons -->
                 <div class="row">
                     <div class="col-sm-7">
-  
-  <?php  include 'category1.php';  ?>
 
+
+                    <br>
+
+<form method="post" enctype="multipart/form-data" action="" autocomplete="off">
+
+<?php
+  if(isset($errMSG)){
+      ?>
+            <div class="alert alert-danger">
+              <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
+            </div><br>
+            <?php
+  }
+  else if(isset($successMSG)){
+    ?>
+        <div class="alert alert-success">
+              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
+        </div><br>
+        <?php
+  }
+?>
+
+  <div class="form-group row">
+    <div class="col-sm-4">
+        <?php
+            // php select option value from database
+            $hostname = "localhost";
+            $username = "root";
+            $password = "";
+            $databaseName = "ovcaa";
+            // connect to mysql database
+            $connect = mysqli_connect($hostname, $username, $password, $databaseName);
+            // mysql select query
+            $query = "SELECT * FROM `category` ORDER BY category_id";
+            // for method 1
+            $result1 = mysqli_query($connect, $query);
+            // for method 2
+            $result2 = mysqli_query($connect, $query);
+            $options = "";
+            while($row2 = mysqli_fetch_array($result2))
+                  {
+                      $options = $options."<option>$row2[1]</option>";
+                  }
+        ?>
+        <script src="../assets/js/jquery.min.js"></script>
+        <select name="category_id" class="form-control" id="cat_name">
+        <?php
+            if(isset($_POST['add_new_cat']) )
+              {
+                  $cat_name = $_POST['cat_name'];
+                  $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
+                  $stmt->bindParam(':cat_name',$cat_name);
+                  if($stmt->execute())
+                      {
+                        header('refresh:3;tbl_category.php');
+                      }
+                  else
+                      {
+                        $errMSG = "Error!";
+                        header('refresh:3;tbl_category.php');
+                      }
+              }
+        ?>  <?php while($row1 = mysqli_fetch_array($result1)):;?>
+            <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
+            <?php endwhile;?>
+            <option value="new">Add new category</option>
+        </select>
+    </div>
+  </div>
+
+  <div class="form-group" id="newCat" style="display:none;">
+  <label class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-4 form-group" id="cname">
+                <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
+        </div>
+        <div class="form-inline">
+            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
+      <script type="text/javascript">
+        $('#cat_name').on('change',function(){
+            if( $(this).val()==="new"){
+              $("#newCat").show()
+            }
+            else{
+              $("#newCat").hide()
+            }
+        });
+      </script>
+    </div>
+  </div>                  
  </div>
+ </form>  
 
 
-  <div class="col-sm-1" right" style="right: 30px;"">
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
+  <div class="col-sm-1"  style="right: 30px;" hidden="">
+                        <div class="input-group-btn" hidden="">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" hidden="">
+                                <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret" hidden="" hidden=""></span>
                             </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="tbl_category.php">Default</a></li>                               
-                                <li><a href="tbl_category.php?sorting='.$sort.'&field=cat_name">Category</a></li>
+                            <ul class="dropdown-menu" hidden="">
+                                <li><a href="tbl_category.php" hidden="">Default</a></li>                                
+                                <li><a href="tbl_category.php?sorting='.$sort.'&field=cat_name" hidden="">Category</a></li>
                             </ul>
                             <?php 
                                 $field='cat_name';
@@ -160,12 +248,11 @@
                                                 $sort='DESC';
                                             }
                                         else { $sort='ASC'; }
-                                    }                               
+                                    }                                
                                 elseif($_GET['field']=='cat_name')
                                     {
                                         $field = "cat_name"; 
                                     }
-                               
                             ?>
                         </div>
                     </div>
@@ -206,5 +293,4 @@
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
 </body>
-
 </html>
