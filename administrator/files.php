@@ -79,14 +79,14 @@ else {
     }
 ?>
 
-<div class="table-responsive container-fluid">
-<div class="row">
+<div class="row container-fluid">
 <?php echo pagination($statement,$per_page,$page,$url='?');?>
     <?php if (isset($_GET['search'])) {
     echo $output;
 }  ?>
 </div>
 
+<div class="table-responsive container-fluid">
 <div class="row">
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
@@ -137,10 +137,10 @@ if (mysqli_num_rows($results) != 0){
 </table>
 </div>
 
-<div class="row">
+</div> <!-- end of container-fluid -->
+<div class="row container-fluid">
 <?php echo pagination($statement,$per_page,$page,$url='?');?> 
 </div>
-</div> <!-- end of container-fluid -->
 
 </body>
 </html>
