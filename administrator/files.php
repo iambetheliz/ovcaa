@@ -81,12 +81,11 @@ else {
 
 <div class="table-responsive container-fluid">
 <div class="row">
-<?php echo pagination($statement,$per_page,$page,$url='?');?> 
-</div>
-
-<?php if (isset($_GET['search'])) {
+<?php echo pagination($statement,$per_page,$page,$url='?');?>
+    <?php if (isset($_GET['search'])) {
     echo $output;
 }  ?>
+</div>
 
 <div class="row">
 <table class="table table-striped table-bordered table-hover" id="table-id">

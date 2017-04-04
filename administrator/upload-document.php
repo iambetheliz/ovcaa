@@ -42,6 +42,9 @@ $error = false;
   if(empty($title)){
     $error = true;
     $errMSG = "Please Enter Title.";
+  }else if (strlen($title) < 5) {
+   $error = true;
+   $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> Title must have atleat 5 characters.";
   }
   else if(empty($description)){
     $error = true;
@@ -80,9 +83,8 @@ $error = false;
   // if no error occured, continue ....
   if(!isset($errMSG))
   {
-   $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id); INSERT INTO category(cat_name) VALUES (:cat_name)');
+   $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id)');
       $stmt->bindParam(':title',$title);
-      $stmt->bindParam(':cat_name',$cat_name);
       $stmt->bindParam(':description',$description);
       $stmt->bindParam(':filename',$final_file);
       $stmt->bindParam(':new_size',$new_size);
