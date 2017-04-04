@@ -35,18 +35,12 @@ $error = false;
     $new_file_name = strtolower($file);
  
     $final_file=str_replace(' ','-',$new_file_name);
-  if(empty($title)){
-    $error = true;
-    $errMSG = "Please Enter Title.";
-  }
-  else if(empty($description)){
-    $error = true;
-   $errMSG = "Please Enter Description.";
-  }
-  else if(empty($final_file)){
+
+  if(empty($final_file)){
     $error = true;
    $errMSG = "Please Select FIle.";
   }
+   
   else
   {
    $folder = 'uploads/'; // upload directory 
@@ -70,7 +64,6 @@ $error = false;
     $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
    }
 }
-
 
 // Title error
   $title = trim($_POST['title']);
@@ -250,17 +243,6 @@ $error = false;
 <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
 
 <?php
-  if(isset($errMSG)){
-    ?>
-    <div class="form-group row">
-        <div class="alert alert-danger col-sm-6">
-              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?></strong>
-        </div>
-    </div>
-        <?php
-  }
-?>
-<?php
   if(isset($successMSG)){
     ?>
     <div class="form-group row">
@@ -277,6 +259,14 @@ $error = false;
     <div class="col-sm-4">
     <input type="file" name="file" class="form-control-file" />
     <p class="text-danger"><?php echo $FileError; ?></p>
+    <?php
+  if(isset($errMSG)){
+    ?>
+  <p class="text-danger">  <?php echo $errMSG; ?> </p>
+      
+        <?php
+  }
+?>
   </div>
   </div>
   
@@ -340,7 +330,7 @@ $error = false;
 <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="title" autofocus />
+        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
         <p class="text-danger"><?php echo $TitleError; ?></p>
       </div>
 </div>
@@ -353,7 +343,7 @@ $error = false;
     </div>
   </div>
 
-  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
+ <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea> 
 
