@@ -1,50 +1,58 @@
 <?php
-    ob_start();
-    session_start();
-    require_once '../includes/dbconnect.php';
-    
-    // if session is not set this will redirect to login page
-    if( !isset($_SESSION['user']) ) {
-        header("Location: /ovcaa/administrator");
-        exit;
-    }
-    // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
-?>
-<?php
- error_reporting( ~E_NOTICE ); // avoid notice
- require_once 'Material.php';
- 
- if(isset($_POST['btn-upload']))
- {
-    $cat_name = $_POST['cat_name'];
-    
-   if(empty($cat_name)){
-   $errMSG = "Please Enter Category.";   
-  }
-  else if (strlen($cat_name) < 5) {
+            
+$error = false;
+
+ if ( isset($_POST['add_new_cat']) ) {
+  
+  // clean user inputs to prevent sql injections
+  $cat_name = trim($_POST['cat_name']);
+  $cat_name = strip_tags($cat_name);
+  $cat_name = htmlspecialchars($cat_name);
+       
+  // basic username validation
+
+  if (empty($cat_name)) {
    $error = true;
-   $userNameError = "Category must have atleat 5 characters.";
+   $categoryError = "Please enter a Category.";
+  } else if (strlen($cat_name) < 5) {
+   $error = true;
+   $categoryError = "Category must have atleat 5 characters.";
+  } 
+  else if (!preg_match("/^[a-zA-Z ]+$/",$cat_name)) {
+   $error = true;
+   $categoryError = "Category must contain alphabets and space.";
   }
-     
-    // if no error occured, continue ....
-  if(!isset($errMSG))
-  {
-   $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES(:ucat_name)');
-      
-      $stmt->bindParam(':ucat_name',$cat_name);
-      
+ 
+  else {
+   // check username exist or not
+   $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
+   $result = mysql_query($query);
+   $count = mysql_num_rows($result);
+   if($count!=0){
+    $error = true;
+    $categoryError = "Provided Category is already in use.";
+   }
+  }
+ 
+  // if there's no error, continue to signup
+  if( !$error ) {
    
-      if($stmt->execute())
-      {
-        $successMSG = "new record succesfully inserted ...";
-        header("refresh:3;tbl_category.php"); // redirects image view page after 5 seconds.
-      }
-      else
-      {
-        $errMSG = "error while inserting....";
-      }
-    }
+    $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
+                  $stmt->bindParam(':cat_name',$cat_name);
+                  if($stmt->execute())
+                      {
+                        header('refresh:1;upload-document.php');
+                      }
+                  else
+                      {
+                        $errMSG = "Error!";
+                        header('refresh:1;upload-document.php');
+                      } 
+    
+  }  
+  
  }
-?>
+
+ ?>
+
+

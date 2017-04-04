@@ -139,7 +139,7 @@
                         <a href="upload-document.php" class="btn btn-success" type="button" role="button" >
                             <span class="glyphicon glyphicon-plus"></span> Upload New File
                         </a>   
-                        <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete"/> 
+                        
                     </div>
                     <div class="col-sm-1" right" style="right: 30px;"">
                         <div class="input-group-btn">

@@ -70,9 +70,72 @@ $error = false;
     $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
    }
 }
+
+
+// Title error
+  $title = trim($_POST['title']);
+  $title = strip_tags($title);
+  $title = htmlspecialchars($title);
+       
+  if (empty($title)) {
+   $error = true;
+   $TitleError = "Please enter a Title.";
+  } else if (strlen($title) < 5) {
+   $error = true;
+   $TitleError = "Title must have atleast 5 characters.";
+  } 
+  else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
+   $error = true;
+   $TitleError = "Title must contain alphabets and space.";
+  }
+ 
+  else {
+   // check username exist or not
+   $query = "SELECT title FROM material WHERE title='$title'";
+   $result = mysql_query($query);
+   $count = mysql_num_rows($result);
+   if($count!=0){
+    $error = true;
+    $TitleError = "Provided Title is already in use.";
+   }
+  }
+
+// end Title error
+
+// Description error
+  $description = trim($_POST['description']);
+  $description = strip_tags($description);
+  $description = htmlspecialchars($description);
+       
+  if (empty($description)) {
+   $error = true;
+   $DescError = "Please enter a Description.";
+  } else if (strlen($description) < 5) {
+   $error = true;
+   $DescError = "Description must have atleast 5 characters.";
+  } 
+  else if (!preg_match("/^[a-zA-Z ]+$/",$description)) {
+   $error = true;
+   $DescError = "Description must contain alphabets and space.";
+  }
+ 
+  else {
+   // check username exist or not
+   $query = "SELECT description FROM material WHERE description='$description'";
+   $result = mysql_query($query);
+   $count = mysql_num_rows($result);
+   if($count!=0){
+    $error = true;
+    $DescError = "Provided Description is already in use.";
+   }
+  }
+
+// end Description error
+
+
   
   // if no error occured, continue ....
-  if(!isset($errMSG))
+  if(!$error)
   {
    $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id); INSERT INTO category(cat_name) VALUES (:cat_name)');
       $stmt->bindParam(':title',$title);
@@ -181,23 +244,7 @@ $error = false;
                 <!-- /.row -->              
 
 <!-- Main Form -->
- <?php
-            if(isset($_POST['add_new_cat']) )
-              {
-                  $cat_name = $_POST['cat_name'];
-                  $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
-                  $stmt->bindParam(':cat_name',$cat_name);
-                  if($stmt->execute())
-                      {
-                        header('refresh:1;upload-document.php');
-                      }
-                  else
-                      {
-                        $errMSG = "Error!";
-                        header('refresh:1;upload-document.php');
-                      }
-              }
- ?>
+ <?php     include 'add_category.php'; ?>
 
 <br>
 <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
@@ -235,7 +282,8 @@ $error = false;
   
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Category: (Required)</label>
-     <div class="col-sm-4">
+     <div class="col-sm-4">    
+     <p class="text-danger"><?php echo $categoryError; ?></p>
         <?php
             // php select option value from database
             $hostname = "localhost";
@@ -266,12 +314,13 @@ $error = false;
         </select>
     </div>
   </div>
-
+  
   <div class="form-group" id="newCat" style="display:none;">
   <label class="col-sm-2 col-form-label"></label>
         <div class="col-sm-4 form-group" id="cname">
                 <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
         </div>
+
         <div class="form-inline">
             <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
       <script type="text/javascript">
@@ -287,13 +336,14 @@ $error = false;
     </div>
   </div>
 
+
 <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
+        <input type="text" class="form-control" name="title" autofocus />
         <p class="text-danger"><?php echo $TitleError; ?></p>
       </div>
-  </div>
+</div>
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
@@ -303,7 +353,7 @@ $error = false;
     </div>
   </div>
 
- <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
+  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea> 
 
