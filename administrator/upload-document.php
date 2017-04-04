@@ -147,7 +147,7 @@ $error = false;
   {
    $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id)');
       $stmt->bindParam(':title',$title);
-           $stmt->bindParam(':description',$description);
+      $stmt->bindParam(':description',$description);
       $stmt->bindParam(':filename',$final_file);
       $stmt->bindParam(':new_size',$new_size);
       $stmt->bindParam(':location',$location);
@@ -252,7 +252,6 @@ $error = false;
 
 <!-- Main Form -->
  
-
  <!-- Add Category -->
 
 <?php
@@ -393,21 +392,24 @@ $error = false;
     </div>
   </div>
 
+
+
 <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
-        <p class="text-danger"><?php echo $TitleError; ?></p>
-      </div>
-</div>
+    <div class="col-sm-4">
+    <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus >   
+    <p class="text-danger"><?php echo $TitleError; ?></p>
+    </div>
+  </div>
 
-<div class="form-group row">
+  <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-        <textarea id="textarea" class="form-control" type="textarea" name="description" maxlength="100" rows="3" value="<?php echo $description; ?>" autofocus /></textarea>
-        <p class="text-danger"><?php echo $DescError; ?></p>
+    <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>    
+     <p class="text-danger"><?php echo $DescError; ?></p>
     </div>
-</div>
+  </div>
+ 
   
  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
