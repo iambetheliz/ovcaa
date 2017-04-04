@@ -40,7 +40,7 @@ $error = false;
     $error = true;
    $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> Please Select FIle.";
   }
-   
+ 
   else
   {
    $folder = 'uploads/'; // upload directory 
@@ -64,6 +64,23 @@ $error = false;
     $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
    }
 }
+
+//File       
+  if (empty($final_file)) {
+   $error = true;
+   $FileError = " <span class='glyphicon glyphicon-info-sign'></span> Please Select File.";
+  }
+    else {
+   // check username exist or not
+   $query = "SELECT filename FROM material WHERE filename='$final_file'";
+   $result = mysql_query($query);
+   $count = mysql_num_rows($result);
+   if($count!=0){
+    $error = true;
+    $FileError = " <span class='glyphicon glyphicon-info-sign'></span> File is already exists.";
+   }
+  }  
+//END File
 
 // Title error
   $title = trim($_POST['title']);
@@ -124,8 +141,6 @@ $error = false;
   }
 
 // end Description error
-
-
   
   // if no error occured, continue ....
   if(!$error)
@@ -299,7 +314,6 @@ $error = false;
 
  <!-- End Add Category -->
 
-
 <br>
 <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
 
@@ -319,15 +333,7 @@ $error = false;
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
     <input type="file" name="file" class="form-control-file" />
-    <p class="text-danger"><?php echo $FileError; ?></p>
-    <?php
-  if(isset($errMSG)){
-    ?>
-  <p class="text-danger">  <?php echo $errMSG; ?> </p>
-      
-        <?php
-  }
-?>
+    <p class="text-danger"><?php echo $FileError; ?></p>    
   </div>
   </div>
   
@@ -387,7 +393,6 @@ $error = false;
     </div>
   </div>
 
-
 <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
       <div class="col-sm-4">
@@ -396,14 +401,14 @@ $error = false;
       </div>
 </div>
 
-  <div class="form-group row">
+<div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-        <textarea id="textarea" class="form-control" type="textarea" name="description" maxlength="100" rows="3"></textarea>
+        <textarea id="textarea" class="form-control" type="textarea" name="description" maxlength="100" rows="3" value="<?php echo $description; ?>" autofocus /></textarea>
         <p class="text-danger"><?php echo $DescError; ?></p>
     </div>
-  </div>
-
+</div>
+  
  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea> 
