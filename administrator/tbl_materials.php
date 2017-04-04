@@ -43,8 +43,17 @@
 <meta name="author" content="">
 <title>Table: Material - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
-<link href="../assets/css/custom.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+/* For pagination function. */
+ul.pagination a {
+    color:#014421;
+}
+ul.pagination>li>a.current {
+    background:#014421;
+    color:#fff;
+}
+</style>
 </head>
 
 <body>
@@ -126,13 +135,14 @@
 
                 <!-- Buttons -->
                 <div class="row">
-                    <div class="col-sm-7">
+                    <div class="col col-xs-4">
                         <a href="upload-document.php" class="btn btn-success" type="button" role="button" >
                             <span class="glyphicon glyphicon-plus"></span> Upload New File
-                        </a>   
-                    </div>
-                    <div class="col-sm-1" right" style="right: 30px;"">
-                        <div class="input-group-btn">
+                        </a>  
+                    </div>            
+                    <div class="col col-xs-3"></div>         
+                    <div class="col col-xs-2 text-right">
+                        <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
                             </button>
@@ -176,22 +186,21 @@
                         </div>
                     </div>
                 <form action="" method="get">
-                    <div class="col-sm-4 right">
+                    <div class="col col-xs-3 text-right">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Search for terms..">
                             <span class="input-group-btn"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button></span>
                         </div>
                     </div>
-                </div><br>
+                </div>
                 <!-- End of Buttons -->
-                
-                <!-- Table and Pagination -->
+                <br>
                 <?php 
-                    include '../includes/pagination.php';
-                    include 'files.php';
+                    include '../includes/pagination.php'; 
+                    include 'files.php'; 
                 ?>
-                <!-- End of Table and Pagination -->
                 </form>
+
             </div><!-- /.container-fluid -->
         </div><!-- /#page-wrapper -->
         <!-- End of Main Screen -->

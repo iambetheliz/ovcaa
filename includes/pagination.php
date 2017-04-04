@@ -30,7 +30,7 @@ function pagination($query,$per_page=10,$page=1,$url='?'){
      
     $pagination = "";
     if($lastpage > 1){   
-        $pagination .= "<ul class='pagination'>";
+        $pagination .= "<ul class='pagination pull-right'>";
              
             if ($page > 1) $pagination.= "<li><a href='{$url}page={$prev}'>{$prevlabel}</a></li>";
              
@@ -91,7 +91,9 @@ function pagination($query,$per_page=10,$page=1,$url='?'){
             }
          
         $pagination.= "</ul>";  
-        $pagination .= "<p class='page_info'>Page {$page} of {$lastpage}</p>";
+        $pagination.= "<div class='row'>";  
+        $pagination .= "<div class='col col-xs-4'><br>Page {$page} of {$lastpage}</div>";
+        $pagination.= "</div>";  
     }
      
     return $pagination;

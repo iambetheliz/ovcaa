@@ -11,7 +11,6 @@
     // select loggedin members detail
     $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
     $userRow=mysql_fetch_array($res);
-
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -79,16 +78,15 @@ else {
     }
 ?>
 
-<div class="row container-fluid">
-<?php echo pagination($statement,$per_page,$page,$url='?');?>
-    <?php if (isset($_GET['search'])) {
+<?php if (isset($_GET['search'])) {
     echo $output;
 }  ?>
-</div>
 
-<div class="table-responsive container-fluid">
+
+<!-- Container Fluid -->
+<div class="table-responsive table-bordered container-fluid">
 <div class="row">
-<table class="table table-striped table-bordered table-hover" id="table-id">
+<table class="table table-striped table-bordered table-list" id="table-id">
 <thead>
     <tr>
         <th>Edit</th>
@@ -136,11 +134,10 @@ if (mysqli_num_rows($results) != 0){
     </tbody>
 </table>
 </div>
+</div> 
+<!-- end of container-fluid -->
 
-</div> <!-- end of container-fluid -->
-<div class="row container-fluid">
 <?php echo pagination($statement,$per_page,$page,$url='?');?> 
-</div>
 
 </body>
 </html>
