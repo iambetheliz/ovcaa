@@ -38,7 +38,7 @@ $error = false;
 
   if(empty($final_file)){
     $error = true;
-   $errMSG = "Please Select FIle.";
+   $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> Please Select FIle.";
   }
    
   else
@@ -72,14 +72,14 @@ $error = false;
        
   if (empty($title)) {
    $error = true;
-   $TitleError = "Please enter a Title.";
+   $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Title.";
   } else if (strlen($title) < 5) {
    $error = true;
-   $TitleError = "Title must have atleast 5 characters.";
+   $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must have atleast 5 characters.";
   } 
   else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
    $error = true;
-   $TitleError = "Title must contain alphabets and space.";
+   $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must contain alphabets and space.";
   }
  
   else {
@@ -89,7 +89,7 @@ $error = false;
    $count = mysql_num_rows($result);
    if($count!=0){
     $error = true;
-    $TitleError = "Provided Title is already in use.";
+    $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Provided Title is already in use.";
    }
   }
 
@@ -102,14 +102,14 @@ $error = false;
        
   if (empty($description)) {
    $error = true;
-   $DescError = "Please enter a Description.";
+   $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Description.";
   } else if (strlen($description) < 5) {
    $error = true;
-   $DescError = "Description must have atleast 5 characters.";
+   $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Description must have atleast 5 characters.";
   } 
   else if (!preg_match("/^[a-zA-Z ]+$/",$description)) {
    $error = true;
-   $DescError = "Description must contain alphabets and space.";
+   $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Description must contain alphabets and space.";
   }
  
   else {
@@ -119,7 +119,7 @@ $error = false;
    $count = mysql_num_rows($result);
    if($count!=0){
     $error = true;
-    $DescError = "Provided Description is already in use.";
+    $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Provided Description is already in use.";
    }
   }
 
