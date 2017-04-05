@@ -85,8 +85,8 @@ else {
 <!-- Container Fluid -->
 <div class="table-responsive table-bordered container-fluid">
 <div class="row">
-<table class="table table-bordered table-list" id="table-id">
-<thead class="thead-inverse">
+<table class="table table-bordered table-hover table-list" id="table-id">
+<thead>
     <tr>
         <th>Edit</th>
         <th>Delete</th>

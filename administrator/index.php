@@ -126,15 +126,15 @@
             <div class="form-group">
                 <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                <input type="text" name="userName" class="form-control" placeholder="Username" value="<?php echo $userName; ?>" maxlength="40" autofocus />
+                <input type="text" id="username" name="userName" class="form-control" placeholder="Username" value="<?php echo $userName; ?>" maxlength="20" autofocus />
                 </div>
                 <span class="text-danger"><?php echo $userNameError; ?></span>
             </div>
             <div class="form-group">
                 <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                <input type="password" name="pass" class="form-control" placeholder="Password" maxlength="15" />
-                </div>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                    <input name="pass" id="password" class="form-control" type="password" placeholder="Password" maxlength="15" />
+                </div><br><hr>
                 <span class="text-danger"><?php echo $passError; ?></span>
             </div>
             <div class="form-group"><br>
@@ -164,7 +164,21 @@
 <script src="../assets/js/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
-<script src="../assets/js/bootstrap.js"></script>
+<script src="../assets/js/bootstrap-show-password.js"></script>
+<script>
+    $(function() {
+        $('#password').password().on('show.bs.password', function(e) {
+            $('#eventLog').text('On show event');
+            $('#methods').prop('checked', true);
+        }).on('hide.bs.password', function(e) {
+                    $('#eventLog').text('On hide event');
+                    $('#methods').prop('checked', false);
+                });
+        $('#methods').click(function() {
+            $('#password').password('toggle');
+        });
+    });
+</script>
 
 </body>
 </html>
