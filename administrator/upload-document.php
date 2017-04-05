@@ -387,15 +387,13 @@
         </div>
   </div>
 
-    <div class="form-group row">
+  <div class="form-group row">
       <label class="col-sm-2 col-form-label">Description: (Required)</label>
-      <div class="col-sm-4">
-          <textarea id="textarea" class="form-control" type="textarea" name="description" maxlength="100" rows="3">
-          <?php echo $description; ?>
-          </textarea>
+        <div class="col-sm-4">
+          <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>    
           <p class="text-danger"><?php echo $DescError; ?></p>
-      </div>
-    </div>
+        </div>
+  </div>
 
    <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
     <textarea hidden="" name="location"><?php echo $location; ?></textarea>
