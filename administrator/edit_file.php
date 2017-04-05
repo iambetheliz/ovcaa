@@ -271,11 +271,12 @@
                   {
                       $options = $options."<option>$row2[1]</option>";
                   }
+
         ?>
         <script src="../assets/js/jquery.min.js"></script>
         <select name="category_id" class="form-control" id="cat_name">
        
-         <?php while($row1 = mysqli_fetch_array($result1)):;?>
+         <?php while($row1 = mysqli_fetch_array($result1)):;?>            
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>           
         </select>
@@ -293,7 +294,7 @@
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-   <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>    
+  <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>    
       <p class="text-danger"><?php echo $DescError; ?></p>
     </div>
   </div>  
@@ -322,7 +323,7 @@
   </div>
   </div>
 
-  <textarea hidden="" name="uploaded_by"><?php echo $userRow['userName']; ?></textarea>
+  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea>
 
