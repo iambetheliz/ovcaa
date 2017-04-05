@@ -21,38 +21,6 @@
 <script src="../assets/js/index.js"></script>
 <script src="../assets/js/jquery.min.js"></script>
 <!-- end of jQuery -->
-<style type="text/css">
-ul.pagination li.page_info {
-    display: inline;
-    -webkit-margin-before: 1em;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
-    -webkit-padding-start: 40px;
-}
-
-/* For pagination function. */
-ul.pagination {
-    text-align:center;
-    color:#829994;
-}
-ul.pagination li {
-    display:inline;
-    padding:0 3px;
-}
-ul.pagination a {
-    color:#014421;
-    display:inline-block;
-    padding:5px 10px;
-    border:1px solid #cde0dc;
-    text-decoration:none;
-}
-ul.pagination a:hover,
-ul.pagination a.current {
-    background:#014421;
-    color:#fff;
-}
-</style>
 </head>
 <body>
 
@@ -88,9 +56,6 @@ $per_page = 5; // Set how many records do you want to display per page.
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
-        <th><center><input class="second" id="selectall" name="check" type="checkbox">
-<label class="label2" for="selectall"></label>
-</center></th>
         <th><center>Action</center></th>
         <th>Username</th>
         <th>First Name</th>
@@ -107,7 +72,6 @@ if (mysqli_num_rows($results) != 0) {
 ?>  
     <tbody>
         <tr>
-            <td><center><input class="second" id="Item A" name="option2" type="checkbox"></center></td>
             <td><center>
             <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['userId']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
             </td>
@@ -146,27 +110,3 @@ else {
 </div> <!-- end of container-fluid -->
 </body>
 </html>
-
-<script type="text/javascript">    
-$(document).ready(function() {
-$(".first").click(function() {
-$("#checkAll").attr("data-type", "uncheck");
-});
-$("input[name=option2]").click(function() {
-$("#selectall").prop("checked", false);
-});
-$("#checkAll").attr("data-type", "check");
-$("#checkAll").click(function() {
-if ($("#checkAll").attr("data-type") === "check") {
-$(".first").prop("checked", true);
-$("#checkAll").attr("data-type", "uncheck");
-} else {
-$(".first").prop("checked", false);
-$("#checkAll").attr("data-type", "check");
-}
-})
-$("#selectall").click(function() {
-$(".second").prop("checked", $("#selectall").prop("checked"))
-})
-});
-</script>

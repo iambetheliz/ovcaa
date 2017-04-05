@@ -82,12 +82,11 @@ else {
     echo $output;
 }  ?>
 
-
 <!-- Container Fluid -->
 <div class="table-responsive table-bordered container-fluid">
 <div class="row">
-<table class="table table-striped table-bordered table-list" id="table-id">
-<thead>
+<table class="table table-bordered table-list" id="table-id">
+<thead class="thead-inverse">
     <tr>
         <th>Edit</th>
         <th>Delete</th>
@@ -104,10 +103,11 @@ else {
     </tr>
 </thead>
 <?php
-if (mysqli_num_rows($results) != 0){
+if (mysqli_num_rows($results) != 0){           
 
     // displaying records.
     while ($row = mysqli_fetch_array($results)){
+
 ?>
     <tbody>
         <tr>
@@ -117,7 +117,7 @@ if (mysqli_num_rows($results) != 0){
             <td class="delete_row">
             <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['id']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span></a>
             </td>
-            <td><?php echo $row['title'] ?></td>
+            <td><?php echo $msg .$row['title'] ?></td>
             <td><p><?php echo $row['description'] ?></p></td>
             <td><p><?php echo $row['cat_name'] ?></p></td>
             <td><p><?php echo $row['filename'] ?></p></td>

@@ -133,7 +133,7 @@
     {
      $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id)');
         $stmt->bindParam(':title',$title);
-             $stmt->bindParam(':description',$description);
+        $stmt->bindParam(':description',$description);
         $stmt->bindParam(':filename',$final_file);
         $stmt->bindParam(':new_size',$new_size);
         $stmt->bindParam(':location',$location);
@@ -143,12 +143,14 @@
      
         if($stmt->execute())
         {
-          $successMSG = "new record succesfully inserted ...";
-          header("refresh:3;tbl_materials.php"); // redirects image view page after 5 seconds.
+          $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
+          $lastId = $stmt->fetchColumn();
+          $successMSG = "New record created succesfully. Last inserted ID is: " . $lastId;
+          header("refresh:5;tbl_materials.php"); // redirects image view page after 5 seconds.
         }
         else
         {
-          $errMSG = "error while inserting....";
+          $errMSG = "Error while inserting....";
         }
       }
    }
@@ -237,82 +239,15 @@
                   <!-- /.row -->              
 
   <!-- Main Form -->
-   
-
-   <!-- Add Category -->
-
-  <?php
-              
-  $error = false;
-
-   if ( isset($_POST['add_new_cat']) ) {
-    
-    // clean user inputs to prevent sql injections
-    $cat_name = trim($_POST['cat_name']);
-    $cat_name = strip_tags($cat_name);
-    $cat_name = htmlspecialchars($cat_name);
-         
-    // basic username validation
-
-    if (empty($cat_name)) {
-     $error = true;
-     $categoryError = "Please enter a Category.";
-    } else if (strlen($cat_name) < 5) {
-     $error = true;
-     $categoryError = "Category must have atleat 5 characters.";
-    } 
-    else if (!preg_match("/^[a-zA-Z ]+$/",$cat_name)) {
-     $error = true;
-     $categoryError = "Category must contain alphabets and space.";
-    }
-   
-    else {
-     // check username exist or not
-     $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
-     $result = mysql_query($query);
-     $count = mysql_num_rows($result);
-     if($count!=0){
-      $error = true;
-      $categoryError = "Provided Category is already in use.";
-     }
-    }
-   
-    // if there's no error, continue to signup
-    if( !$error ) {
-     
-      $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
-                    $stmt->bindParam(':cat_name',$cat_name);
-                    if($stmt->execute())
-                        {
-                          header('refresh:1;upload-document.php');
-                        }
-                    else
-                        {
-                          $errMSG = "Error!";
-                          header('refresh:1;upload-document.php');
-                        } 
-      
-    }  
-    
-   }
-
-   ?>
-
-   <!-- End Add Category -->
-
-
   <br>
   <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
 
   <?php
     if(isset($successMSG)){
       ?>
-      <div class="form-group row">
-          <div class="alert alert-success col-sm-6">
-                <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
-          </div>
-      </div>
-          <?php
+      <p class="text-success"><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></p>
+      <br>
+  <?php
     }
   ?>
 
@@ -366,6 +301,61 @@
           </select>
       </div>
     </div>
+
+  <!-- Add Category -->
+  <?php
+              
+  $error = false;
+
+   if ( isset($_POST['add_new_cat']) ) {
+    
+    $cat_name = trim($_POST['cat_name']);
+    $cat_name = strip_tags($cat_name);
+    $cat_name = htmlspecialchars($cat_name);
+
+    if (empty($cat_name)) {
+     $error = true;
+     $categoryError = "Please enter a Category.";
+    } else if (strlen($cat_name) < 5) {
+     $error = true;
+     $categoryError = "Category must have atleat 5 characters.";
+    } 
+    else if (!preg_match("/^[a-zA-Z ]+$/",$cat_name)) {
+     $error = true;
+     $categoryError = "Category must contain alphabets and space.";
+    }
+   
+    else {
+     $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
+     $result = mysql_query($query);
+     $count = mysql_num_rows($result);
+     
+      if($count!=0){
+        $error = true;
+        $categoryError = "Provided Category is already in use.";
+      }
+    }
+   
+    if( !$error ) {
+     
+      $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
+      $stmt->bindParam(':cat_name',$cat_name);
+
+          if($stmt->execute()) {
+            $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
+            $lastId = $stmt->fetchColumn();
+            $successMSG = "New category added!";
+              header('refresh:3;upload-document.php');
+            }
+          else {
+            $errMSG = "Error!";
+            header('refresh:3;upload-document.php');
+          } 
+      
+    }      
+   }
+
+   ?>
     
     <div class="form-group" id="newCat" style="display:none;">
     <label class="col-sm-2 col-form-label"></label>
@@ -387,7 +377,7 @@
         </script>
       </div>
     </div>
-
+   <!-- End Add Category -->
 
   <div class="form-group row"> 
       <label class="col-sm-2 col-form-label">Title: (Required)</label>

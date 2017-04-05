@@ -199,6 +199,7 @@ ul.pagination>li>a.current {
                     include '../includes/pagination.php'; 
                     include 'files.php'; 
                 ?>
+                <br>
                 </form>
 
             </div><!-- /.container-fluid -->
