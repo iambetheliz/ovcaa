@@ -78,29 +78,6 @@
       $new_size = $edit_row['filesize'];// old file from database
     }             
 
-//File       
-  if (empty($new_size)) {
-   $error = true;
-   $FileError = " <span class='glyphicon glyphicon-info-sign'></span> Please Select File.";
-  }
-    else {
-   // check username exist or not
-   $query = "SELECT filesize FROM material WHERE filesize='$new_size'";
-   $result = mysql_query($query);
-   $count = mysql_num_rows($result);
-   if($count!=0){
-    $error = true;
-    $FileError = " <span class='glyphicon glyphicon-info-sign'></span> Try Again..";
-   }
-      else
-    {
-      // if no image selected the old image remain as it is.
-      $final_file = $edit_row['filename']; // old file from database
-      $new_size = $edit_row['filesize'];// old file from database
-    }   
-  }  
-//End File error
-
 // Title error
   $title = trim($_POST['title']);
   $title = strip_tags($title);
