@@ -77,9 +77,47 @@
       $final_file = $edit_row['filename']; // old file from database
       $new_size = $edit_row['filesize'];// old file from database
     }             
+
+// Title error
+  $title = trim($_POST['title']);
+  $title = strip_tags($title);
+  $title = htmlspecialchars($title);
+       
+  if (empty($title)) {
+   $error = true;
+   $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Title.";
+  } else if (strlen($title) < 5) {
+   $error = true;
+   $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must have atleast 5 characters.";
+  } 
+  else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
+   $error = true;
+   $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must contain alphabets and space.";
+  }   
+
+// end Title error
+
+// Description error
+  $description = trim($_POST['description']);
+  $description = strip_tags($description);
+  $description = htmlspecialchars($description);
+       
+  if (empty($description)) {
+   $error = true;
+   $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Description.";
+  } else if (strlen($description) < 5) {
+   $error = true;
+   $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Description must have atleast 5 characters.";
+  } 
+  else if (!preg_match("/^[a-zA-Z ]+$/",$description)) {
+   $error = true;
+   $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Description must contain alphabets and space.";
+  }
+   
+// end Description error
     
     // if no error occured, continue ....
-    if(!isset($errMSG))
+    if(!$error)
     {
       $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, category_id=:category_id WHERE id=:id');
       $stmt->bindParam(':title',$title);
@@ -93,12 +131,8 @@
       $stmt->bindParam(':id',$id);
         
       if($stmt->execute()){
-        ?>
-                <script>
-        alert('Successfully Updated ...');
-        window.location.href='tbl_materials.php';
-        </script>
-                <?php
+        $successMSG = "Successfully updated...";
+        header("refresh:3;tbl_materials.php");
       }
       else{
         $errMSG = "Sorry Data Could Not Updated !";
@@ -197,61 +231,42 @@
 
 <?php
   if(isset($errMSG)){
-      ?>
-            <div class="alert alert-danger">
-              <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
+      ?><div class="form-group row">
+            <div class="alert alert-danger col-sm-6" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $errMSG; ?>
             </div>
+        </div>
             <?php
   }
   else if(isset($successMSG)){
-    ?>
-        <div class="alert alert-success">
-              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
+    ?><div class="form-group row">
+        <div class="alert alert-success col-sm-6" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <?php echo $successMSG; ?>
         </div>
+      </div>
         <?php
   }
   ?>   
 
- <div class="form-group row"> 
-    <label class="col-sm-2 col-form-label">Title: (Required)</label>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus >
-        <small class="form-text text-muted">Title of your document.</small>
-      </div>
-  </div>
-
-  <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Description: (Required)</label>
-    <div class="col-sm-4">
-    <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>
-    <small class="form-text text-muted">Description of your document.</small>
-    </div>
-  </div>
-
-  <div class="form-group row">
+<div class="form-group row">
     <label class="col-sm-2 col-form-label">Category: (Required)</label>
-    <div class="col-sm-4">
+     <div class="col-sm-4">    
+     <p class="text-danger"><?php echo $categoryError; ?></p>
         <?php
             // php select option value from database
             $hostname = "localhost";
             $username = "root";
             $password = "";
             $databaseName = "ovcaa";
-
             // connect to mysql database
             $connect = mysqli_connect($hostname, $username, $password, $databaseName);
-
             // mysql select query
             $query = "SELECT * FROM `category` ORDER BY category_id";
-
             // for method 1
             $result1 = mysqli_query($connect, $query);
-
             // for method 2
             $result2 = mysqli_query($connect, $query);
-
             $options = "";
-
             while($row2 = mysqli_fetch_array($result2))
                   {
                       $options = $options."<option>$row2[1]</option>";
@@ -259,51 +274,29 @@
         ?>
         <script src="../assets/js/jquery.min.js"></script>
         <select name="category_id" class="form-control" id="cat_name">
-        <?php
-            if(isset($_POST['add_new_cat']) )
-              {
-                  $cat_name = $_POST['cat_name'];
-
-                  $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
-                  $stmt->bindParam(':cat_name',$cat_name);
-
-                  if($stmt->execute())
-                      {
-                        header('refresh:3;tbl_materials.php');
-                      }
-                  else
-                      {
-                        $errMSG = "Error!";
-                        header('refresh:3;tbl_materials.php');
-                      }
-              }
-        ?>  <?php while($row1 = mysqli_fetch_array($result1)):;?>
+       
+         <?php while($row1 = mysqli_fetch_array($result1)):;?>
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
-            <?php endwhile;?>
-            <option value="new">Add new category</option>
+            <?php endwhile;?>           
         </select>
     </div>
   </div>
-
-  <div class="form-group" id="newCat" style="display:none;">
-  <label class="col-sm-2 col-form-label"></label>
-        <div class="col-sm-4 form-group" id="cname">
-                <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
-        </div>
-        <div class="form-inline">
-            <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
-      <script type="text/javascript">
-        $('#cat_name').on('change',function(){
-            if( $(this).val()==="new"){
-              $("#newCat").show()
-            }
-            else{
-              $("#newCat").hide()
-            }
-        });
-      </script>
+   
+ <div class="form-group row"> 
+    <label class="col-sm-2 col-form-label">Title: (Required)</label>
+    <div class="col-sm-4">
+    <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >   
+      <p class="text-danger"><?php echo $TitleError; ?></p>
     </div>
   </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Description: (Required)</label>
+    <div class="col-sm-4">
+   <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>    
+      <p class="text-danger"><?php echo $DescError; ?></p>
+    </div>
+  </div>  
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Old File:</label>    
@@ -313,10 +306,10 @@
   </div>  
 
   <div class="form-group row">
-    <label class="col-sm-2 col-form-label">New File: </label>
-      <div class="col-sm-4">
-        <input type="file" name="file" class="form-control-file" />
-      </div>
+  <label class="col-sm-2 col-form-label">New File: </label>
+    <div class="col-sm-4">
+    <input type="file" name="file" class="form-control-file" />
+  </div>
   </div>
   
   <div class="form-group row">
@@ -329,7 +322,7 @@
   </div>
   </div>
 
-  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
+  <textarea hidden="" name="uploaded_by"><?php echo $userRow['userName']; ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea>
 
