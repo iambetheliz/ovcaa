@@ -24,17 +24,12 @@
         $pass = htmlspecialchars($pass);
         // prevent sql injections / clear user invalid inputs
         
-        if(empty($userName)){
+        if(empty($userName && $pass)){
             $error = true;
-            $userNameError = "Please enter your username.";
+            $errMSG = "Incorrect username or password.";
         } else if ( !filter_var($userName) ) {
             $error = true;
-            $userNameError = "Please enter valid username.";
-        }
-        
-        if(empty($pass)){
-            $error = true;
-            $passError = "Please enter your password.";
+            $errMSG = "Please enter valid username.";
         }
         
         // if there's no error, continue to login
@@ -48,7 +43,7 @@
             
             if( $count == 1 && $row['userPass']==$password ) {
                 $_SESSION['user'] = $row['userId'];
-                $successMSG = "<h3 align='center'>Signing in</h3>";
+                $successMSG = "Signing in";
                 header("refresh:3;dashboard.php");
             } else {
                 $errMSG = "Incorrect Credentials, Try again...";
@@ -67,6 +62,7 @@
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/bootstrap-theme.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <style type="text/css">
     .profile-img {
@@ -80,84 +76,68 @@
 <body>
 
 <div class="wrap">
-<div class="container"><br>
-        <div class="row">
-            <div class="col-sm-6 col-md-4 col-md-offset-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <strong> Sign in to continue</strong>
-                    </div>
-                    <div class="panel-body">
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
-                            <fieldset>
-                                <div class="row">
-                                    <div class="center-block"><br>
-                                        <img class="profile-img"
-                                            src="../images/logo.png" alt="">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-10  col-md-offset-1 ">
-                                        <?php
-                                            if ( isset($errMSG) ) {
-                                        ?>
-                                        <div class="form-group">
-                                            <div class="alert alert-danger">
-                                                <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
-                                            </div>
-                                        </div>
-                                        <?php
-                                            }
-                                        ?>
-                                        <?php
-                                            if ( isset($successMSG) ) {
-                                        ?>
-                                        <div class="form-group">
-                                            <div class="alert alert-default">
-                                                    <?php echo $successMSG; ?><br>
-                                                    <div class="center-block">
-                                                        <center><img src="../images/ajax_loader_blue_32.gif" class="icon" /></center>
-                                                    </div><br><br>
-                                            </div>
-                                        </div>
-                                        <?php
-                                            } else { ?>
-            <br>     
+<div class="container">
+    <div class="row">
+        <div class="center-block">
+            <a href="/ovcaa/administrator"><img class="profile-img" src="../images/logo.png" alt="UPOU logo" /></a>
+            <center><h3>Sign in to UPOU Scribd</h3></center><br>
+        </div>
+    </div>
+    <div class="row">
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <?php
+            if ( isset($errMSG) ) {
+        ?>
             <div class="form-group">
-                <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                <input type="text" id="username" name="userName" class="form-control" placeholder="Username" value="<?php echo $userName; ?>" maxlength="20" autofocus />
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <?php echo $errMSG; ?>
                 </div>
-                <span class="text-danger"><?php echo $userNameError; ?></span>
             </div>
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                    <input name="pass" id="password" class="form-control" type="password" placeholder="Password" maxlength="15" />
-                </div><br><hr>
-                <span class="text-danger"><?php echo $passError; ?></span>
-            </div>
-            <div class="form-group"><br>
-                <button type="submit" class="btn btn-lg btn-block btn-primary" name="btn-login">Sign In</button><br>
-            </div>
-                                        <?php
-                                            }
-                                        ?>
-                                    </div>
+        <?php
+            }
+        ?>
+            <div class="panel panel-default">
+
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1 "><br>     
+                                <div class="form-group">
+                                    <strong>Username</strong>
+                                    <input type="text" id="username" name="userName" class="form-control" value="<?php echo $userName; ?>" maxlength="20" autofocus />
                                 </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                </div>
+                                <div class="form-group">
+                                    <strong>Password</strong>
+                                    <input name="pass" id="password" class="form-control" type="password" maxlength="20" />
+                                </div>
+                                <div class="form-group">
+                                    <?php
+                                        if ( isset($successMSG) ) {
+                                    ?>
+                                    <button type="submit" class="btn btn-block btn-success" name="btn-login">Signing in ...</button><br>
+                                    <?php
+                                        } else {?>
+                                    <button type="submit" class="btn btn-block btn-success" name="btn-login">Sign In</button><br>
+                                    <?php    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
         </div>
     </div>
 </div>
+</div>
 
 <footer class="footer">
-<div class="container">
+    <div class="container">
         <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
-</div>
+    </div>
 </footer>
 
 <!-- jQuery -->

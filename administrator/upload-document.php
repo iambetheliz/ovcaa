@@ -47,10 +47,10 @@
      $folder = 'uploads/'; // upload directory 
      $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); // get image extension
      // valid image extensions
-     $valid_extensions = array('exe', 'zip', 'rar', 'sql'); // valid extensions
+     $valid_extensions = array('docx', 'pdf', 'xls', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
     
      // allow valid image file formats
-     if(!in_array($fileExt, $valid_extensions)){  
+     if(in_array($fileExt, $valid_extensions)){  
      // Check file size '5MB'
       if($new_size < 5000000)    {     
         $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
@@ -112,22 +112,7 @@
      $error = true;
      $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Description must contain alphabets and space.";
     }
-   
-    else {
-     // check username exist or not
-     $query = "SELECT description FROM material WHERE description='$description'";
-     $result = mysql_query($query);
-     $count = mysql_num_rows($result);
-     if($count!=0){
-      $error = true;
-      $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Provided Description is already in use.";
-     }
-    }
 
-  // end Description error
-
-
-    
     // if no error occured, continue ....
     if(!$error)
     {
@@ -194,7 +179,7 @@
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                       <ul class="dropdown-menu">
                           <li>
-                              <a href="logout.php">Logout</a>
+                              <a href="logout.php?logout">Logout</a>
                           </li>
                       </ul>
                   </li>
@@ -245,27 +230,48 @@
   <?php
     if(isset($successMSG)){
       ?>
-      <p class="text-success"><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></p>
-      <br>
+        <div class="form-group row">
+            <div class="alert alert-success col-sm-6">
+                <span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?>
+            </div>
+        </div>
+  <?php
+    }
+    if(isset($errMSG)){
+      ?>
+        <div class="form-group row">
+            <div class="alert alert-danger col-sm-6">  
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <?php echo $errMSG; ?> 
+            </div>
+        </div> 
   <?php
     }
   ?>
 
-    <div class="form-group row">
-    <label class="col-sm-2 col-form-label"></label>
-      <div class="col-sm-4">
-      <input type="file" name="file" class="form-control-file" />
-      <p class="text-danger"><?php echo $FileError; ?></p>
-      <?php
-    if(isset($errMSG)){
-      ?>
-    <p class="text-danger">  <?php echo $errMSG; ?> </p>
-        
-          <?php
-    }
-  ?>
+<div class="form-group row">
+  <label class="col-sm-2 col-form-label"></label>
+  <div class="col-sm-4"> 
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button id="file-button-browse" type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-file"></span>  Browse
+        </button>
+      </span>
+      <input type="file" class="form-control-file" name="file" id="files-input-upload" style="display:none">
+      <input type="text" id="file-input-name" disabled="disabled" placeholder="File not selected" class="form-control">
     </div>
-    </div>
+    <script type="text/javascript">
+      document.getElementById('file-button-browse').addEventListener('click', function() {
+      document.getElementById('files-input-upload').click();
+      });
+
+      document.getElementById('files-input-upload').addEventListener('change', function() {
+      document.getElementById('file-input-name').value = this.value;
+      });
+    </script>
+  </div>
+</div>
     
     <div class="form-group row">
       <label class="col-sm-2 col-form-label">Category: (Required)</label>
@@ -357,27 +363,25 @@
 
    ?>
     
-    <div class="form-group" id="newCat" style="display:none;">
+    <div class="form-group row" id="newCat" style="display:none;">
     <label class="col-sm-2 col-form-label"></label>
           <div class="col-sm-4 form-group" id="cname">
-                  <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
+              <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus /><br>
+              <?php echo $successMSG; ?>
+              <button type="submit" id="add" name="add_new_cat" class="btn btn-primary pull-right">ADD</button>
+              <script type="text/javascript">
+                $('#cat_name').on('change',function(){
+                  if( $(this).val()==="new"){
+                    $("#newCat").show()
+                  }
+                  else{
+                    $("#newCat").hide()
+                  }
+                  });
+              </script>
           </div>
-
-          <div class="form-inline">
-              <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
-        <script type="text/javascript">
-          $('#cat_name').on('change',function(){
-              if( $(this).val()==="new"){
-                $("#newCat").show()
-              }
-              else{
-                $("#newCat").hide()
-              }
-          });
-        </script>
-      </div>
     </div>
-   <!-- End Add Category -->
+    <!-- End Add Category -->
 
   <div class="form-group row"> 
       <label class="col-sm-2 col-form-label">Title: (Required)</label>
@@ -408,7 +412,7 @@
      <button type="submit" name="btn-upload" class="btn btn-success" formaction="upload-document.php"><span class="glyphicon glyphicon-upload"></span>
     &nbsp;UPLOAD</button> (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.
     </div>
-    </div>
+  </div>
 
   </form>
 
@@ -425,7 +429,7 @@
       </footer>
 
   <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="../assets/js/jquery.min.js"></script>
   <script src="../assets/js/bootstrap.min.js"></script>
   <script src="../assets/js/index.js"></script>
 
