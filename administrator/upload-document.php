@@ -19,13 +19,16 @@
     $userRow = $res->fetch_array(MYSQLI_BOTH);
 ?>
   <?php
-   error_reporting( ~E_NOTICE ); // avoid notice
-   require_once 'Material.php';
+    error_reporting( ~E_NOTICE ); // avoid notice
+    require_once 'Material.php';
    
-  $error = false;
-   if(isset($_POST['btn-upload']))
-   {
-      $title = $_POST['title'];
+    $error = false;
+    if(isset($_POST['btn-upload'])) {
+
+      $title = trim($_POST['title']);
+      $title = strip_tags($title);
+      $title = htmlspecialchars($title);
+
       $description = $_POST['description'];
       $category_id = $_POST['category_id'];
       $cat_name = $_POST['cat_name'];
@@ -42,60 +45,65 @@
    
       $final_file=str_replace(' ','-',$new_file_name);
 
-    
-  // Title error
-    $title = trim($_POST['title']);
-    $title = strip_tags($title);
-    $title = htmlspecialchars($title);
-         
-    if (empty($title)) {
-     $error = true;
-     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Title.";
-    } else if (strlen($title) < 5) {
-     $error = true;
-     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must have atleast 5 characters.";
-    } 
-    else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
-     $error = true;
-     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must contain alphabets and space.";
-    }
-   
-    else {
-     // check username exist or not
-     $result = mysqli_query($DB_con,"SELECT title FROM material WHERE title='$title'");
-     $count = mysqli_num_rows($result);
-     if($count!=0){
-      $error = true;
-      $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Provided Title is already in use.";
-     }
-    }
-  // end Title error
+      $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
+      $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
 
-    if(empty($final_file)){
-      $error = true;
-      $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> No file chosen!";
-    }
-     
-    else
-    {
-     $folder = 'uploads/'; // upload directory 
-     $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); // get image extension
-     // valid image extensions
-     $valid_extensions = array('docx', 'pdf', 'xls', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
+
+      if (empty($description)) {
+        $description = 'No description';
+      }
+      else if (!preg_match("/^[a-zA-Z ]+$/",$description)) {
+        $error = true;
+        $descError = "Description must only contain alphabets and space.";
+      }   
+
+      // Title error         
+      if (empty($title)) {
+        $error = true;
+        $TitleError = "Please enter a title.";
+      } else if (strlen($title) < 5) {
+        $error = true;
+        $TitleError = "Title must have atleast 5 characters.";
+      } 
+      else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
+        $error = true;
+        $TitleError = "Title must contain only alphabets and space.";
+      }   
+      else {
+        // check username exist or not
+        $query = "SELECT title FROM material WHERE title='$title'";
+        $result = mysql_query($query);
+        $count = mysql_num_rows($result);
+          if($count!=0){
+            $error = true;
+            $TitleError = "Provided title is already in use.";
+          }
+      }
+      // end Title error
+
+      if(empty($final_file)){
+        $error = true;
+        $errMSG = "No file chosen!";
+      }     
+      else {
+        $folder = 'uploads/'; // upload directory 
+        $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); 
+        // valid image extensions
+        $valid_extensions = array('docx', 'doc', 'pdf', 'xls', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
     
-     // allow valid image file formats
-     if(in_array($fileExt, $valid_extensions)){  
-     // Check file size '5MB'
-      if($new_size < 5000000)    {     
-        $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
-        $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-        move_uploaded_file($file_loc,$folder.$final_file);
-      }
-      else{
-       $errMSG = "Sorry, your file is too large.";
-      }
-    }  
+        // allow valid image file formats
+        if(in_array($fileExt, $valid_extensions)){  
+          // Check file size '5MB'
+          if($new_size < 5000000)    {     
+            move_uploaded_file($file_loc,$folder.$final_file);
+          }
+          else{
+            $error = true;
+            $errMSG = "Sorry, your file is too large.";
+          }
+        }  
     else{
+      $error = true;
       $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
      }
   }
@@ -117,8 +125,7 @@
         {
           $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
           $lastId = $stmt->fetchColumn();
-          $successMSG = "New record created succesfully. Last inserted ID is: " . $lastId;
-          header("refresh:3;tbl_materials.php"); // redirects image view page after 5 seconds.
+          $successMSG = "New record created succesfully. <br>Last inserted ID is: " . $lastId;
         }
         else
         {
@@ -256,34 +263,38 @@
                   <!-- Page Heading -->
                   <div class="row">
                       <div class="col-lg-12">
-                          <h3 class="page-header"><strong>Upload New File</strong></h3>
+                          <h3 class="page-header">
+                              <strong>Upload New File</strong>
+                                  <small>(<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.</small>
+                          </h3>
                       </div>
                   </div>
                   <!-- /.row -->              
 
-  <!-- Main Form -->
-  <br>
-  <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
+<!-- Main Form -->
+<div class="form-group row">
+<div class="col-sm-6">
 
+<form method="post" enctype="multipart/form-data" action="" >
+<div class="form-group row">
+<div class="col-sm-8"> 
   <?php
     if(isset($successMSG)){
       ?>
-        <div class="form-group row">
-            <div class="alert alert-success col-sm-6">
-                <span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?>
-            </div>
-        </div>
-
-<?php
+      <div class="alert alert-success"><?php echo $successMSG; ?></div>
+  <?php
     }
     if(isset($errMSG)){
       ?>
-<p class="text-danger"><?php echo $errMSG; ?></p> 
+      <div class="alert alert-danger"><?php echo $errMSG; ?></div> 
   <?php
     }
   ?>
+</div>
+</div>
+
 <div class="form-group row">
-  <div class="col-sm-6"> 
+  <div class="col-sm-8"> 
     <div class="input-group">
       <span class="input-group-btn">
         <button id="file-button-browse" type="button" class="btn btn-default">
@@ -302,11 +313,19 @@
       });
     </script>
   </div>
-</div>
+</div><br>
+
+  <div class="form-group row"> 
+        <div class="col-sm-8">
+          <strong>Title</strong> <sup class="text-danger">*</sup>
+          <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
+          <p class="text-danger"><?php echo $TitleError; ?></p>
+        </div>
+  </div>
       
     <div class="form-group row">
-      <label class="col-sm-2 col-form-label">Category: (Required)</label>
-       <div class="col-sm-4">    
+      <div class="col-sm-8">
+          <strong>Category</strong> <sup class="text-danger">*</sup>
           <?php
               // php select option value from database
               $hostname = "localhost";
@@ -340,8 +359,7 @@
     </div>
     
     <div class="form-group row" id="newCat" style="display:none;">
-    <label class="col-sm-2 col-form-label"></label>
-          <div class="col-sm-4 form-group" id="cname">
+          <div class="col-sm-8" id="cname">
               <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus /><br>
               <?php echo $successMSG; ?>
               <button type="submit" id="add" name="add_new_cat" class="btn btn-primary pull-right">ADD</button>
@@ -359,43 +377,39 @@
     </div>
     <!-- End Add Category -->
 
-  <div class="form-group row"> 
-      <label class="col-sm-2 col-form-label">Title: (Required)</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
-          <p class="text-danger"><?php echo $TitleError; ?></p>
-        </div>
+  <div class="form-group row">
+      <div class="col-sm-8">
+          <strong>Description</strong> <sup class="text-danger">*</sup>
+          <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>   
+          <p class="text-danger"><?php echo $descError; ?></p>
+      </div>
+  </div>
+
+  <div class="form-group row" style="display:none;">
+      <div class="col-sm-8">
+          <input type="text" class="form-control" name="uploaded_by" value="<?php echo $userRow['first_name']." ".$userRow['last_name'] ?>" />
+          <input type="text" class="form-control" name="location" value="<?php echo $location; ?>" />
+          <input type="text" class="form-control" name="url" value="<?php echo $url; ?>" />
+      </div>
   </div>
 
   <div class="form-group row">
-      <label class="col-sm-2 col-form-label">Description: (Required)</label>
-        <div class="col-sm-4">
-          <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>    
-        </div>
+      <div class="col-sm-8">
+          <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> CANCEL </a>
+          <button type="submit" name="btn-upload" class="btn btn-success" formaction="upload-document.php"><span class="glyphicon glyphicon-upload"></span>&nbsp;UPLOAD
+          </button>
+      </div>
   </div>
-
-   <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
-    <textarea hidden="" name="location"><?php echo $location; ?></textarea>
-    <textarea hidden="" name="url"><?php echo $url; ?></textarea> 
-
   <br>
-  <div class="form-group row">
-    <label class="col-sm-2 col-form-label"></label>
-      <div class="col-sm-4">
-      <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
-    CANCEL </a>
-     <button type="submit" name="btn-upload" class="btn btn-success" formaction="upload-document.php"><span class="glyphicon glyphicon-upload"></span>
-    &nbsp;UPLOAD</button> (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.
-    </div>
-  </div>
-
   </form>
 
-  </div><!-- /.container-fluid -->
-          </div><!-- /#page-wrapper -->
-
-      </div><!-- /#wrapper -->
   </div>
+  </div>
+
+  </div><!-- /.container-fluid -->
+  </div><!-- /.container-fluid2 -->
+  </div><!-- /#page-wrapper -->
+  </div><!-- /#wrapper -->
 
       <footer class="footer">
           <div class="container-fluid">

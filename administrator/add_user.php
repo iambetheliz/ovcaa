@@ -41,7 +41,7 @@
   if (empty($userName)) {
    $error = true;
    $userNameError .= "<span class='glyphicon glyphicon-exclamation-sign'></span> ";
-   $userNameError .= "Please enter a username.";
+   $userNameError .= "Username cannot be empty!";
   } else if (strlen($userName) < 5) {
    $error = true;
    $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Username must have atleat 5 characters.";
