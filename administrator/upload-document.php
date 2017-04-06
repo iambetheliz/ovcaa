@@ -35,7 +35,6 @@
       $new_file_name = strtolower($file);
    
       $final_file=str_replace(' ','-',$new_file_name);
-
     if(empty($final_file)){
       $error = true;
      $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> Please Select FIle.";
@@ -64,7 +63,6 @@
       $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
      }
   }
-
   // Title error
     $title = trim($_POST['title']);
     $title = strip_tags($title);
@@ -92,9 +90,7 @@
       $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Provided Title is already in use.";
      }
     }
-
   // end Title error
-
   // Description error
     $description = trim($_POST['description']);
     $description = strip_tags($description);
@@ -122,10 +118,7 @@
       $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Provided Description is already in use.";
      }
     }
-
   // end Description error
-
-
     
     // if no error occured, continue ....
     if(!$error)
@@ -305,13 +298,11 @@
   <?php
               
   $error = false;
-
    if ( isset($_POST['add_new_cat']) ) {
     
     $cat_name = trim($_POST['cat_name']);
     $cat_name = strip_tags($cat_name);
     $cat_name = htmlspecialchars($cat_name);
-
     if (empty($cat_name)) {
      $error = true;
      $categoryError = "Please enter a Category.";
@@ -339,7 +330,6 @@
      
       $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
       $stmt->bindParam(':cat_name',$cat_name);
-
           if($stmt->execute()) {
             $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
             $lastId = $stmt->fetchColumn();
@@ -353,7 +343,6 @@
       
     }      
    }
-
    ?>
     
     <div class="form-group" id="newCat" style="display:none;">
