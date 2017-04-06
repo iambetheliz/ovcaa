@@ -54,70 +54,41 @@
     // make file name in lower case
  
     $final_file=str_replace(' ','-',$new_file_name);
-          
-    if($final_file)
-    {
-      $folder = 'uploads/'; // upload directory 
+             
+ if($file)
+  {
+   $folder = 'uploads/'; // upload directory 
+   $fileExt = strtolower(pathinfo($file,PATHINFO_EXTENSION)); // get image extension
+  $valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'pdf', 'xlsx', 'docx', 'ppt'); // valid extensions
 
-      if($new_size < 5000000)
-        {
-          $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
-          $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-          unlink($folder.$edit_row['filename']);
-          move_uploaded_file($file_loc,$folder.$final_file);
-        }
-        else
-        {
-          $errMSG = "Sorry, your file is too large it should be less then 5MB";
-        }
+   
+   if(in_array($fileExt, $valid_extensions))
+   {   
+    if($imgSize < 5000000)
+    {
+                 unlink($folder.$edit_row['file']);
+                    $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
+
+                   $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
+                  
+                    move_uploaded_file($file_loc,$folder.$file);
     }
     else
     {
-      // if no image selected the old image remain as it is.
-      $final_file = $edit_row['filename']; // old file from database
-      $new_size = $edit_row['filesize'];// old file from database
-    }             
-
-// Title error
-  $title = trim($_POST['title']);
-  $title = strip_tags($title);
-  $title = htmlspecialchars($title);
-       
-  if (empty($title)) {
-   $error = true;
-   $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Title.";
-  } else if (strlen($title) < 5) {
-   $error = true;
-   $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must have atleast 5 characters.";
-  } 
-  else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
-   $error = true;
-   $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must contain alphabets and space.";
-  }   
-
-// end Title error
-
-// Description error
-  $description = trim($_POST['description']);
-  $description = strip_tags($description);
-  $description = htmlspecialchars($description);
-       
-  if (empty($description)) {
-   $error = true;
-   $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Description.";
-  } else if (strlen($description) < 5) {
-   $error = true;
-   $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Description must have atleast 5 characters.";
-  } 
-  else if (!preg_match("/^[a-zA-Z ]+$/",$description)) {
-   $error = true;
-   $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Description must contain alphabets and space.";
+     $errMSG = "Sorry, your file is too large it should be less then 5MB";
+    }
+   }
+   else
+   {
+    $errMSG = "Sorry, only ZIP, PDF, XLSX, DOCX, PPT, JPG, JPEG, PNG & GIF files are allowed.";  
+   } 
   }
-   
-// end Description error
-    
-    // if no error occured, continue ....
-    if(!$error)
+  else
+  {
+   // if no file selected the old image remain as it is.
+            $final_file = $edit_row['filename']; // old file from database
+            $new_size = $edit_row['filesize'];// old file from database // old file from database // if no error occured, continue ....
+    if(!isset($errMSG))
     {
       $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, category_id=:category_id WHERE id=:id');
       $stmt->bindParam(':title',$title);
