@@ -1,6 +1,13 @@
 <?php
     ob_start();
     require_once '../includes/dbconnect.php';
+
+    $conDB = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($conDB->connect_errno) {
+        echo "Connect failed: ", $conDB->connect_error;
+    exit();
+    }
     
     session_start();
         if(!isset($_SESSION['user']))
@@ -10,8 +17,8 @@
         $userName=$_SESSION['user'];
 
     // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+    $res = $conDB->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
+    $userRow = $res->fetch_array(MYSQLI_BOTH);
 ?>
 <!DOCTYPE html>
 <html lang="en-US">

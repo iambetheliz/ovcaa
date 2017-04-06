@@ -1,20 +1,24 @@
 <?php
-    ob_start();
     session_start();
     require_once '../includes/dbconnect.php';
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+        echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header("Location: index.php");
+        header("Location: /ovcaa/administrator");
         exit;
     }
     // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
+    $userRow = $res->fetch_array(MYSQLI_BOTH);
 ?>
 <?php
-
-  error_reporting( ~E_NOTICE );
   
   require_once 'Material.php';
   
@@ -144,7 +148,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="logout.php">Logout</a>
+                            <a href="logout.php?logout">Logout</a>
                         </li>
                     </ul>
                 </li>

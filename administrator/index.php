@@ -2,6 +2,13 @@
     ob_start();
     session_start();
     require_once '../includes/dbconnect.php';
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+        echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
     
     // it will never let you open index(login) page if session is set
     if ( isset($_SESSION['user'])!="" ) {
@@ -37,21 +44,24 @@
             
             $password = hash('sha256', $pass); // password hashing using SHA256
         
-            $res=mysql_query("SELECT userId, userName, userPass FROM members WHERE userName='$userName'");
-            $row=mysql_fetch_array($res);
-            $count = mysql_num_rows($res); // if uname/pass correct it returns must be 1 row
+            $query = "SELECT userId, userName, userPass FROM members WHERE userName='$userName'";
+            $result = $DB_con->query($query);
+            $row = $result->fetch_array(MYSQLI_BOTH);
+            $row_cnt = $result->num_rows; // if uname/pass correct it returns must be 1 row
             
-            if( $count == 1 && $row['userPass']==$password ) {
+            if( $row_cnt == 1 && $row['userPass']==$password ) {
                 $_SESSION['user'] = $row['userId'];
                 $successMSG = "Signing in";
                 header("refresh:3;dashboard.php");
             } else {
                 $errMSG = "Incorrect Credentials, Try again...";
             }
-                
+            
+            $result->close();
         }
         
     }
+    $DB_con->close();
 ?>
 
 <!DOCTYPE html>

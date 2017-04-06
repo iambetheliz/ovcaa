@@ -2,15 +2,22 @@
     ob_start();
     session_start();
     require_once '../includes/dbconnect.php';
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+        echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header("Location: index.php");
+        header("Location: /ovcaa/administrator");
         exit;
     }
     // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
+    $userRow = $res->fetch_array(MYSQLI_BOTH);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -32,7 +39,7 @@ $per_page = 5; // Set how many records do you want to display per page.
 
 
     $search = $_GET['search'];
-    $search = mysql_real_escape_string($search);
+    $search = $DB_con->real_escape_string($search);
     $output = 'Showing results for "'.$search.'."';
 
     $startpoint = ($page * $per_page) - $per_page;

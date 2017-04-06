@@ -1,16 +1,22 @@
 <?php
-    ob_start();
     session_start();
     require_once '../includes/dbconnect.php';
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+        echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header("Location: index.php");
+        header("Location: /ovcaa/administrator");
         exit;
     }
     // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
+    $userRow = $res->fetch_array(MYSQLI_BOTH);
 ?>
 <?php
 
@@ -122,14 +128,14 @@
 
                 <!-- Buttons -->
                 <div class="row">
-                    <div class="col-sm-7"> 
-                        <!-- Button trigger modal -->
-                        <a href="add_user.php" class="btn btn-success">
-                            <span class="glyphicon glyphicon-plus"></span> Add New User
-                        </a>                
-                    </div>
-                    <div class="col-sm-1" right" style="right: 30px;"">
-                        <div class="input-group-btn">
+                    <div class="col col-xs-4">
+                        <a href="add_user.php" class="btn btn-success" type="button" role="button" >
+                            <span class="glyphicon glyphicon-plus"></span> Add New
+                        </a>  
+                    </div>                            
+                    <div class="col col-xs-3"></div>         
+                    <div class="col col-xs-2 text-right">
+                        <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
                             </button>
@@ -166,22 +172,21 @@
                             ?>
                         </div>
                     </div>
-                    <div class="col-sm-4 right">
                 <form action="" method="get">
+                    <div class="col col-xs-3 text-right">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Search for terms..">
                             <span class="input-group-btn"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button></span>
                         </div>
                     </div>
-                </div><br>
+                </div>
                 <!-- End of Buttons -->
-                
+                <br>
                 <!-- Table and Pagination -->
                 <?php 
                     include '../includes/pagination.php';
                     include 'users.php';
-                ?>               
-                
+                ?>                               
                 </form>
 
             </div><!-- /.container-fluid -->

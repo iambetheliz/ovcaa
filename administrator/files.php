@@ -2,15 +2,22 @@
     ob_start();
     session_start();
     require_once '../includes/dbconnect.php';
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+        echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header("Location: index.php");
+        header("Location: /ovcaa/administrator");
         exit;
     }
     // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
+    $userRow = $res->fetch_array(MYSQLI_BOTH);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -39,19 +46,20 @@ $per_page = 5; // Set how many records do you want to display per page.
 if (isset($_GET['search'])) {
 
     $search = $_GET['search'];
-    $search = mysql_real_escape_string($search);
+    $search = $DB_con->real_escape_string($search);
         if (empty($search)) {
             $errMSG = "<div class='alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Please enter a keyword.</div>";
         }
         else {
-            $output = '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Showing results for <strong>"'.$search.'."</strong></div>';
+            $output = '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Showing result for <strong>"'.$search.'."</strong></div>';
         }
     
     $startpoint = ($page * $per_page) - $per_page;
 
     $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `filename`,`description`, `cat_name`, `uploaded_by`) LIKE '%".$search."%'";
 
-    $results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+    $result = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+
 }
 else {
 
@@ -59,14 +67,16 @@ else {
 
     $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `filename`,`description`, `cat_name`, `uploaded_by`)";
 
-    $results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+    $result = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+    
 }
 
 ?>  
 
 <?php if(!empty($_SESSION['success_msg'])){ ?>
-<div class="alert alert-success"><?php echo $_SESSION['success_msg']; ?></div>
-<?php unset($_SESSION['success_msg']); } ?>
+    <div class="alert alert-success"><?php echo $_SESSION['success_msg']; ?></div>
+    <?php unset($_SESSION['success_msg']); 
+} ?>
 
 <?php
   if(isset($successMSG)){
@@ -102,14 +112,14 @@ else {
         <th>Date Modified</th>
     </tr>
 </thead>
+
 <?php
-if (mysqli_num_rows($results) != 0){           
+if (mysqli_num_rows($result) != 0) { ?>
 
-    // displaying records.
-    while ($row = mysqli_fetch_array($results)){
-
-?>
     <tbody>
+    <?php 
+    // displaying records.
+    while ($row = mysqli_fetch_array($result)){ ?>
         <tr>
             <td>
             <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span></a>
@@ -128,10 +138,12 @@ if (mysqli_num_rows($results) != 0){
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['date_created'])) ?></p></td>
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['date_updated'])) ?></p></td>
         </tr>
-        <?php } }else{ ?>
-            <tr><td colspan="13">No records found.</td></tr> 
-        <?php } ?>
+    <?php 
+    } 
+}else { ?>
+        <tr><td colspan="13">No records found.</td></tr> 
     </tbody>
+    <?php } ?>
 </table>
 </div>
 </div> 
