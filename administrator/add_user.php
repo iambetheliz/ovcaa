@@ -47,9 +47,8 @@
    $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Username must have atleat 5 characters.";
   }else {
    // check username exist or not
-   $query = "SELECT userName FROM members WHERE userName='$userName'";
-   $result = mysql_query($query);
-   $count = mysql_num_rows($result);
+   $result = mysqli_query($DB_con,"SELECT userName FROM members WHERE userName='$userName'");
+   $count = mysqli_num_rows($result);
    if($count!=0){
     $error = true;
     $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Provided username is already in use.";
@@ -67,9 +66,8 @@
   }
   else {
    // check email exist or not
-   $query = "SELECT userEmail FROM members WHERE userEmail='$email'";
-   $result = mysql_query($query);
-   $count = mysql_num_rows($result);
+   $result = mysqli_query($DB_con,"SELECT userEmail FROM members WHERE userEmail='$email'");
+   $count = mysqli_num_rows($result);
    if($count!=0){
     $error = true;
     $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Provided email is already in use.";
@@ -91,10 +89,9 @@
   // if there's no error, continue to signup
   if( !$error ) {
    
-   $query = "INSERT INTO members(userName,userEmail,userPass) VALUES('$userName','$email','$userPass')";
-   $res = mysql_query($query);
+   $result = mysqli_query($DB_con,"INSERT INTO members(userName,userEmail,userPass) VALUES('$userName','$email','$userPass')");
     
-   if ($res) {
+   if ($result) {
     $errTyp = "success";
     $successMSG = "Successfully registered, you may login now";
     header("refresh:3; tbl_users.php");
@@ -175,7 +172,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="logout.php?logout">Logout</a>
+                            <a href="logout.php">Logout</a>
                         </li>
                     </ul>
                 </li>

@@ -1,17 +1,23 @@
 <?php
-      ob_start();
-      session_start();
-      require_once '../includes/dbconnect.php';
-      
-      // if session is not set this will redirect to login page
-      if( !isset($_SESSION['user']) ) {
-          header("Location: /ovcaa/administrator");
-          exit;
-      }
-      // select loggedin members detail
-      $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-      $userRow=mysql_fetch_array($res);
-  ?>
+    session_start();
+    require_once '../includes/dbconnect.php';
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+        echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
+    
+    // if session is not set this will redirect to login page
+    if( !isset($_SESSION['user']) ) {
+        header("Location: /ovcaa/administrator");
+        exit;
+    }
+    // select loggedin members detail
+    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
+    $userRow = $res->fetch_array(MYSQLI_BOTH);
+?>
   <?php
    error_reporting( ~E_NOTICE ); // avoid notice
    require_once 'Material.php';
@@ -35,34 +41,8 @@
       $new_file_name = strtolower($file);
    
       $final_file=str_replace(' ','-',$new_file_name);
-    if(empty($final_file)){
-      $error = true;
-     $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> Please Select FIle.";
-    }
-     
-    else
-    {
-     $folder = 'uploads/'; // upload directory 
-     $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); // get image extension
-     // valid image extensions
-     $valid_extensions = array('docx', 'pdf', 'xls', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
+
     
-     // allow valid image file formats
-     if(in_array($fileExt, $valid_extensions)){  
-     // Check file size '5MB'
-      if($new_size < 5000000)    {     
-        $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
-        $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-       move_uploaded_file($file_loc,$folder.$final_file);
-      }
-      else{
-       $errMSG = "Sorry, your file is too large.";
-      }
-    }  
-    else{
-      $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
-     }
-  }
   // Title error
     $title = trim($_POST['title']);
     $title = strip_tags($title);
@@ -82,35 +62,48 @@
    
     else {
      // check username exist or not
-     $query = "SELECT title FROM material WHERE title='$title'";
-     $result = mysql_query($query);
-     $count = mysql_num_rows($result);
+     $result = mysqli_query($DB_con,"SELECT title FROM material WHERE title='$title'");
+     $count = mysqli_num_rows($result);
      if($count!=0){
       $error = true;
       $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Provided Title is already in use.";
      }
     }
   // end Title error
-  // Description error
-    $description = trim($_POST['description']);
-    $description = strip_tags($description);
-    $description = htmlspecialchars($description);
-         
-    if (empty($description)) {
-     $error = true;
-     $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Description.";
-    } else if (strlen($description) < 5) {
-     $error = true;
-     $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Description must have atleast 5 characters.";
-    } 
-    else if (!preg_match("/^[a-zA-Z ]+$/",$description)) {
-     $error = true;
-     $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Description must contain alphabets and space.";
+
+    if(empty($final_file)){
+      $error = true;
+      $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> No file chosen!";
     }
+     
+    else
+    {
+     $folder = 'uploads/'; // upload directory 
+     $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); // get image extension
+     // valid image extensions
+     $valid_extensions = array('docx', 'pdf', 'xls', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
+    
+     // allow valid image file formats
+     if(in_array($fileExt, $valid_extensions)){  
+     // Check file size '5MB'
+      if($new_size < 5000000)    {     
+        $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
+        $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
+        move_uploaded_file($file_loc,$folder.$final_file);
+      }
+      else{
+       $errMSG = "Sorry, your file is too large.";
+      }
+    }  
+    else{
+      $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
+     }
+  }
+
     // if no error occured, continue ....
     if(!$error)
     {
-     $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id)');
+        $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id)');
         $stmt->bindParam(':title',$title);
         $stmt->bindParam(':description',$description);
         $stmt->bindParam(':filename',$final_file);
@@ -125,7 +118,7 @@
           $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
           $lastId = $stmt->fetchColumn();
           $successMSG = "New record created succesfully. Last inserted ID is: " . $lastId;
-          header("refresh:5;tbl_materials.php"); // redirects image view page after 5 seconds.
+          header("refresh:3;tbl_materials.php"); // redirects image view page after 5 seconds.
         }
         else
         {
@@ -134,6 +127,57 @@
       }
    }
   ?>
+
+  <!-- Add Category -->
+  <?php
+              
+  $error = false;
+   if ( isset($_POST['add_new_cat']) ) {
+    
+    $cat_name = trim($_POST['cat_name']);
+    $cat_name = strip_tags($cat_name);
+    $cat_name = htmlspecialchars($cat_name);
+    if (empty($cat_name)) {
+     $error = true;
+     $categoryError = "Please enter a Category.";
+    } else if (strlen($cat_name) < 5) {
+     $error = true;
+     $categoryError = "Category must have atleat 5 characters.";
+    } 
+    else if (!preg_match("/^[a-zA-Z ]+$/",$cat_name)) {
+     $error = true;
+     $categoryError = "Category must contain alphabets and space.";
+    }
+   
+    else {
+     $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
+     $result = mysql_query($query);
+     $count = mysql_num_rows($result);
+     
+      if($count!=0){
+        $error = true;
+        $categoryError = "Provided Category is already in use.";
+      }
+    }
+   
+    if( !$error ) {
+     
+      $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
+      $stmt->bindParam(':cat_name',$cat_name);
+          if($stmt->execute()) {
+            $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
+            $lastId = $stmt->fetchColumn();
+            $successMSG = "New category added!";
+              header('refresh:3;upload-document.php');
+            }
+          else {
+            $errMSG = "Error!";
+            header('refresh:3;upload-document.php');
+          } 
+      
+    }      
+   }
+   ?>
 
   <!DOCTYPE html>
   <html lang="en-US">
@@ -229,23 +273,17 @@
                 <span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?>
             </div>
         </div>
-  <?php
+
+<?php
     }
     if(isset($errMSG)){
       ?>
-        <div class="form-group row">
-            <div class="alert alert-danger col-sm-6">  
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <?php echo $errMSG; ?> 
-            </div>
-        </div> 
+<p class="text-danger"><?php echo $errMSG; ?></p> 
   <?php
     }
   ?>
-
 <div class="form-group row">
-  <label class="col-sm-2 col-form-label"></label>
-  <div class="col-sm-4"> 
+  <div class="col-sm-6"> 
     <div class="input-group">
       <span class="input-group-btn">
         <button id="file-button-browse" type="button" class="btn btn-default">
@@ -265,11 +303,10 @@
     </script>
   </div>
 </div>
-    
+      
     <div class="form-group row">
       <label class="col-sm-2 col-form-label">Category: (Required)</label>
        <div class="col-sm-4">    
-       <p class="text-danger"><?php echo $categoryError; ?></p>
           <?php
               // php select option value from database
               $hostname = "localhost";
@@ -298,59 +335,9 @@
               <?php endwhile;?>
               <option value="new">Add new category</option>
           </select>
+       <p class="text-danger"><?php echo $categoryError; ?></p>
       </div>
     </div>
-
-  <!-- Add Category -->
-  <?php
-              
-  $error = false;
-   if ( isset($_POST['add_new_cat']) ) {
-    
-    $cat_name = trim($_POST['cat_name']);
-    $cat_name = strip_tags($cat_name);
-    $cat_name = htmlspecialchars($cat_name);
-    if (empty($cat_name)) {
-     $error = true;
-     $categoryError = "Please enter a Category.";
-    } else if (strlen($cat_name) < 5) {
-     $error = true;
-     $categoryError = "Category must have atleat 5 characters.";
-    } 
-    else if (!preg_match("/^[a-zA-Z ]+$/",$cat_name)) {
-     $error = true;
-     $categoryError = "Category must contain alphabets and space.";
-    }
-   
-    else {
-     $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
-     $result = mysql_query($query);
-     $count = mysql_num_rows($result);
-     
-      if($count!=0){
-        $error = true;
-        $categoryError = "Provided Category is already in use.";
-      }
-    }
-   
-    if( !$error ) {
-     
-      $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
-      $stmt->bindParam(':cat_name',$cat_name);
-          if($stmt->execute()) {
-            $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
-            $lastId = $stmt->fetchColumn();
-            $successMSG = "New category added!";
-              header('refresh:3;upload-document.php');
-            }
-          else {
-            $errMSG = "Error!";
-            header('refresh:3;upload-document.php');
-          } 
-      
-    }      
-   }
-   ?>
     
     <div class="form-group row" id="newCat" style="display:none;">
     <label class="col-sm-2 col-form-label"></label>
@@ -384,7 +371,6 @@
       <label class="col-sm-2 col-form-label">Description: (Required)</label>
         <div class="col-sm-4">
           <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>    
-          <p class="text-danger"><?php echo $DescError; ?></p>
         </div>
   </div>
 
