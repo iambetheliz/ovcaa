@@ -53,10 +53,6 @@
       if (empty($description)) {
         $description = 'No description';
       }
-      else if (!preg_match("/^[a-zA-Z ]+$/",$description)) {
-        $error = true;
-        $descError = "Description must only contain alphabets and space.";
-      }   
 
       // Title error         
       if (empty($title)) {
@@ -95,7 +91,7 @@
         // allow valid image file formats
         if(in_array($fileExt, $valid_extensions)){  
 
-          if($new_size > ini_get('upload_max_filesize'))    {     
+          if($new_size > 5000000) {     
             $error = true;
             $errMSG = "Sorry, your file is too large.";
           }

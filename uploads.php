@@ -23,8 +23,9 @@ header("location: 403-error.html");
 <body>
 <?php include('header.php'); ?>
 
+
 <div class="wrap">
-<div class="container">
+    <div class="container-fluid">
 
                 <?php    
                 $stmt = $DB_con->prepare('SELECT *, category.category_id, category.cat_name FROM material JOIN 

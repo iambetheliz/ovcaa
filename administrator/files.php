@@ -93,9 +93,9 @@ else {
 }  ?>
 
 <!-- Container Fluid -->
-<div class="table-responsive table-bordered container-fluid">
 <div class="row">
-<table class="table table-bordered table-hover table-list" id="table-id">
+<div class="table-responsive">
+<table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
         <th>Edit</th>
