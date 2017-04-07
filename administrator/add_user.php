@@ -41,14 +41,15 @@
   if (empty($userName)) {
    $error = true;
    $userNameError .= "<span class='glyphicon glyphicon-exclamation-sign'></span> ";
-   $userNameError .= "Username cannot be empty!";
+   $userNameError .= "Please enter a username.";
   } else if (strlen($userName) < 5) {
    $error = true;
    $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Username must have atleat 5 characters.";
   }else {
    // check username exist or not
-   $result = mysqli_query($DB_con,"SELECT userName FROM members WHERE userName='$userName'");
-   $count = mysqli_num_rows($result);
+   $query = "SELECT userName FROM members WHERE userName='$userName'";
+   $result = mysql_query($query);
+   $count = mysql_num_rows($result);
    if($count!=0){
     $error = true;
     $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Provided username is already in use.";
