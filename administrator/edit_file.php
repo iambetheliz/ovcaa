@@ -72,6 +72,7 @@
                     $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
     }
 
+
     else
     {
       $error = true;
