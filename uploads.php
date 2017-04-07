@@ -1,6 +1,6 @@
 <?php
 include('User.php'); // Includes Login Script
-include('Material.php');
+include('dbConnect.php');
 
 session_start();
 

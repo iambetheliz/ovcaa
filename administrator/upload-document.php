@@ -94,16 +94,12 @@
     
         // allow valid image file formats
         if(in_array($fileExt, $valid_extensions)){  
-          // Check file size '5MB'
-          if($new_size < 5000000)    {     
-            move_uploaded_file($file_loc,$folder.$final_file);
-          }
-          else{
+
+          if($new_size > ini_get('upload_max_filesize'))    {     
             $error = true;
             $errMSG = "Sorry, your file is too large.";
           }
-        }  
-    else{
+        } else{
       $error = true;
       $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
      }
@@ -123,6 +119,8 @@
         $stmt->bindParam(':url',$url);
         $stmt->bindParam(':uploaded_by',$uploaded_by);
         $stmt->bindParam(':category_id', $_POST['category_id']);
+        
+        move_uploaded_file($file_loc,$folder.$final_file);
      
         if($stmt->execute())
         {

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-    <title>UP Open University</title>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+<title>UP Open University</title>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/bootstrap-theme.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet">

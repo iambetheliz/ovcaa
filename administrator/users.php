@@ -50,17 +50,14 @@ $per_page = 5; // Set how many records do you want to display per page.
 
 ?>  
 
-<div class="table-responsive container-fluid">
-<div class="row">
-<?php echo pagination($statement,$per_page,$page,$url='?');?> 
-</div>
+<div class="container-fluid">
 
 <?php if (isset($_GET['search'])) {
     echo $output;
 }  ?>
 
 <div class="row">
-<table class="table table-striped table-bordered table-hover" id="table-id">
+<table class="table table-striped table-bordered table-responsive table-hover" id="table-id">
 <thead>
     <tr>
         <th><center>Action</center></th>
