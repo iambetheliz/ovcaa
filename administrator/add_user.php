@@ -1,37 +1,40 @@
 <?php
-    session_start();
-    require_once '../includes/dbconnect.php';
+  session_start();
+  require_once '../includes/dbconnect.php';
 
-    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+  $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
-    if ($DB_con->connect_errno) {
-        echo "Connect failed: ", $DB_con->connect_error;
-    exit();
-    }
-    
-    // if session is not set this will redirect to login page
-    if( !isset($_SESSION['user']) ) {
-        header("Location: /ovcaa/administrator");
-        exit;
-    }
-    // select loggedin members detail
-    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
-    $userRow = $res->fetch_array(MYSQLI_BOTH);
-?>
-<?php
+  if ($DB_con->connect_errno) {
+    echo "Connect failed: ", $DB_con->connect_error;
+  exit();
+  }
+   
+  // if session is not set this will redirect to login page
+  if( !isset($_SESSION['user']) ) {
+      header("Location: /ovcaa/administrator");
+  exit;
+  }
 
- $error = false;
+  // select loggedin members detail
+  $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
+  $result = $DB_con->query($res);
 
- if ( isset($_POST['btn-signup']) ) {
+  if ($result->num_rows != 0) {
+    $userRow = $result->fetch_array(MYSQLI_BOTH);
+  }
+
+  $error = false;
+
+  if ( isset($_POST['btn-signup']) ) {
   
   // clean user inputs to prevent sql injections
   $userName = trim($_POST['userName']);
   $userName = strip_tags($userName);
   $userName = htmlspecialchars($userName);
   
-  $email = trim($_POST['email']);
-  $email = strip_tags($email);
-  $email = htmlspecialchars($email);
+  $userEmail = trim($_POST['userEmail']);
+  $userEmail = strip_tags($userEmail);
+  $userEmail = htmlspecialchars($userEmail);
   
   $userPass = trim($_POST['userPass']);
   $userPass = strip_tags($userPass);
@@ -47,16 +50,17 @@
    $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Username must have atleat 5 characters.";
   }else {
    // check username exist or not
-   $result = mysqli_query($DB_con,"SELECT userName FROM members WHERE userName='$userName'");
-   $count = mysqli_num_rows($result);
-   if($count!=0){
+   $query = "SELECT userName FROM members WHERE userName='$userName'";
+   $result = $DB_con->query($query);
+
+   if($result->num_rows != 0){
     $error = true;
     $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Provided username is already in use.";
    }
   }
   
   //basic email validation
-  if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
+  if ( !filter_var($userEmail,FILTER_VALIDATE_EMAIL) ) {
    $error = true;
    $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter a valid email address.";
   } 
@@ -66,9 +70,10 @@
   }
   else {
    // check email exist or not
-   $result = mysqli_query($DB_con,"SELECT userEmail FROM members WHERE userEmail='$email'");
-   $count = mysqli_num_rows($result);
-   if($count!=0){
+   $query = "SELECT userEmail FROM members WHERE userEmail='$userEmail'";
+   $result = $DB_con->query($query);
+
+   if($result->num_rows != 0){
     $error = true;
     $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Provided email is already in use.";
    }
@@ -89,21 +94,19 @@
   // if there's no error, continue to signup
   if( !$error ) {
    
-   $result = mysqli_query($DB_con,"INSERT INTO members(userName,userEmail,userPass) VALUES('$userName','$email','$userPass')");
+   $stmt = $DB_con->prepare("INSERT INTO members(userName,userEmail,userPass) VALUES('$userName', '$userEmail', '$userPass')");
+   $stmt->bind_param($userName, $userEmail, $userPass);
     
-   if ($result) {
-    $errTyp = "success";
-    $successMSG = "Successfully registered, you may login now";
-    header("refresh:3; tbl_users.php");
-    unset($userName);
-    unset($email);
-    unset($userPass);
+   if (!$stmt) {
+      $errMSG = "Something went wrong, try again later..."; 
    } else {
-    $errTyp = "danger";
-    $errMSG = "Something went wrong, try again later..."; 
-   } 
-    
-  }  
+      $stmt->execute();
+      $successMSG = "User created successfully!";
+        header("refresh:3; tbl_users.php");
+        unset($userName);
+        unset($userEmail);
+        unset($userPass);    
+  }  }
   
  }
 ?>
@@ -217,66 +220,76 @@
                 <!-- /.row -->              
 
 <!-- Main Form -->
-<br>
-<div class="col-sm-4">
+<div class="form-group row">
+<div class="col-sm-6">
 <form id="regValidate" method="post" action="add_user.php" autocomplete="off">
 
-<?php
-  if ( isset($successMSG) ) {
-?>
-<div class="form-group">
-      <?php echo $successMSG; ?>
+<div class="form-group row">
+<div class="col-sm-8"> 
+  <?php
+    if(isset($successMSG)){
+      ?>
+      <div class="alert alert-success"><?php echo $successMSG; ?></div>
+  <?php
+    }
+    if(isset($errMSG) && ($error == true)){
+      ?>
+      <div class="alert alert-danger"><?php echo $errMSG; ?></div> 
+  <?php
+    }
+  ?>
 </div>
-<?php
- }
-?>
-
-<?php
-  if ( isset($errMSG) || ($error == true)) {
-    echo $errMSG; 
-  }
-?>
+</div>
   
-<div class="form-group">
-  <label>Username</label>
-  <div class="input-group" data-validate="userName">
+<div class="form-group row"> 
+  <div class="col-sm-8">
+    <strong>Username</strong><sup class="text-danger">*</sup>
+    <div class="input-group" data-validate="userName">
       <input type="text" id="userName" name="userName" class="form-control" maxlength="15" value="<?php echo $userName ?>" autofocus />
       <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-  </div>
+    </div>
       <p class="text-danger"><?php echo $userNameError; ?></p>
+  </div>
 </div>
 
-  <div class="form-group">
-  <label>Email</label>
-  <div class="input-group" data-validate="email">
-      <input type="text" id="email" name="email" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $email ?>" />
+<div class="form-group row"> 
+  <div class="col-sm-8">
+    <strong>Email</strong><sup class="text-danger">*</sup>
+    <div class="input-group" data-validate="email">
+      <input type="text" id="email" name="userEmail" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $userEmail ?>" />
       <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
      </div>
       <p class="text-danger"><?php echo $emailError; ?></p>
   </div>
-
-  <div class="form-group">
-  <label>Password</label> (atleast 8 characters)
-    <div class="input-group" data-validate="userPass">
-      <input type="password" class="form-control" name="userPass" id="userPass" autocomplete="off" /><span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-    </div>      
-    <p class="text-danger"><?php echo $passError; ?></p>
 </div>
 
-  <br>
-  <div class="form-group">
+<div class="form-group row"> 
+  <div class="col-sm-8">
+    <strong>Password</strong><sup class="text-danger">*</sup> (at least 8 characters)
+    <div class="input-group" data-validate="userPass">
+      <input type="password" class="form-control" name="userPass" id="userPass" /><span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
+    </div>      
+    <p class="text-danger"><?php echo $passError; ?></p>
+  </div>
+</div>
+
+<br>
+<div class="form-group row">
+  <div class="col-sm-8">
     <a type="button" href="tbl_users.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
   CANCEL </a>&nbsp;
     <button type="submit" class="btn btn-success send" name="btn-signup" data-loading-text="Saving info"><span class='glyphicon glyphicon-thumbs-up'></span> Save </button>
   </div>
+</div>
+
 </form>
+</div>
 </div>
 
 </div><!-- /.container-fluid -->
-        </div><!-- /#page-wrapper -->
-
-    </div><!-- /#wrapper -->
-</div>
+</div><!-- /.container-fluid -->
+</div><!-- /#page-wrapper -->
+</div><!-- /#wrapper -->
 
     <footer class="footer">
         <div class="container-fluid">

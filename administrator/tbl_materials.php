@@ -5,40 +5,41 @@
     $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
     if ($DB_con->connect_errno) {
-        echo "Connect failed: ", $DB_con->connect_error;
+      echo "Connect failed: ", $DB_con->connect_error;
     exit();
     }
-    
+   
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header("Location: /ovcaa/administrator");
-        exit;
+      header("Location: /ovcaa/administrator");
+    exit;
     }
+
     // select loggedin members detail
-    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
-    $userRow = $res->fetch_array(MYSQLI_BOTH);
-?>
-<?php
+    $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
+    $result = $DB_con->query($res);
 
-    require_once 'Material.php';
+    if ($result->num_rows != 0) {
+      $userRow = $result->fetch_array(MYSQLI_BOTH);
+    }
+
+    require_once 'dbConnect.php';
     
-    if(isset($_GET['delete_id']))
- {
-  // select image from db to delete
-  $stmt_select = $DB_con->prepare('SELECT material.filename, category.category_id, category.cat_name FROM material JOIN 
-    category ON category.category_id = material.category_id WHERE id =:id');
-  $stmt_select->execute(array(':id'=>$_GET['delete_id']));
-  $fileRow=$stmt_select->fetch(PDO::FETCH_ASSOC);
-  unlink("../administrator/uploads/".$fileRow['filename']);
-  
-  // it will delete an actual record from db
-  $stmt_delete = $DB_con->prepare('DELETE FROM material WHERE id =:id');
-  $stmt_delete->bindParam(':id',$_GET['delete_id']);
-  $stmt_delete->execute();
-  
-  header("Location: tbl_materials.php");
- }
+    if(isset($_GET['delete_id'])) {
 
+        $stmt_select = $DB_con->prepare('SELECT material.filename, category.category_id, category.cat_name FROM material JOIN 
+    category ON category.category_id = material.category_id WHERE id =:id');
+        $stmt_select->execute(array(':id'=>$_GET['delete_id']));
+        $fileRow=$stmt_select->fetch(PDO::FETCH_ASSOC);
+        unlink("../administrator/uploads/".$fileRow['filename']);
+  
+        // it will delete an actual record from db
+        $stmt_delete = $DB_con->prepare('DELETE FROM material WHERE id =:id');
+        $stmt_delete->bindParam(':id',$_GET['delete_id']);
+        $stmt_delete->execute();
+  
+        header("Location: tbl_materials.php");
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en-US">

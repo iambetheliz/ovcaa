@@ -5,22 +5,25 @@
     $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
     if ($DB_con->connect_errno) {
-        echo "Connect failed: ", $DB_con->connect_error;
+      echo "Connect failed: ", $DB_con->connect_error;
     exit();
     }
-    
+   
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header("Location: /ovcaa/administrator");
-        exit;
+      header("Location: /ovcaa/administrator");
+    exit;
     }
+
     // select loggedin members detail
-    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
-    $userRow = $res->fetch_array(MYSQLI_BOTH);
-?>
-<?php
+    $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
+    $result = $DB_con->query($res);
+
+    if ($result->num_rows != 0) {
+      $userRow = $result->fetch_array(MYSQLI_BOTH);
+    }
   
-  require_once 'Material.php';
+  require_once 'dbConnect.php';
   
   if(isset($_GET['edit_id']) && !empty($_GET['edit_id']))
   {

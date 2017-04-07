@@ -5,22 +5,23 @@
     $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
     if ($DB_con->connect_errno) {
-        echo "Connect failed: ", $DB_con->connect_error;
+      echo "Connect failed: ", $DB_con->connect_error;
     exit();
     }
-    
+   
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header("Location: /ovcaa/administrator");
-        exit;
+      header("Location: /ovcaa/administrator");
+    exit;
     }
+
     // select loggedin members detail
-    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
-    $userRow = $res->fetch_array(MYSQLI_BOTH);
-?>
-  <?php
-    error_reporting( ~E_NOTICE ); // avoid notice
-    require_once 'Material.php';
+    $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
+    $result = $DB_con->query($res);
+
+    if ($result->num_rows != 0) {
+      $userRow = $result->fetch_array(MYSQLI_BOTH);
+    }
    
     $error = false;
     if(isset($_POST['btn-upload'])) {
@@ -72,9 +73,9 @@
       else {
         // check username exist or not
         $query = "SELECT title FROM material WHERE title='$title'";
-        $result = mysql_query($query);
-        $count = mysql_num_rows($result);
-          if($count!=0){
+        $result = $DB_con->query($query);
+
+        if($result->num_rows != 0){
             $error = true;
             $TitleError = "Provided title is already in use.";
           }
@@ -111,6 +112,8 @@
     // if no error occured, continue ....
     if(!$error)
     {
+      require_once 'dbConnect.php';
+
         $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id)');
         $stmt->bindParam(':title',$title);
         $stmt->bindParam(':description',$description);
@@ -393,9 +396,10 @@
       </div>
   </div>
 
+  <br>
   <div class="form-group row">
       <div class="col-sm-8">
-          <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> CANCEL </a>
+          <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> CANCEL </a>&nbsp;
           <button type="submit" name="btn-upload" class="btn btn-success" formaction="upload-document.php"><span class="glyphicon glyphicon-upload"></span>&nbsp;UPLOAD
           </button>
       </div>
