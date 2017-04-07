@@ -14,27 +14,27 @@
 ?>
 <?php
 
-  error_reporting( ~E_NOTICE );
-  
-  require_once 'Material.php';
-  
-  if(isset($_GET['edit_id']) && !empty($_GET['edit_id']))
-  {
-    $id = $_GET['edit_id'];
-    $stmt_edit = $DB_con->prepare('SELECT * FROM material JOIN 
+    error_reporting( ~E_NOTICE );
+    
+    require_once 'Material.php';
+        
+ if(isset($_GET['edit_id']) && !empty($_GET['edit_id']))
+ {
+        $id = $_GET['edit_id'];
+        $stmt_edit = $DB_con->prepare('SELECT * FROM material JOIN 
     category ON category.category_id = material.category_id WHERE id =:id');
     $stmt_edit->execute(array(':id'=>$id));
     $edit_row = $stmt_edit->fetch(PDO::FETCH_ASSOC);
     extract($edit_row);
-  }
-  else
-  {
-    header("Location: tbl_materials.php");
-  }  
-  
-  
-  if(isset($_POST['btn_save_updates']))
-  {
+ }
+ else
+ {
+  header("Location: tbl_materials.php");
+ }
+ 
+ if(isset($_POST['btn_save_updates']))
+ {
+   
     $title = $_POST['title'];
     $description = $_POST['description'];
     $category_id = $_POST['category_id'];
@@ -54,48 +54,61 @@
     // make file name in lower case
  
     $final_file=str_replace(' ','-',$new_file_name);
-          
-   
- if($file)
+     
+  if($final_file)
   {
    $folder = 'uploads/'; // upload directory 
-   $imgExt = strtolower(pathinfo($file,PATHINFO_EXTENSION)); // get image extension
-  $valid_extensions = array('exe', 'zip', 'rar', 'sql'); // valid extensions
+   $FileExt = strtolower(pathinfo($file,PATHINFO_EXTENSION)); // get image extension
+   $valid_extensions = array('exe', 'zip', 'rar', 'sql'); // valid extensions
 
    
-   if(!in_array($imgExt, $valid_extensions))
+   if(!in_array($FileExt, $valid_extensions))
    {   
-    if($imgSize < 5000000)
+    if($imgSize < 5000000 )
     {
-                 unlink($folder.$edit_row['file']);
+                 
                     $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
 
-                   $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-                  
-                    move_uploaded_file($file_loc,$folder.$file);
+                    $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
     }
+
     else
     {
-     $errMSG = "Sorry, your file is too large it should be less then 5MB";
+      $error = true;
+     $FileError = " <span class='glyphicon glyphicon-info-sign'></span> Sorry, your file is too large it should be less then 5MB.";
     }
    }
    else
    {
-    $errMSG = "Sorry, only ZIP, PDF, XLSX, DOCX, PPT, JPG, JPEG, PNG & GIF files are allowed.";  
+     $error = true;
+     $FileError = " <span class='glyphicon glyphicon-info-sign'></span> Sorry, only RAR, ZIP, PDF, XLSX, DOCX, PPT, JPG, JPEG, PNG & GIF files are allowed..";
    } 
   }
   else
   {
    // if no file selected the old image remain as it is.
-            $final_file = $edit_row['filename']; // old file from database
-            $new_size = $edit_row['filesize'];// old file from database // old file from database
+            $final_file = $edit_row['filename'];
+            $new_size = $edit_row['filesize']; 
+             // old file from database
   } 
+    
+  if (empty($title)) {
+     $error = true;
+     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Title.";
+    } else if (strlen($title) < 5) {
+     $error = true;
+     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must have atleast 5 characters.";
+    } 
+    else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
+     $error = true;
+     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must contain alphabets and space.";
+    }       
+  // end Title error
 
-   
-    // if no error occured, continue ....
-    if(!isset($errMSG))
-    {
-      $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, category_id=:category_id WHERE id=:id');
+  // if no error occured, continue ....
+  if(!$error)
+  {
+    $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, category_id=:category_id WHERE id=:id');
       $stmt->bindParam(':title',$title);
       $stmt->bindParam(':description',$description);
       $stmt->bindParam(':filename',$final_file);
@@ -105,20 +118,19 @@
       $stmt->bindParam(':uploaded_by',$uploaded_by);
       $stmt->bindParam(':category_id', $_POST['category_id']);
       $stmt->bindParam(':id',$id);
-        
-      if($stmt->execute()){
+
+      unlink($folder.$edit_row['filename']);                                   
+      move_uploaded_file($file_loc,$folder.$final_file);    
+    
+   if($stmt->execute()){
         $successMSG = "Successfully updated...";
         header("refresh:3;tbl_materials.php");
-      }
-      else{
-        $errMSG = "Sorry Data Could Not Updated !";
-      }
-    
-    }
-    
-            
-  }
-  
+   }
+   else{
+    $errMSG = "Sorry Data Could Not Updated !";
+   }
+  }    
+ }
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -206,10 +218,10 @@
  <form method="post" enctype="multipart/form-data">
 
 <?php
-  if(isset($errMSG)){
+  if(isset($FileError)){
       ?><div class="form-group row">
             <div class="alert alert-danger col-sm-6" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo $errMSG; ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-danger"><?php echo $FileError; ?></p>  
             </div>
         </div>
             <?php
@@ -224,10 +236,17 @@
   }
   ?>   
 
-<div class="form-group row">
+ <div class="form-group row"> 
+    <label class="col-sm-2 col-form-label">Title: (Required)</label>
+    <div class="col-sm-4">
+    <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >   
+      <p class="text-danger"><?php echo $TitleError; ?></p>
+    </div>
+  </div>
+
+  <div class="form-group row">
     <label class="col-sm-2 col-form-label">Category: (Required)</label>
-     <div class="col-sm-4">    
-     <p class="text-danger"><?php echo $categoryError; ?></p>
+     <div class="col-sm-4">        
         <?php
             // php select option value from database
             $hostname = "localhost";
@@ -251,28 +270,18 @@
         ?>
         <script src="../assets/js/jquery.min.js"></script>
         <select name="category_id" class="form-control" id="cat_name">
-       
-         <?php while($row1 = mysqli_fetch_array($result1)):;?>            
+            <?php while($row1 = mysqli_fetch_array($result1)):;?>                    
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>           
         </select>
-    </div>
-  </div>
-   
- <div class="form-group row"> 
-    <label class="col-sm-2 col-form-label">Title: (Required)</label>
-    <div class="col-sm-4">
-    <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >   
-      <p class="text-danger"><?php echo $TitleError; ?></p>
     </div>
   </div>
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Description: (Required)</label>
     <div class="col-sm-4">
-  <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>    
-      <p class="text-danger"><?php echo $DescError; ?></p>
-    </div>
+  <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>   
+  </div>
   </div>  
 
   <div class="form-group row">
@@ -286,7 +295,7 @@
   <label class="col-sm-2 col-form-label">New File: </label>
     <div class="col-sm-4">
     <input type="file" name="file" class="form-control-file" />
-    <p class="text-danger"><?php echo $FileError; ?></p>  
+    
   </div>
   </div>
   

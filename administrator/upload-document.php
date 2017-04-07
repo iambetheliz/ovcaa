@@ -53,7 +53,7 @@
       if($new_size < 5000000)    {     
         $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
         $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-       move_uploaded_file($file_loc,$folder.$final_file);
+       
       }
       else{
        $errMSG = "Sorry, your file is too large.";
@@ -132,6 +132,8 @@
         $stmt->bindParam(':url',$url);
         $stmt->bindParam(':uploaded_by',$uploaded_by);
         $stmt->bindParam(':category_id', $_POST['category_id']);
+
+        move_uploaded_file($file_loc,$folder.$final_file);
      
         if($stmt->execute())
         {
