@@ -54,15 +54,16 @@
     // make file name in lower case
  
     $final_file=str_replace(' ','-',$new_file_name);
-             
+          
+   
  if($file)
   {
    $folder = 'uploads/'; // upload directory 
-   $fileExt = strtolower(pathinfo($file,PATHINFO_EXTENSION)); // get image extension
-  $valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'pdf', 'xlsx', 'docx', 'ppt'); // valid extensions
+   $imgExt = strtolower(pathinfo($file,PATHINFO_EXTENSION)); // get image extension
+  $valid_extensions = array('exe', 'zip', 'rar', 'sql'); // valid extensions
 
    
-   if(in_array($fileExt, $valid_extensions))
+   if(!in_array($imgExt, $valid_extensions))
    {   
     if($imgSize < 5000000)
     {
@@ -87,7 +88,11 @@
   {
    // if no file selected the old image remain as it is.
             $final_file = $edit_row['filename']; // old file from database
-            $new_size = $edit_row['filesize'];// old file from database // old file from database // if no error occured, continue ....
+            $new_size = $edit_row['filesize'];// old file from database // old file from database
+  } 
+
+   
+    // if no error occured, continue ....
     if(!isset($errMSG))
     {
       $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, category_id=:category_id WHERE id=:id');
