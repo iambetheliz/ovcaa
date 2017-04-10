@@ -49,7 +49,18 @@
       $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
       $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
 
+      // File error       
+      if ($final_file) {      
+       $query = "SELECT filename FROM material WHERE filename='$final_file'";
+       $result = $DB_con->query($query);
 
+     if($result->num_rows != 0){
+            $error = true;
+            $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> File is already exists.";
+        }
+      }  
+
+     // Description error
       if (empty($description)) {
         $description = 'No description';
       }
@@ -82,7 +93,7 @@
         $error = true;
         $errMSG = "No file chosen!";
       }     
-      else {
+     if ($final_file) {
         $folder = 'uploads/'; // upload directory 
         $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); 
         // valid image extensions
@@ -283,10 +294,12 @@
     }
     if(isset($errMSG)){
       ?>
-      <div class="alert alert-danger"><?php echo $errMSG; ?></div> 
+      <div class="alert alert-danger"><?php echo $errMSG; ?></div>
+
   <?php
     }
   ?>
+
 </div>
 </div>
 
