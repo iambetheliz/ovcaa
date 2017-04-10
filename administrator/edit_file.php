@@ -66,6 +66,17 @@
         $description = 'No description';
       }
 
+    // File error
+      if ($final_file) {      
+       $query = "SELECT filename FROM material WHERE filename='$final_file'";
+       $result = $DB_con->query($query);
+
+     if($result->num_rows != 0){
+            $error = true;
+            $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> File is already exists.";
+        }
+      }  
+      
      // Title error         
       if (empty($title)) {
         $error = true;
@@ -253,6 +264,7 @@
   <?php
     }
   ?>
+
 </div>
 </div>
 
@@ -326,29 +338,10 @@
         ?>  <?php while($row1 = mysqli_fetch_array($result1)):;?>
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>
-            <option value="new">Add new category</option>
-        </select>
+       </select>
     </div>
   </div>
-
-  <div class="form-group row" id="newCat" style="display:none;">
-          <div class="col-sm-8" id="cname">
-              <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus /><br>
-              <?php echo $successMSG; ?>
-              <button type="submit" id="add" name="add_new_cat" class="btn btn-primary pull-right">ADD</button>
-              <script type="text/javascript">
-                $('#cat_name').on('change',function(){
-                  if( $(this).val()==="new"){
-                    $("#newCat").show()
-                  }
-                  else{
-                    $("#newCat").hide()
-                  }
-                  });
-              </script>
-          </div>
-    </div>
-
+  
   <div class="form-group row"> 
     <div class="col-sm-8">
       <strong>Old File</strong> 
