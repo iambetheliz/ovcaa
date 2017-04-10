@@ -69,7 +69,7 @@
         $description = 'No description';
       }
 
-      // Title error         
+     // Title error         
       if (empty($title)) {
         $error = true;
         $TitleError = "Please enter a title.";
@@ -123,7 +123,7 @@
     }             
     
     // if no error occured, continue ....
-    if(!isset($errMSG))
+    if(!$error)
     {
       $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, category_id=:category_id WHERE id=:id');
       $stmt->bindParam(':title',$title);
