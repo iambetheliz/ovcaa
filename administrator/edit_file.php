@@ -270,7 +270,8 @@
 
         ?>
         <script src="../assets/js/jquery.min.js"></script>
-        <select name="category_id" class="form-control" id="cat_name">
+        <select name="category_id" class="form-control" id="cat_name" >
+          <option value="<?php echo $cat_name; ?>" ><?php echo $cat_name; ?></option>
             <?php while($row1 = mysqli_fetch_array($result1)):;?>                    
             <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
             <?php endwhile;?>           
