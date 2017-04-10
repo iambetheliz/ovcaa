@@ -61,10 +61,7 @@
     // make file name in lower case
  
     $final_file=str_replace(' ','-',$new_file_name);
-
-    $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
-    $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-
+    
     if (empty($description)) {
         $description = 'No description';
       }
@@ -102,6 +99,9 @@
 
       // allow valid image file formats
         if(in_array($fileExt, $valid_extensions)){
+          $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
+          $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
+
             if($new_size > 5000000)    {     
                 $error = true;
                 $errMSG = "Sorry, your file is too large.";

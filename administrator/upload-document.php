@@ -46,9 +46,6 @@
    
       $final_file=str_replace(' ','-',$new_file_name);
 
-      $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
-      $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-
       // File error       
       if ($final_file) {      
        $query = "SELECT filename FROM material WHERE filename='$final_file'";
@@ -101,10 +98,13 @@
     
         // allow valid image file formats
         if(in_array($fileExt, $valid_extensions)){  
-
+            $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
+            $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
+            
           if($new_size > 5000000) {     
             $error = true;
             $errMSG = "Sorry, your file is too large.";
+
           }
         } else{
       $error = true;
@@ -164,18 +164,19 @@
      $categoryError = "Category must contain alphabets and space.";
     }
    
-    else {
-     $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
-     $result = mysql_query($query);
-     $count = mysql_num_rows($result);
-     
-      if($count!=0){
-        $error = true;
-        $categoryError = "Provided Category is already in use.";
+    else {         
+      $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
+      $result = $DB_con->query($query);
+    
+    if($result->num_rows != 0){
+            $error = true;
+            $categoryError = "Provided Category is already in use.";
       }
     }
    
     if( !$error ) {
+      
+      require_once 'dbConnect.php';
      
       $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
       $stmt->bindParam(':cat_name',$cat_name);
