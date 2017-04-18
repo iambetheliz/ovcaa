@@ -107,10 +107,10 @@ ul.pagination>li>a.current {
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
                         <ul id="demo" class="collapse">
                             <li class="active">
-                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                                <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
                             </li>
                             <li>
-                                <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
+                                <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
                             </li>
                         </ul>
                     </li>
@@ -154,13 +154,6 @@ ul.pagination>li>a.current {
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="tbl_materials.php">Default</a></li>
-                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=title">Title</a></li>
-                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=cat_name">Category</a></li>
-                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=uploaded_by">Uploader</a></li>
-                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=date_updated">Latest</a></li>
-                            </ul>
                             <?php 
                                 $field='date_updated';
                                 $sort='DESC';
@@ -191,9 +184,16 @@ ul.pagination>li>a.current {
                                         $sort="DESC";
                                     }
                             ?>
+                            <ul class="dropdown-menu">
+                                <li><a href="tbl_materials.php">Default</a></li>
+                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=title">Title</a></li>
+                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=cat_name">Category</a></li>
+                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=uploaded_by">Uploader</a></li>
+                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=date_updated">Latest</a></li>
+                            </ul>
                         </div>
                     </div>
-                <form action="" method="get">
+                    <form action="" method="get">
                     <div class="col col-xs-3 text-right">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Search for terms..">
@@ -203,12 +203,14 @@ ul.pagination>li>a.current {
                 </div>
                 <!-- End of Buttons -->
                 <br>
+                <div class="container-fluid">
                 <?php 
                     include '../includes/pagination.php'; 
                     include 'files.php'; 
                 ?>
+                </div>
                 <br>
-                </form>
+                    </form>
 
             </div><!-- /.container-fluid -->
         </div><!-- /#page-wrapper -->

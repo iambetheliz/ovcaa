@@ -12,7 +12,7 @@
     
     // it will never let you open index(login) page if session is set
     if ( isset($_SESSION['user'])!="" ) {
-        header("Location: dashboard.php");
+        header("Location: dashboard");
         exit;
     }
     

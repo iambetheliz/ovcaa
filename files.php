@@ -1,5 +1,4 @@
 <?php
-    ob_start();
     require_once 'includes/dbconnect.php';
     
     // if session is not set this will redirect to login page
@@ -13,65 +12,57 @@
 <head>
 <meta charset="utf-8">
 <title>Pagination</title>
-<style type="text/css">
-ul.pagination li.page_info {
-    display: inline;
-    -webkit-margin-before: 1em;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
-    -webkit-padding-start: 40px;
-}
-
-/* For pagination function. */
-ul.pagination {
-    text-align:center;
-    color:#829994;
-}
-ul.pagination li {
-    display:inline;
-    padding:0 5px;
-}
-ul.pagination a {
-    color:#014421;
-    display:inline-block;
-    padding:5px 10px;
-    border:1px solid #cde0dc;
-    text-decoration:none;
-}
-ul.pagination a:hover,
-ul.pagination a.current {
-    background:#014421;
-    color:#fff;
-}
-</style>
 </head>
 <body>
 
 <?php
-$page = (int)(!isset($_GET["page"]) ? 1 : $_GET["page"]);
-if ($page <= 0) $page = 1;
+    require_once 'includes/dbconnect.php';
 
-$per_page = 5; // Set how many records do you want to display per page.
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+        echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
+
+    $page = (int)(!isset($_GET["page"]) ? 1 : $_GET["page"]);
+    if ($page <= 0) $page = 1;
+
+    $per_page = 5; // Set how many records do you want to display per page.
+
+    if (isset($_GET['search'])) {
 
     $search = $_GET['search'];
-    $search = mysqli_real_escape_string($conDB, $search);
-    $output = 'Showing results for "'.$search.'."';
+    $search = $DB_con->real_escape_string($search);
+    
+        if (empty($search)) {
+            $output1 = "<div class='row alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Please enter a keyword.</div>";
+        }
+        else {
+            $output1 = '<div class="row alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Showing result for <strong>"'.$search.'."</strong></div>';
+        }
     
     $startpoint = ($page * $per_page) - $per_page;
 
-    $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `description`, `cat_name`, `uploaded_by`) LIKE '%".$search."%'";
+    $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `filename`,`description`, `cat_name`, `uploaded_by`) LIKE '%".$search."%'";
 
-    $results = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+    $result = mysqli_query($DB_con,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+
+}
+else {
+
+    $startpoint = ($page * $per_page) - $per_page;
+
+    $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `filename`,`description`, `cat_name`, `uploaded_by`)";
+
+    $result = mysqli_query($DB_con,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+    
+}
 
 ?>   
 
-<div class="row">
-<?php echo pagination($statement,$per_page,$page,$url='?');?> 
-</div>
-
 <?php if (isset($_GET['search'])) {
-    echo $output;
+    echo $output1;
 }  ?>
 
 <div class="row">
@@ -86,12 +77,12 @@ $per_page = 5; // Set how many records do you want to display per page.
     </tr>
 </thead>
 <?php
-if (mysqli_num_rows($results) != 0) {
+if ($result->num_rows != 0) { ?>
 
-    // displaying records.
-    while ($row = mysqli_fetch_array($results)) {
-?>
     <tbody>
+    <?php 
+    // displaying records.
+    while ($row = $result->fetch_assoc()){ ?>
         <tr>
         <td><h3><strong><?php echo $row['title'] ?></strong></h3></td>
         <td><br>
@@ -125,9 +116,10 @@ else {
                 ?>
         </tr>
     </tbody>
-</table></div>
-<?php echo pagination($statement,$per_page,$page,$url='?');?>
+</table>
 </div>
+</div>
+<?php echo pagination($statement,$per_page,$page,$url='?');?>
 
 </body>
 </html>

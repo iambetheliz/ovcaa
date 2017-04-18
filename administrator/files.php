@@ -27,17 +27,19 @@
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
 <script src="../assets/js/jquery.min.js"></script>
-<script type="text/javascript">
-    window.setTimeout(function() {
-    $(".alert").fadeTo(500, 0).slideUp(500, function(){
-        $(this).remove(); 
-    });
-}, 3000);
-</script>
 </head>
 <body>
 
 <?php
+    require_once '../includes/dbconnect.php';
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+        echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
+
 $page = (int)(!isset($_GET["page"]) ? 1 : $_GET["page"]);
 if ($page <= 0) $page = 1;
 
@@ -47,18 +49,19 @@ if (isset($_GET['search'])) {
 
     $search = $_GET['search'];
     $search = $DB_con->real_escape_string($search);
+
         if (empty($search)) {
-            $errMSG = "<div class='alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Please enter a keyword.</div>";
+            $output = "<div class='row alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Please enter a keyword.</div>";
         }
         else {
-            $output = '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Showing result for <strong>"'.$search.'."</strong></div>';
+            $output = '<div class="row alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Showing result for <strong>"'.$search.'."</strong></div>';
         }
     
     $startpoint = ($page * $per_page) - $per_page;
 
     $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `filename`,`description`, `cat_name`, `uploaded_by`) LIKE '%".$search."%'";
 
-    $result = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+    $result = mysqli_query($DB_con,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
 
 }
 else {
@@ -67,7 +70,7 @@ else {
 
     $statement = "`material` JOIN category ON category.category_id = material.category_id WHERE CONCAT(`id`, `title`, `filename`,`description`, `cat_name`, `uploaded_by`)";
 
-    $result = mysqli_query($conDB,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
+    $result = mysqli_query($DB_con,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
     
 }
 
@@ -114,15 +117,15 @@ else {
 </thead>
 
 <?php
-if (mysqli_num_rows($result) != 0) { ?>
+if ($result->num_rows != 0) { ?>
 
     <tbody>
     <?php 
     // displaying records.
-    while ($row = mysqli_fetch_array($result)){ ?>
+    while ($row = $result->fetch_assoc()){ ?>
         <tr>
             <td>
-            <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span></a>
+            <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span></a>
             </td>
             <td class="delete_row">
             <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['id']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span></a>

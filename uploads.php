@@ -18,6 +18,14 @@ header("location: 403-error.html");
 <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <style type="text/css">
  a[href="/absolute/path/to/index/root/parent/"] {display: none;}
+/* For pagination function. */
+ul.pagination a {
+    color:#014421;
+}
+ul.pagination>li>a.current {
+    background:#014421;
+    color:#fff;
+}
 </style>
 </head>
 <body>
@@ -44,8 +52,7 @@ header("location: 403-error.html");
                 
                 <!-- Buttons -->
                 <div class="row">
-                    <div class="col-sm-7">
-                </div>
+                    <div class="col-sm-7"></div>
                     <div class="col-sm-1" right" style="right: 30px;"">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -100,10 +107,12 @@ header("location: 403-error.html");
                 <!-- End of Buttons -->
  
  <!-- Table and Pagination -->
+ <div class="container-fluid">
  <?php 
     include 'includes/pagination.php';
     include 'files.php';
  ?>
+ </div>
 <!-- End of Table and Pagination -->
 
     </div><!-- /#wrapper -->

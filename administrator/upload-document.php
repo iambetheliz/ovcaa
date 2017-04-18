@@ -46,17 +46,6 @@
    
       $final_file=str_replace(' ','-',$new_file_name);
 
-      // File error       
-      if ($final_file) {      
-       $query = "SELECT filename FROM material WHERE filename='$final_file'";
-       $result = $DB_con->query($query);
-
-     if($result->num_rows != 0){
-            $error = true;
-            $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> File is already exists.";
-        }
-      }  
-
      // Description error
       if (empty($description)) {
         $description = 'No description';
@@ -86,20 +75,31 @@
       }
       // end Title error
 
+      // File error       
+      if ($final_file) {      
+       $query = "SELECT filename FROM material WHERE filename='$final_file'";
+       $result = $DB_con->query($query);
+
+      if($result->num_rows != 0){
+            $error = true;
+            $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> File already exists.";
+        }
+      }   
+
       if(empty($final_file)){
         $error = true;
         $errMSG = "No file chosen!";
       }     
-     if ($final_file) {
+      if ($final_file) {
         $folder = 'uploads/'; // upload directory 
         $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); 
         // valid image extensions
         $valid_extensions = array('docx', 'doc', 'pdf', 'xls', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
+            $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
+            $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
     
         // allow valid image file formats
         if(in_array($fileExt, $valid_extensions)){  
-            $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
-            $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
             
           if($new_size > 5000000) {     
             $error = true;
@@ -134,6 +134,7 @@
           $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
           $lastId = $stmt->fetchColumn();
           $successMSG = "New record created succesfully. <br>Last inserted ID is: " . $lastId;
+          header('refresh:3;tbl_materials.php');
         }
         else
         {
@@ -250,10 +251,10 @@
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
                           <ul id="demo" class="collapse">
                               <li>
-                                  <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                                  <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
                               </li>
                               <li>
-                                  <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
+                                  <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
                               </li>
                           </ul>
                       </li>
