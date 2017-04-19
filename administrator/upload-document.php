@@ -140,7 +140,7 @@
           $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
           $lastId = $stmt->fetchColumn();
           $successMSG = "New record created succesfully. Last inserted ID is: " . $lastId;
-          header("refresh:5;tbl_materials.php"); // redirects image view page after 5 seconds.
+           // redirects image view page after 5 seconds.
         }
         else
         {

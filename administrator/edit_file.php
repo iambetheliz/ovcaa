@@ -1,7 +1,7 @@
 <?php
     ob_start();
     session_start();
-    require_once '../includes/dbconnect.php';
+    require_once 'includes/dbconnect.php';
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
@@ -13,28 +13,27 @@
     $userRow=mysql_fetch_array($res);
 ?>
 <?php
-
-    error_reporting( ~E_NOTICE );
-    
-    require_once 'Material.php';
-        
- if(isset($_GET['edit_id']) && !empty($_GET['edit_id']))
- {
-        $id = $_GET['edit_id'];
-        $stmt_edit = $DB_con->prepare('SELECT * FROM material JOIN 
+  error_reporting( ~E_NOTICE );
+  
+  require_once 'Material.php';
+  
+  if(isset($_GET['edit_id']) && !empty($_GET['edit_id']))
+  {
+    $id = $_GET['edit_id'];
+    $stmt_edit = $DB_con->prepare('SELECT * FROM material JOIN 
     category ON category.category_id = material.category_id WHERE id =:id');
     $stmt_edit->execute(array(':id'=>$id));
     $edit_row = $stmt_edit->fetch(PDO::FETCH_ASSOC);
     extract($edit_row);
- }
- else
- {
-  header("Location: tbl_materials.php");
- }
- 
- if(isset($_POST['btn_save_updates']))
- {
-   
+  }
+  else
+  {
+    header("Location: tbl_materials.php");
+  }  
+  
+  
+  if(isset($_POST['btn_save_updates']))
+  {
     $title = $_POST['title'];
     $description = $_POST['description'];
     $category_id = $_POST['category_id'];
@@ -44,7 +43,6 @@
     $file = $_FILES['file']['name'];
     $file_loc = $_FILES['file']['tmp_name'];
     $file_size = $_FILES['file']['size'];
-
     // new file size in KB
     $new_size = $file_size/1024;  
     // new file size in KB
@@ -54,62 +52,34 @@
     // make file name in lower case
  
     $final_file=str_replace(' ','-',$new_file_name);
-     
-  if($final_file)
-  {
-   $folder = 'uploads/'; // upload directory 
-   $FileExt = strtolower(pathinfo($file,PATHINFO_EXTENSION)); // get image extension
-   $valid_extensions = array('exe', 'zip', 'rar', 'sql'); // valid extensions
-
-   
-   if(!in_array($FileExt, $valid_extensions))
-   {   
-    if($imgSize < 5000000 )
+          
+    if($final_file)
     {
-                 
-                    $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
-
-                    $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
+      $folder = 'uploads/'; // upload directory 
+      if($new_size < 5000000)
+        {
+          $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
+      $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
+          unlink($folder.$edit_row['filename']);
+          move_uploaded_file($file_loc,$folder.$final_file);
+        }
+        else
+        {
+          $errMSG = "Sorry, your file is too large it should be less then 5MB";
+        }
     }
-
-
     else
     {
-      $error = true;
-     $FileError = " <span class='glyphicon glyphicon-info-sign'></span> Sorry, your file is too large it should be less then 5MB.";
-    }
-   }
-   else
-   {
-     $error = true;
-     $FileError = " <span class='glyphicon glyphicon-info-sign'></span> Sorry, only RAR, ZIP, PDF, XLSX, DOCX, PPT, JPG, JPEG, PNG & GIF files are allowed..";
-   } 
-  }
-  else
-  {
-   // if no file selected the old image remain as it is.
-            $final_file = $edit_row['filename'];
-            $new_size = $edit_row['filesize']; 
-             // old file from database
-  } 
-    
-  if (empty($title)) {
-     $error = true;
-     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Title.";
-    } else if (strlen($title) < 5) {
-     $error = true;
-     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must have atleast 5 characters.";
+      // if no image selected the old image remain as it is.
+      $final_file = $edit_row['filename']; // old file from database
+      $new_size = $edit_row['filesize'];// old file from database
     } 
-    else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
-     $error = true;
-     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must contain alphabets and space.";
-    }       
-  // end Title error
-
-  // if no error occured, continue ....
-  if(!$error)
-  {
-    $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, category_id=:category_id WHERE id=:id');
+            
+    
+    // if no error occured, continue ....
+    if(!isset($errMSG))
+    {
+      $stmt = $DB_con->prepare('UPDATE material SET title=:title, description=:description, filename=:filename, filesize=:new_size, location=:location, url=:url, uploaded_by=:uploaded_by, category_id=:category_id WHERE id=:id');
       $stmt->bindParam(':title',$title);
       $stmt->bindParam(':description',$description);
       $stmt->bindParam(':filename',$final_file);
@@ -119,19 +89,24 @@
       $stmt->bindParam(':uploaded_by',$uploaded_by);
       $stmt->bindParam(':category_id', $_POST['category_id']);
       $stmt->bindParam(':id',$id);
-
-      unlink($folder.$edit_row['filename']);                                   
-      move_uploaded_file($file_loc,$folder.$final_file);    
+        
+      if($stmt->execute()){
+        ?>
+                <script>
+        alert('Successfully Updated ...');
+        window.location.href='tbl_materials.php';
+        </script>
+                <?php
+      }
+      else{
+        $errMSG = "Sorry Data Could Not Updated !";
+      }
     
-   if($stmt->execute()){
-        $successMSG = "Successfully updated...";
-        header("refresh:3;tbl_materials.php");
-   }
-   else{
-    $errMSG = "Sorry Data Could Not Updated !";
-   }
-  }    
- }
+    }
+    
+            
+  }
+  
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -167,8 +142,9 @@
             <!-- Top Menu Items -->
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
+                <li><a href="upload-document.php"><span class="glyphicon glyphicon-upload"></span>&nbsp;&nbsp;Upload</a></li>
+                <li class="dropdown show-on-hover">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $login_session; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="logout.php">Logout</a>
@@ -185,10 +161,10 @@
                         <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
                     </li>
                     <li class="active">
-                      <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
                         <ul id="demo" class="collapse">
-                            <li>
-                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                            <li class="active">
+                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Files</a>
                             </li>
                             <li>
                                 <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
@@ -206,48 +182,57 @@
         <!-- Main Screen -->
         <div id="page-wrapper">
             <div class="container-fluid">
-
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h3 class="page-header"><strong>Update:</strong> <?php echo $title; ?></h3>
+                        <h1 class="page-header">Edit</h1>
                     </div>
                 </div>
                 <!-- /.row -->
-
-<br>          
- <form method="post" enctype="multipart/form-data">
-
+                        
+  <br>
+<div class="panel panel-default">
+  <div class="panel-heading">
+  <h3 class="panel-title">Edit</h3>
+  </div>
+  <div class="panel-body">
 <?php
-  if(isset($FileError)){
-      ?><div class="form-group row">
-            <div class="alert alert-danger col-sm-6" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-danger"><?php echo $FileError; ?></p>  
-            </div>
-        </div>
+  if(isset($errMSG)){
+      ?>
+            <div class="alert alert-danger">
+              <span class="glyphicon glyphicon-info-sign"></span> <strong><?php echo $errMSG; ?></strong>
+            </div><br>
             <?php
   }
   else if(isset($successMSG)){
-    ?><div class="form-group row">
-        <div class="alert alert-success col-sm-6" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <?php echo $successMSG; ?>
-        </div>
-      </div>
+    ?>
+        <div class="alert alert-success">
+              <strong><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></strong>
+        </div><br>
         <?php
   }
   ?>   
+ <form method="post" enctype="multipart/form-data">
 
  <div class="form-group row"> 
     <label class="col-sm-2 col-form-label">Title: (Required)</label>
     <div class="col-sm-4">
-    <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >   
-      <p class="text-danger"><?php echo $TitleError; ?></p>
+    <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" >
+    <small id="emailHelp" class="form-text text-muted">Title of your document.</small>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">Description: (Required)</label>
+    <div class="col-sm-4">
+    <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>
+    <small id="emailHelp" class="form-text text-muted">Description of your document.</small>
     </div>
   </div>
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Category: (Required)</label>
-     <div class="col-sm-4">        
+    <div class="col-sm-4">
         <?php
             // php select option value from database
             $hostname = "localhost";
@@ -257,7 +242,7 @@
             // connect to mysql database
             $connect = mysqli_connect($hostname, $username, $password, $databaseName);
             // mysql select query
-            $query = "SELECT * FROM `category` ORDER BY category_id";
+            $query = "SELECT * FROM `category`";
             // for method 1
             $result1 = mysqli_query($connect, $query);
             // for method 2
@@ -267,24 +252,16 @@
                   {
                       $options = $options."<option>$row2[1]</option>";
                   }
-
         ?>
-        <script src="../assets/js/jquery.min.js"></script>
-        <select name="category_id" class="form-control" id="cat_name" >
-          <option value="<?php echo $cat_name; ?>" ><?php echo $cat_name; ?></option>
-            <?php while($row1 = mysqli_fetch_array($result1)):;?>                    
-            <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
-            <?php endwhile;?>           
+        <select name="category_id" class="form-control" id="exampleSelect1">
+            <option>(old) <?php echo $cat_name;?></option>
+            <?php while($row1 = mysqli_fetch_array($result1)):;?>
+            <option value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
+            <?php endwhile;?>
         </select>
+    <small id="emailHelp" class="form-text text-muted">Title of your document.</small>
     </div>
   </div>
-
-  <div class="form-group row">
-    <label class="col-sm-2 col-form-label">Description: (Required)</label>
-    <div class="col-sm-4">
-  <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>   
-  </div>
-  </div>  
 
   <div class="form-group row">
     <label class="col-sm-2 col-form-label">Old File:</label>    
@@ -297,25 +274,26 @@
   <label class="col-sm-2 col-form-label">New File: </label>
     <div class="col-sm-4">
     <input type="file" name="file" class="form-control-file" />
-    
   </div>
   </div>
   
   <div class="form-group row">
   <label class="col-sm-2 col-form-label"></label>
     <div class="col-sm-4">
-    <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
-  CANCEL </a>
-  <button type="submit" name="btn_save_updates" class="btn btn-success"><span class="glyphicon glyphicon-save"></span>
-  UPDATE </button> (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.
+  <button type="submit" name="btn_save_updates" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span>
+  &nbsp;&nbsp;UPDATE (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.</button>
   </div>
   </div>
 
-  <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
+  <textarea hidden="" name="uploaded_by"><?php echo $userRow['userName']; ?></textarea>
   <textarea hidden="" name="location"><?php echo $location; ?></textarea>
   <textarea hidden="" name="url"><?php echo $url; ?></textarea>
 
-  </form>
+  </form></div>
+
+
+                        </div>
+                        <br>
             </div><!-- /.container-fluid -->
         </div><!-- /#page-wrapper -->
 
@@ -324,7 +302,7 @@
 
     <footer class="footer">
         <div class="container-fluid">
-            <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
+            <p align="right">&copy; UP Open University 2017 <a class="top-nav" href="/ovcaa">View Site</a></p>
         </div>
     </footer>
 
@@ -333,5 +311,5 @@
 <script src="../assets/js/bootstrap.min.js"></script>
 
 </body>
+
 </html>
-<?php ob_end_flush(); ?>
