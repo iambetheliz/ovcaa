@@ -14,7 +14,6 @@ header("location: 403-error.html");
 <title>UP Open University</title>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-<link href="assets/css/custom.css" rel="stylesheet">
 <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <style type="text/css">
  a[href="/absolute/path/to/index/root/parent/"] {display: none;}
