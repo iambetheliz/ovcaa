@@ -1,3 +1,17 @@
+<?php
+include('User.php'); // Includes Login Script
+include('dbConnect.php');
+include_once ('gpConfig.php');
+
+if ( isset($_SESSION['token'])!="" ) {
+        header("Location: library");
+        exit;
+    }
+    else {
+        $loginError = "You need to login first!";
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
