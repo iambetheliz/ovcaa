@@ -16,9 +16,8 @@ header("Location: index.php?loginError");
 <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <style type="text/css">
- a[href="/absolute/path/to/index/root/parent/"] {display: none;}
 /* For pagination function. */
-ul.pagination a {
+ul.pagination>li>a {
     color:#014421;
 }
 ul.pagination>li>a.current {

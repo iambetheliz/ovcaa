@@ -54,7 +54,7 @@
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <style type="text/css">
 /* For pagination function. */
-ul.pagination a {
+ul.pagination>li>a {
     color:#014421;
 }
 ul.pagination>li>a.current {

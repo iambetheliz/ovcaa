@@ -106,7 +106,7 @@
       $folder = 'uploads/'; // upload directory 
       $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); 
         // valid image extensions
-      $valid_extensions = array('docx', 'doc', 'pdf', 'xls', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
+      $valid_extensions = array('docx', 'doc', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
 
       // allow valid image file formats
         if(in_array($fileExt, $valid_extensions)){

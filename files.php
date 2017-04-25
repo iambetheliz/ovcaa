@@ -64,7 +64,7 @@ else {
 <?php if (isset($_GET['search'])) {
     echo $output1;
 }  ?>
-
+<br>
 <div class="row">
 <div class="table-responsive">
 <table class="table table-striped table-bordered table-hover" id="table-id">
