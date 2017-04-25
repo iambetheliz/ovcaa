@@ -49,7 +49,6 @@ if ($gClient->getAccessToken()) {
 } else {
     $authUrl = $gClient->createAuthUrl();
     $output = '<h1>Welcome to UPOU Scribd!</h1>';
-    $output .= '<p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>';
     $output .= '<p><a class="btn btn-lg btn-danger" href="'.$authUrl.'"><span class="fa fa-google-plus"></span> Sign-in with Google</a></p>';
 }
 ?>

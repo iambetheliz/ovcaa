@@ -43,7 +43,7 @@ ul.pagination>li>a.current {
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header"><strong>Uploads <font color="#7b1113">(<?php echo $count; ?>)</font></strong></h1>
+                        <h1 class="page-header"><strong>Library <font color="#7b1113">(<?php echo $count; ?>)</font></strong></h1>
                     </div>
                 </div>
                 <!-- End of Page Heading -->
