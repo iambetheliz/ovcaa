@@ -41,7 +41,7 @@ if ( isset($_SESSION['token'])!="" ) {
         		<?php
             		}
         		?>
-                    <div class="jumbotron"> 
+                    <div class="jumbotron" style="background: transparent;text-align: center;"> 
                         <?php echo $output; ?>                      
                     </div>
                 </div>
