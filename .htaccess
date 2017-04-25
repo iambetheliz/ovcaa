@@ -11,7 +11,7 @@ RewriteRule ^(.*)$ $1.html
 
 Options -Indexes
 
-ErrorDocument 404 /ovcaa/404-error.html 
-ErrorDocument 403 /ovcaa/403-error.html 
+ErrorDocument 404 /ovcaa/404-error.php
+ErrorDocument 403 /ovcaa/403-error.php
 
 </IfModule>

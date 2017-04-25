@@ -15,6 +15,9 @@
         header("Location: dashboard");
         exit;
     }
+    else {
+        $loginError = "You need to login first!";
+    }
     
     $error = false;
     
@@ -97,6 +100,18 @@
     </div>
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <?php
+            if ( isset($_GET['loginError']) ) {
+        ?>
+            <div class="form-group">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <?php echo $loginError; ?>
+                </div>
+            </div>
+        <?php
+            }
+        ?>
         <?php
             if ( isset($errMSG) ) {
         ?>

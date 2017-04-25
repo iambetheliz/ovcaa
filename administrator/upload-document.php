@@ -38,6 +38,7 @@
       $file = $_FILES['file']['name'];
       $file_loc = $_FILES['file']['tmp_name'];
       $file_size = $_FILES['file']['size'];
+
       // new file size in KB
       $new_size = $file_size/1024;  
    
@@ -94,7 +95,7 @@
         $folder = 'uploads/'; // upload directory 
         $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); 
         // valid image extensions
-        $valid_extensions = array('docx', 'doc', 'pdf', 'xls', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
+        $valid_extensions = array('docx', 'doc', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
             $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
             $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
     

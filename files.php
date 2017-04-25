@@ -2,9 +2,9 @@
     require_once 'includes/dbconnect.php';
     
     // if session is not set this will redirect to login page
-    if(!isset($_SESSION['token'])){
-    header("location: 403-error.html");
-        exit;
+    if( !isset($_SESSION['token']) ) {
+      header("Location: 403-error.html");
+    exit;
     }
 ?>
 <!DOCTYPE HTML>
@@ -84,17 +84,17 @@ if ($result->num_rows != 0) { ?>
     // displaying records.
     while ($row = $result->fetch_assoc()){ ?>
         <tr>
-        <td><h3><strong><?php echo $row['title'] ?></strong></h3></td>
+        <td><br><p><strong><?php echo $row['title'] ?></strong></p></td>
         <td><br>
-            <small><p>Description: <?php echo $row['description'] ?></p></small>
-            <small><p>Category: <?php echo $row['cat_name'] ?></p></small>
-            <small><p>URL: <a target="_blank" href="<?php echo $row['url'] ?>"><?php echo $row['url'] ?></a></p></small>
+            <p>Description: <?php echo $row['description'] ?></p>
+            <p>Category: <?php echo $row['cat_name'] ?></p>
+            <p>URL: <a href="<?php echo $row['url'] ?>"><?php echo $row['url'] ?></a></p>
         </td>
         <td><br>
-        <small><p><?php echo $row['uploaded_by'] ?></p></small>
+        <p><?php echo $row['uploaded_by'] ?></p>
         </td>
         <td><br>
-        <small><p><?php echo date("F j, Y g:i a", strtotime($row["date_updated"])); ?></p></small>
+        <p><?php echo date("F j, Y g:i a", strtotime($row["date_updated"])); ?></p>
         </td>
         <?php
     }

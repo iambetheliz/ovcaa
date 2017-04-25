@@ -115,7 +115,29 @@ else {
         <th>Date Modified</th>
     </tr>
 </thead>
-
+<?php
+  /**
+   * Formats bytes to a human readable representation.
+   * 
+   * @param int $bytes
+   *
+   * @return string
+   */
+  function format_filesize($bytes) {
+    $labels = array(' B', ' KB', ' MB', ' GB', ' TB');
+    
+    foreach($labels AS $label){
+      if ($bytes > 1024){
+        $bytes = $bytes / 1024;
+      }
+      else {
+        break;
+      }
+    }
+    
+    return round($bytes, 2) . $label;
+  }
+?>
 <?php
 if ($result->num_rows != 0) { ?>
 
@@ -134,7 +156,7 @@ if ($result->num_rows != 0) { ?>
             <td><p><?php echo $row['description'] ?></p></td>
             <td><p><?php echo $row['cat_name'] ?></p></td>
             <td><p><?php echo $row['filename'] ?></p></td>
-            <td><p><?php echo $row['filesize'] ?>&nbsp;kb</p></td>
+            <td><p><?php echo format_filesize($row['filesize']) ?></p></td>
             <td><p><?php echo $row['location'] ?></p></td>
             <td><p><a href="<?php echo $row['url'] ?>" target="_blank"><?php echo $row['url'] ?></a></p></td>
             <td><p><?php echo $row['uploaded_by'] ?></p></td>

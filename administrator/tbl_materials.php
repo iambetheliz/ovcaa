@@ -11,7 +11,7 @@
    
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-      header("Location: /ovcaa/administrator");
+      header("Location: /ovcaa/administrator/index.php?loginError");
     exit;
     }
 
@@ -166,22 +166,25 @@ ul.pagination>li>a.current {
                                             }
                                         else { $sort='ASC'; }
                                     }
-                                if($_GET['field']=='title')
-                                    { 
-                                        $field = "title";  
-                                    }
-                                elseif($_GET['field']=='cat_name')
+                                if(isset($_GET['field']))
                                     {
-                                        $field = "cat_name"; 
-                                    }
-                                elseif($_GET['field']=='uploaded_by')
-                                    { 
-                                        $field="uploaded_by"; 
-                                    }
-                                elseif($_GET['field']=='date_updated')
-                                    { 
-                                        $field="date_updated"; 
-                                        $sort="DESC";
+                                        if($_GET['field']=='title')
+                                            { 
+                                                $field = "title";  
+                                            }
+                                        elseif($_GET['field']=='cat_name')
+                                            {
+                                                $field = "cat_name"; 
+                                            }
+                                        elseif($_GET['field']=='uploaded_by')
+                                            { 
+                                                $field="uploaded_by"; 
+                                            }
+                                        elseif($_GET['field']=='date_updated')
+                                            { 
+                                                $field="date_updated"; 
+                                                $sort="DESC";
+                                            }
                                     }
                             ?>
                             <ul class="dropdown-menu">
