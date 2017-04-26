@@ -160,7 +160,7 @@
 </div>
 
 <footer class="footer">
-    <div class="container">
+    <div class="container-fluid">
         <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
     </div>
 </footer>
