@@ -4,14 +4,17 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^(.*)$ $1.php
+#RewriteRule ^([a-z]+)\/?$ $1.php [NC]
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.*)$ $1.html
+#RewriteRule ^([a-z]+)\/?$ $1.html [NC]
 
 Options -Indexes
 
 ErrorDocument 403 /ovcaa/403-error.php
 ErrorDocument 404 /ovcaa/404-error.php
+ErrorDocument 500 /ovcaa/500-error.php
 
 </IfModule>
