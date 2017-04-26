@@ -31,6 +31,8 @@
 <title>Admin - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/dashboard.css" rel="stylesheet" type="text/css">
+<link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet" media="screen">
 </head>
 
 <body>
@@ -91,12 +93,90 @@
         <!-- Main Screen -->
         <div id="page-wrapper">
             <div class="container-fluid">
+
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Welcome <?php echo $userRow['userName'] ; ?>!</h1>
                     </div>
                 </div>
+                <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="offer offer-success">
+                <div class="shape">
+                <?php    
+                $stmt = $DB_con->prepare('SELECT *, category.category_id, category.cat_name FROM material JOIN 
+                category ON category.category_id = material.category_id WHERE YEAR(date_created) = YEAR(NOW()) AND MONTH(date_created) = MONTH(NOW()) AND DAY(date_created) = DAY(NOW())');
+                $stmt->execute();    
+                $count = $stmt->rowCount();
+                ?>
+                    <div class="shape-text">
+                        <p><?php echo $count; ?></p>                         
+                    </div>
+                </div>
+                <div class="offer-content">
+                    <h3 class="lead"><span class="glyphicon glyphicon-briefcase"></span> Today</h3> <p>And a little description. <br> and so one</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="offer offer-info">
+                <div class="shape">
+                <?php    
+                $stmt = $DB_con->prepare('SELECT *, category.category_id, category.cat_name FROM material JOIN 
+                category ON category.category_id = material.category_id WHERE WEEKOFYEAR(date_created) = WEEKOFYEAR(NOW())');
+                $stmt->execute();    
+                $count = $stmt->rowCount();
+                ?>
+                    <div class="shape-text">
+                        <p><?php echo $count; ?></p>                         
+                    </div>
+                </div>
+                <div class="offer-content">
+                    <h3 class="lead"><span class="glyphicon glyphicon-briefcase"></span> This Week</h3>
+                    <p>And a little description. <br> and so one</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="offer offer-warning">
+                <div class="shape">
+                <?php    
+                $stmt = $DB_con->prepare('SELECT *, category.category_id, category.cat_name FROM material JOIN 
+                category ON category.category_id = material.category_id WHERE YEAR(date_created) = YEAR(NOW()) AND MONTH(date_created)=MONTH(NOW())');
+                $stmt->execute();    
+                $count = $stmt->rowCount();
+                ?>
+                    <div class="shape-text">
+                        <p><?php echo $count; ?></p>                         
+                    </div>
+                </div>
+                <div class="offer-content">
+                    <h3 class="lead"><span class="glyphicon glyphicon-briefcase"></span> This Month</h3>
+                    <p>And a little description. <br> and so one</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="offer offer-danger">
+                <div class="shape">
+                <?php    
+                $stmt = $DB_con->prepare('SELECT *, category.category_id, category.cat_name FROM material JOIN 
+                category ON category.category_id = material.category_id WHERE YEAR(date_created) = YEAR(NOW())');
+                $stmt->execute();    
+                $count = $stmt->rowCount();
+                ?>
+                    <div class="shape-text">
+                        <p><?php echo $count; ?></p>                         
+                    </div>
+                </div>
+                <div class="offer-content">
+                    <h3 class="lead"><span class="glyphicon glyphicon-briefcase"></span> This Year</h3>
+                    <p>And a little description. <br> and so one</p>
+                </div>
+            </div>
+        </div>  
+    </div>
                 <!-- /.row -->
                 
             </div><!-- /.container-fluid -->
