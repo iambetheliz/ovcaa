@@ -73,7 +73,6 @@ else {
     $result = mysqli_query($DB_con,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
     
 }
-
 ?>  
 
 <?php if(!empty($_SESSION['success_msg'])){ ?>

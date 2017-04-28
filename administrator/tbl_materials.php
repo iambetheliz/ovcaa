@@ -116,7 +116,6 @@ ul.pagination>li>a.current {
                     </li>
                 </ul>
             </div>
-
         </div>
         </nav>
         <!-- End of Navigation -->
@@ -147,8 +146,8 @@ ul.pagination>li>a.current {
                         <a href="upload-document.php" class="btn btn-success" type="button" role="button" >
                             <span class="glyphicon glyphicon-plus"></span> Upload New File
                         </a>  
-                    </div>            
-                    <div class="col col-xs-3"></div>         
+                    </div>  
+                    <div class="col col-xs-3"></div>
                     <div class="col col-xs-2 text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

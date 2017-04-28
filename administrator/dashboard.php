@@ -20,6 +20,99 @@
     $res = $conDB->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
     $userRow = $res->fetch_array(MYSQLI_BOTH);
 ?>
+<?php
+//simple class to convert number to words in php based on http://www.karlrixon.co.uk/writing/convert-numbers-to-words-with-php/
+if ( !class_exists('NumbersToWords') ){
+  /**
+  * NumbersToWords
+  */
+  class NumbersToWords{
+    
+    public static $hyphen      = '-';
+    public static $conjunction = ' and ';
+    public static $separator   = ', ';
+    public static $negative    = 'negative ';
+    public static $decimal     = ' point ';
+    public static $dictionary  = array(
+      0                   => 'zero',
+      1                   => 'one',
+      2                   => 'two',
+      3                   => 'three',
+      4                   => 'four',
+      5                   => 'five',
+      6                   => 'six',
+      7                   => 'seven',
+      8                   => 'eight',
+      9                   => 'nine',
+      10                  => 'ten',
+      11                  => 'eleven',
+      12                  => 'twelve',
+      13                  => 'thirteen',
+      14                  => 'fourteen',
+      15                  => 'fifteen',
+      16                  => 'sixteen',
+      17                  => 'seventeen',
+      18                  => 'eighteen',
+      19                  => 'nineteen',
+      20                  => 'twenty',
+      30                  => 'thirty',
+      40                  => 'fourty',
+      50                  => 'fifty',
+      60                  => 'sixty',
+      70                  => 'seventy',
+      80                  => 'eighty',
+      90                  => 'ninety',
+      100                 => 'hundred',
+      1000                => 'thousand',
+      1000000             => 'million',
+      1000000000          => 'billion',
+      1000000000000       => 'trillion',
+      1000000000000000    => 'quadrillion',
+      1000000000000000000 => 'quintillion'
+    );
+    public static function convert($count){
+      if (!is_numeric($count) ) return false;
+      $string = '';
+      switch (true) {
+        case $count < 21:
+            $string = self::$dictionary[$count];
+            break;
+        case $count < 100:
+            $tens   = ((int) ($count / 10)) * 10;
+            $units  = $count % 10;
+            $string = self::$dictionary[$tens];
+            if ($units) {
+                $string .= self::$hyphen . self::$dictionary[$units];
+            }
+            break;
+        case $count < 1000:
+            $hundreds  = $count / 100;
+            $remainder = $count % 100;
+            $string = self::$dictionary[$hundreds] . ' ' . self::$dictionary[100];
+            if ($remainder) {
+                $string .= self::$conjunction . self::convert($remainder);
+            }
+            break;
+        default:
+            $baseUnit = pow(1000, floor(log($count, 1000)));
+            $numBaseUnits = (int) ($count / $baseUnit);
+            $remainder = $count % $baseUnit;
+            $string = self::convert($numBaseUnits) . ' ' . self::$dictionary[$baseUnit];
+            if ($remainder) {
+                $string .= $remainder < 100 ? self::$conjunction : self::$separator;
+                $string .= self::convert($remainder);
+            }
+            break;
+      }
+      return $string;
+    }
+  }//end class
+}//end if
+/**
+ * usage:
+ */
+//echo NumbersToWords::convert(2839);
+?>
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -101,6 +194,11 @@
                         <h1 class="page-header">Welcome <?php echo $userRow['userName'] ; ?>!</h1>
                     </div>
                 </div>
+                <div class="row container-fluid">                    
+                    <div class="alert alert-warning" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button><p>Displaying total numbers of files per day, week, month and year</p>
+                    </div>
+                </div>
                 <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
             <div class="offer offer-success">
@@ -116,7 +214,15 @@
                     </div>
                 </div>
                 <div class="offer-content">
-                    <h3 class="lead"><span class="glyphicon glyphicon-briefcase"></span> Today</h3> <p>And a little description. <br> and so one</p>
+                    <h3 class="lead"><span class="glyphicon glyphicon-calendar"></span> Today</h3>
+                        <?php 
+                            if ($count != 0) {?> 
+                                <p>You have uploaded <?php echo NumbersToWords::convert($count); ?> files today.</p>
+                        <?php    }
+                            else {?>
+                                <p>You haven't uploaded any files today.</p>
+                        <?php    }
+                        ?>
                 </div>
             </div>
         </div>
@@ -134,8 +240,15 @@
                     </div>
                 </div>
                 <div class="offer-content">
-                    <h3 class="lead"><span class="glyphicon glyphicon-briefcase"></span> This Week</h3>
-                    <p>And a little description. <br> and so one</p>
+                    <h3 class="lead"><span class="glyphicon glyphicon-calendar"></span> This Week</h3>
+                <?php 
+                    if ($count != 0) {?> 
+                        <p>You have uploaded <?php echo NumbersToWords::convert($count); ?> files this week.</p>
+                <?php    }
+                    else {?>
+                        <p>You haven't uploaded any files this week.</p>
+                <?php    }
+                ?>
                 </div>
             </div>
         </div>
@@ -153,8 +266,15 @@
                     </div>
                 </div>
                 <div class="offer-content">
-                    <h3 class="lead"><span class="glyphicon glyphicon-briefcase"></span> This Month</h3>
-                    <p>And a little description. <br> and so one</p>
+                    <h3 class="lead"><span class="glyphicon glyphicon-calendar"></span> This Month</h3>
+                        <?php 
+                            if ($count != 0) {?> 
+                                <p>You have uploaded <?php echo NumbersToWords::convert($count); ?> files this month.</p>
+                        <?php    }
+                            else {?>
+                                <p>You haven't uploaded any files this.</p>
+                        <?php    }
+                        ?>
                 </div>
             </div>
         </div>
@@ -172,8 +292,15 @@
                     </div>
                 </div>
                 <div class="offer-content">
-                    <h3 class="lead"><span class="glyphicon glyphicon-briefcase"></span> This Year</h3>
-                    <p>And a little description. <br> and so one</p>
+                    <h3 class="lead"><span class="glyphicon glyphicon-calendar"></span> This Year</h3>
+                        <?php 
+                            if ($count != 0) {?> 
+                                <p>You have uploaded <?php echo NumbersToWords::convert($count); ?> files this year.</p>
+                        <?php    }
+                            else {?>
+                                <p>You haven't uploaded any files this year.</p>
+                        <?php    }
+                        ?>
                 </div>
             </div>
         </div>  
