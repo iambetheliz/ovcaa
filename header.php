@@ -40,11 +40,8 @@ if ($gClient->getAccessToken()) {
     //Render facebook profile data
     $output = '';
     if(!empty($userData)){
-        $output .= '<h1>Welcome to UPOU Scribd!</h1>';
-        $output .= '<p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>';
-        $library = '<a href="uploads.php">'.'<i class="glyphicon glyphicon-book">'.'</i>&nbsp;&nbsp;Library</a>';
         $account = '<p class="navbar-text" style="color:white;"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;'. $userData['first_name'].'&nbsp;'. $userData['last_name'].'</p>';
-        $logout = '<a href="logout.php"><i class="glyphicon glyphicon-off">'.'</i>&nbsp;&nbsp;Logout</a>';
+        $logout = '<a href="logout"><i class="glyphicon glyphicon-off">'.'</i>&nbsp;&nbsp;Logout</a>';
     }else{
         $output .= '<h3 style="color:red">Some problem occurred, please try again.</h3>';
     }
@@ -52,7 +49,6 @@ if ($gClient->getAccessToken()) {
 } else {
     $authUrl = $gClient->createAuthUrl();
     $output = '<h1>Welcome to UPOU Scribd!</h1>';
-    $output .= '<p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>';
     $output .= '<p><a class="btn btn-lg btn-danger" href="'.$authUrl.'"><span class="fa fa-google-plus"></span> Sign-in with Google</a></p>';
 }
 ?>
@@ -93,7 +89,6 @@ if ($gClient->getAccessToken()) {
             <?php
                 if(!empty($userData)){?>
                 <li><?php echo $account; ?></li>
-                <li><?php echo $library; ?></li>
                 <li><?php echo $logout; ?></li>
             <?php }?>
             </ul>   

@@ -1,46 +1,45 @@
 <?php
     session_start();
     require_once '../includes/dbconnect.php';
-    
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+      echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
+   
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header("Location: /ovcaa/administrator");
-        exit;
+      header("Location: /ovcaa/administrator/index.php?loginError");
+    exit;
     }
+
     // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
-?>
-<?php
+    $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
+    $result = $DB_con->query($res);
 
-    require_once 'Material.php';
-    
-    if(isset($_GET['delete_id']))
- {
-  // select image from db to delete
-  $stmt_select = $DB_con->prepare('SELECT material.filename, category.category_id, category.cat_name FROM material JOIN 
-    category ON category.category_id = material.category_id WHERE id =:id');
-  $stmt_select->execute(array(':id'=>$_GET['delete_id']));
-  $fileRow=$stmt_select->fetch(PDO::FETCH_ASSOC);
-  unlink("../administrator/uploads/".$fileRow['filename']);
-  
-  // it will delete an actual record from db
-  $stmt_delete = $DB_con->prepare('DELETE FROM material WHERE id =:id');
-  $stmt_delete->bindParam(':id',$_GET['delete_id']);
-  $stmt_delete->execute();
-  
-  header("Location: tbl_materials.php");
- }
-
- if(isset($_POST['bulk_delete_submit'])){
-        $idArr = $_POST['checked_id'];
-        foreach($idArr as $id){
-            mysqli_query($conn,"DELETE FROM material WHERE id=".$id);
-        }
-        $successMSG = 'Users have been deleted successfully.';
-        header("Location:index.php");
+    if ($result->num_rows != 0) {
+      $userRow = $result->fetch_array(MYSQLI_BOTH);
     }
 
+    require_once 'dbConnect.php';
+    
+    if(isset($_GET['delete_id'])) {
+
+        $stmt_select = $DB_con->prepare('SELECT material.filename, category.category_id, category.cat_name FROM material JOIN 
+    category ON category.category_id = material.category_id WHERE id =:id');
+        $stmt_select->execute(array(':id'=>$_GET['delete_id']));
+        $fileRow=$stmt_select->fetch(PDO::FETCH_ASSOC);
+        unlink("../administrator/uploads/".$fileRow['filename']);
+  
+        // it will delete an actual record from db
+        $stmt_delete = $DB_con->prepare('DELETE FROM material WHERE id =:id');
+        $stmt_delete->bindParam(':id',$_GET['delete_id']);
+        $stmt_delete->execute();
+  
+        header("Location: tbl_materials.php");
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -52,8 +51,17 @@
 <meta name="author" content="">
 <title>Table: Material - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
-<link href="../assets/css/custom.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+/* For pagination function. */
+ul.pagination>li>a {
+    color:#014421;
+}
+ul.pagination>li>a.current {
+    background:#014421;
+    color:#fff;
+}
+</style>
 </head>
 
 <body>
@@ -99,16 +107,15 @@
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
                         <ul id="demo" class="collapse">
                             <li class="active">
-                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                                <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
                             </li>
                             <li>
-                                <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
+                                <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </div>
-
         </div>
         </nav>
         <!-- End of Navigation -->
@@ -135,24 +142,17 @@
 
                 <!-- Buttons -->
                 <div class="row">
-                    <div class="col-sm-7">
+                    <div class="col col-xs-4">
                         <a href="upload-document.php" class="btn btn-success" type="button" role="button" >
                             <span class="glyphicon glyphicon-plus"></span> Upload New File
-                        </a>   
-                        
-                    </div>
-                    <div class="col-sm-1" right" style="right: 30px;"">
-                        <div class="input-group-btn">
+                        </a>  
+                    </div>  
+                    <div class="col col-xs-3"></div>
+                    <div class="col col-xs-2 text-right">
+                        <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="tbl_materials.php">Default</a></li>
-                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=title">Title</a></li>
-                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=cat_name">Category</a></li>
-                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=uploaded_by">Uploader</a></li>
-                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=date_updated">Latest</a></li>
-                            </ul>
                             <?php 
                                 $field='date_updated';
                                 $sort='DESC';
@@ -165,50 +165,62 @@
                                             }
                                         else { $sort='ASC'; }
                                     }
-                                if($_GET['field']=='title')
-                                    { 
-                                        $field = "title";  
-                                    }
-                                elseif($_GET['field']=='cat_name')
+                                if(isset($_GET['field']))
                                     {
-                                        $field = "cat_name"; 
-                                    }
-                                elseif($_GET['field']=='uploaded_by')
-                                    { 
-                                        $field="uploaded_by"; 
-                                    }
-                                elseif($_GET['field']=='date_updated')
-                                    { 
-                                        $field="date_updated"; 
-                                        $sort="DESC";
+                                        if($_GET['field']=='title')
+                                            { 
+                                                $field = "title";  
+                                            }
+                                        elseif($_GET['field']=='cat_name')
+                                            {
+                                                $field = "cat_name"; 
+                                            }
+                                        elseif($_GET['field']=='uploaded_by')
+                                            { 
+                                                $field="uploaded_by"; 
+                                            }
+                                        elseif($_GET['field']=='date_updated')
+                                            { 
+                                                $field="date_updated"; 
+                                                $sort="DESC";
+                                            }
                                     }
                             ?>
+                            <ul class="dropdown-menu">
+                                <li><a href="tbl_materials.php">Default</a></li>
+                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=title">Title</a></li>
+                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=cat_name">Category</a></li>
+                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=uploaded_by">Uploader</a></li>
+                                <li><a href="tbl_materials.php?sorting='.$sort.'&field=date_updated">Latest</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="col-sm-4 right">
-                <form action="" method="get">
+                    <form action="" method="get">
+                    <div class="col col-xs-3 text-right">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Search for terms..">
                             <span class="input-group-btn"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button></span>
                         </div>
                     </div>
-                </div><br>
+                </div>
                 <!-- End of Buttons -->
-                
-                <!-- Table and Pagination -->
+                <br>
+                <div class="container-fluid">
                 <?php 
-                    include '../includes/pagination.php';
-                    include 'files.php';
+                    include '../includes/pagination.php'; 
+                    include 'files.php'; 
                 ?>
-                <!-- End of Table and Pagination -->
-                </form>
+                </div>
+                <br>
+                    </form>
+
             </div><!-- /.container-fluid -->
         </div><!-- /#page-wrapper -->
         <!-- End of Main Screen -->
 
     </div><!-- /#wrapper -->
 </div><!-- /#wrap -->
-<br>
+
     <footer class="footer">
         <div class="container-fluid">
             <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
@@ -216,8 +228,9 @@
     </footer>
 
 <!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="../assets/js/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
+
 </body>
 </html>

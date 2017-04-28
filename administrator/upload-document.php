@@ -1,25 +1,35 @@
 <?php
-      ob_start();
-      session_start();
-      require_once '../includes/dbconnect.php';
-      
-      // if session is not set this will redirect to login page
-      if( !isset($_SESSION['user']) ) {
-          header("Location: /ovcaa/administrator");
-          exit;
-      }
-      // select loggedin members detail
-      $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-      $userRow=mysql_fetch_array($res);
-  ?>
-  <?php
-   error_reporting( ~E_NOTICE ); // avoid notice
-   require_once 'Material.php';
+    session_start();
+    require_once '../includes/dbconnect.php';
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+      echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
    
-  $error = false;
-   if(isset($_POST['btn-upload']))
-   {
-      $title = $_POST['title'];
+    // if session is not set this will redirect to login page
+    if( !isset($_SESSION['user']) ) {
+      header("Location: /ovcaa/administrator");
+    exit;
+    }
+
+    // select loggedin members detail
+    $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
+    $result = $DB_con->query($res);
+
+    if ($result->num_rows != 0) {
+      $userRow = $result->fetch_array(MYSQLI_BOTH);
+    }
+   
+    $error = false;
+    if(isset($_POST['btn-upload'])) {
+
+      $title = trim($_POST['title']);
+      $title = strip_tags($title);
+      $title = htmlspecialchars($title);
+
       $description = $_POST['description'];
       $category_id = $_POST['category_id'];
       $cat_name = $_POST['cat_name'];
@@ -28,6 +38,7 @@
       $file = $_FILES['file']['name'];
       $file_loc = $_FILES['file']['tmp_name'];
       $file_size = $_FILES['file']['size'];
+
       // new file size in KB
       $new_size = $file_size/1024;  
    
@@ -35,95 +46,79 @@
       $new_file_name = strtolower($file);
    
       $final_file=str_replace(' ','-',$new_file_name);
-    if(empty($final_file)){
-      $error = true;
-     $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> Please Select FIle.";
-    }
-     
-    else
-    {
-     $folder = 'uploads/'; // upload directory 
-     $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); // get image extension
-     // valid image extensions
-     $valid_extensions = array('exe', 'zip', 'rar', 'sql'); // valid extensions
+
+     // Description error
+      if (empty($description)) {
+        $description = 'No description';
+      }
+
+      // Title error         
+      if (empty($title)) {
+        $error = true;
+        $TitleError = "Please enter a title.";
+      } else if (strlen($title) < 5) {
+        $error = true;
+        $TitleError = "Title must have atleast 5 characters.";
+      } 
+      else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
+        $error = true;
+        $TitleError = "Title must contain only alphabets and space.";
+      }   
+      else {
+        // check username exist or not
+        $query = "SELECT title FROM material WHERE title='$title'";
+        $result = $DB_con->query($query);
+
+        if($result->num_rows != 0){
+            $error = true;
+            $TitleError = "Provided title is already in use.";
+          }
+      }
+      // end Title error
+
+      // File error       
+      if ($final_file) {      
+       $query = "SELECT filename FROM material WHERE filename='$final_file'";
+       $result = $DB_con->query($query);
+
+      if($result->num_rows != 0){
+            $error = true;
+            $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> File already exists.";
+        }
+      }   
+
+      if(empty($final_file)){
+        $error = true;
+        $errMSG = "No file chosen!";
+      }     
+      if ($final_file) {
+        $folder = 'uploads/'; // upload directory 
+        $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); 
+        // valid image extensions
+        $valid_extensions = array('docx', 'doc', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
+            $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
+            $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
     
-     // allow valid image file formats
-     if(!in_array($fileExt, $valid_extensions)){  
-     // Check file size '5MB'
-      if($new_size < 5000000)    {     
-        $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
-        $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
-       
-      }
-      else{
-       $errMSG = "Sorry, your file is too large.";
-      }
-    }  
-    else{
+        // allow valid image file formats
+        if(in_array($fileExt, $valid_extensions)){  
+            
+          if($new_size > 5000000) {     
+            $error = true;
+            $errMSG = "Sorry, your file is too large.";
+
+          }
+        } else{
+      $error = true;
       $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
      }
   }
-  // Title error
-    $title = trim($_POST['title']);
-    $title = strip_tags($title);
-    $title = htmlspecialchars($title);
-         
-    if (empty($title)) {
-     $error = true;
-     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Title.";
-    } else if (strlen($title) < 5) {
-     $error = true;
-     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must have atleast 5 characters.";
-    } 
-    else if (!preg_match("/^[a-zA-Z ]+$/",$title)) {
-     $error = true;
-     $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Title must contain alphabets and space.";
-    }
-   
-    else {
-     // check username exist or not
-     $query = "SELECT title FROM material WHERE title='$title'";
-     $result = mysql_query($query);
-     $count = mysql_num_rows($result);
-     if($count!=0){
-      $error = true;
-      $TitleError = " <span class='glyphicon glyphicon-info-sign'></span> Provided Title is already in use.";
-     }
-    }
-  // end Title error
-  // Description error
-    $description = trim($_POST['description']);
-    $description = strip_tags($description);
-    $description = htmlspecialchars($description);
-         
-    if (empty($description)) {
-     $error = true;
-     $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Please enter a Description.";
-    } else if (strlen($description) < 5) {
-     $error = true;
-     $DescError = " <span class='glyphicon glyphicon-info-sign'></span> Description must have atleast 5 characters.";
-    } 
-    else if (!preg_match("/^[a-zA-Z ]+$/",$description)) {
-     $error = true;
-     $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Description must contain alphabets and space.";
-    }
-   
-    else {
-     // check username exist or not
-     $query = "SELECT description FROM material WHERE description='$description'";
-     $result = mysql_query($query);
-     $count = mysql_num_rows($result);
-     if($count!=0){
-      $error = true;
-      $DescError = "<span class='glyphicon glyphicon-info-sign'></span> Provided Description is already in use.";
-     }
-    }
-  // end Description error
-    
+
     // if no error occured, continue ....
     if(!$error)
     {
-     $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id)');
+      require_once 'dbConnect.php';
+
+        $stmt = $DB_con->prepare('INSERT INTO material(title,description,filename,filesize,location,url,uploaded_by,category_id) VALUES(:title, :description, :filename, :new_size, :location, :url, :uploaded_by, :category_id)');
         $stmt->bindParam(':title',$title);
         $stmt->bindParam(':description',$description);
         $stmt->bindParam(':filename',$final_file);
@@ -132,15 +127,15 @@
         $stmt->bindParam(':url',$url);
         $stmt->bindParam(':uploaded_by',$uploaded_by);
         $stmt->bindParam(':category_id', $_POST['category_id']);
-
+        
         move_uploaded_file($file_loc,$folder.$final_file);
      
         if($stmt->execute())
         {
           $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
           $lastId = $stmt->fetchColumn();
-          $successMSG = "New record created succesfully. Last inserted ID is: " . $lastId;
-           // redirects image view page after 5 seconds.
+          $successMSG = "New record created succesfully. <br>Last inserted ID is: " . $lastId;
+          header('refresh:3;tbl_materials.php');
         }
         else
         {
@@ -149,6 +144,58 @@
       }
    }
   ?>
+
+  <!-- Add Category -->
+  <?php
+              
+  $error = false;
+   if ( isset($_POST['add_new_cat']) ) {
+    
+    $cat_name = trim($_POST['cat_name']);
+    $cat_name = strip_tags($cat_name);
+    $cat_name = htmlspecialchars($cat_name);
+    if (empty($cat_name)) {
+     $error = true;
+     $categoryError = "Please enter a Category.";
+    } else if (strlen($cat_name) < 5) {
+     $error = true;
+     $categoryError = "Category must have atleat 5 characters.";
+    } 
+    else if (!preg_match("/^[a-zA-Z ]+$/",$cat_name)) {
+     $error = true;
+     $categoryError = "Category must contain alphabets and space.";
+    }
+   
+    else {         
+      $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
+      $result = $DB_con->query($query);
+    
+    if($result->num_rows != 0){
+            $error = true;
+            $categoryError = "Provided Category is already in use.";
+      }
+    }
+   
+    if( !$error ) {
+      
+      require_once 'dbConnect.php';
+     
+      $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
+      $stmt->bindParam(':cat_name',$cat_name);
+          if($stmt->execute()) {
+            $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
+            $lastId = $stmt->fetchColumn();
+            $successMSG = "New category added!";
+              header('refresh:3;upload-document.php');
+            }
+          else {
+            $errMSG = "Error!";
+            header('refresh:3;upload-document.php');
+          } 
+      
+    }      
+   }
+   ?>
 
   <!DOCTYPE html>
   <html lang="en-US">
@@ -188,7 +235,7 @@
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                       <ul class="dropdown-menu">
                           <li>
-                              <a href="logout.php">Logout</a>
+                              <a href="logout.php?logout">Logout</a>
                           </li>
                       </ul>
                   </li>
@@ -205,10 +252,10 @@
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
                           <ul id="demo" class="collapse">
                               <li>
-                                  <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                                  <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
                               </li>
                               <li>
-                                  <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
+                                  <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
                               </li>
                           </ul>
                       </li>
@@ -227,44 +274,71 @@
                   <!-- Page Heading -->
                   <div class="row">
                       <div class="col-lg-12">
-                          <h3 class="page-header"><strong>Upload New File</strong></h3>
+                          <h3 class="page-header">
+                              <strong>Upload New File</strong>
+                                  <small>(<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.</small>
+                          </h3>
                       </div>
                   </div>
                   <!-- /.row -->              
 
-  <!-- Main Form -->
-  <br>
-  <form method="post" enctype="multipart/form-data" action="" autocomplete="off">
+<!-- Main Form -->
+<div class="form-group row">
+<div class="col-sm-6">
 
+<form method="post" enctype="multipart/form-data" action="" >
+<div class="form-group row">
+<div class="col-sm-8"> 
   <?php
     if(isset($successMSG)){
       ?>
-      <p class="text-success"><span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?></p>
-      <br>
+      <div class="alert alert-success"><?php echo $successMSG; ?></div>
+  <?php
+    }
+    if(isset($errMSG)){
+      ?>
+      <div class="alert alert-danger"><?php echo $errMSG; ?></div>
+
   <?php
     }
   ?>
 
-    <div class="form-group row">
-    <label class="col-sm-2 col-form-label"></label>
-      <div class="col-sm-4">
-      <input type="file" name="file" class="form-control-file" />
-      <p class="text-danger"><?php echo $FileError; ?></p>
-      <?php
-    if(isset($errMSG)){
-      ?>
-    <p class="text-danger">  <?php echo $errMSG; ?> </p>
-        
-          <?php
-    }
-  ?>
+</div>
+</div>
+
+<div class="form-group row">
+  <div class="col-sm-8"> 
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button id="file-button-browse" type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-file"></span>  Browse
+        </button>
+      </span>
+      <input type="file" class="form-control-file" name="file" id="files-input-upload" style="display:none">
+      <input type="text" id="file-input-name" disabled="disabled" placeholder="File not selected" class="form-control">
     </div>
-    </div>
-    
+    <script type="text/javascript">
+      document.getElementById('file-button-browse').addEventListener('click', function() {
+      document.getElementById('files-input-upload').click();
+      });
+      document.getElementById('files-input-upload').addEventListener('change', function() {
+      document.getElementById('file-input-name').value = this.value;
+      });
+    </script>
+  </div>
+</div><br>
+
+  <div class="form-group row"> 
+        <div class="col-sm-8">
+          <strong>Title</strong> <sup class="text-danger">*</sup>
+          <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
+          <p class="text-danger"><?php echo $TitleError; ?></p>
+        </div>
+  </div>
+      
     <div class="form-group row">
-      <label class="col-sm-2 col-form-label">Category: (Required)</label>
-       <div class="col-sm-4">    
-       <p class="text-danger"><?php echo $categoryError; ?></p>
+      <div class="col-sm-8">
+          <strong>Category</strong> <sup class="text-danger">*</sup>
           <?php
               // php select option value from database
               $hostname = "localhost";
@@ -293,120 +367,63 @@
               <?php endwhile;?>
               <option value="new">Add new category</option>
           </select>
+       <p class="text-danger"><?php echo $categoryError; ?></p>
       </div>
     </div>
-
-  <!-- Add Category -->
-  <?php
-              
-  $error = false;
-   if ( isset($_POST['add_new_cat']) ) {
     
-    $cat_name = trim($_POST['cat_name']);
-    $cat_name = strip_tags($cat_name);
-    $cat_name = htmlspecialchars($cat_name);
-    if (empty($cat_name)) {
-     $error = true;
-     $categoryError = "Please enter a Category.";
-    } else if (strlen($cat_name) < 5) {
-     $error = true;
-     $categoryError = "Category must have atleat 5 characters.";
-    } 
-    else if (!preg_match("/^[a-zA-Z ]+$/",$cat_name)) {
-     $error = true;
-     $categoryError = "Category must contain alphabets and space.";
-    }
-   
-    else {
-     $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
-     $result = mysql_query($query);
-     $count = mysql_num_rows($result);
-     
-      if($count!=0){
-        $error = true;
-        $categoryError = "Provided Category is already in use.";
-      }
-    }
-   
-    if( !$error ) {
-     
-      $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
-      $stmt->bindParam(':cat_name',$cat_name);
-          if($stmt->execute()) {
-            $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
-            $lastId = $stmt->fetchColumn();
-            $successMSG = "New category added!";
-              header('refresh:1;upload-document.php');
-            }
-          else {
-            $errMSG = "Error!";
-            header('refresh:3;upload-document.php');
-          } 
-      
-    }      
-   }
-   ?>
-    
-    <div class="form-group" id="newCat" style="display:none;">
-    <label class="col-sm-2 col-form-label"></label>
-          <div class="col-sm-4 form-group" id="cname">
-                  <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus />
+    <div class="form-group row" id="newCat" style="display:none;">
+          <div class="col-sm-8" id="cname">
+              <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus /><br>
+              <?php echo $successMSG; ?>
+              <button type="submit" id="add" name="add_new_cat" class="btn btn-primary pull-right">ADD</button>
+              <script type="text/javascript">
+                $('#cat_name').on('change',function(){
+                  if( $(this).val()==="new"){
+                    $("#newCat").show()
+                  }
+                  else{
+                    $("#newCat").hide()
+                  }
+                  });
+              </script>
           </div>
-
-          <div class="form-inline">
-              <button type="submit" id="add" name="add_new_cat" class="btn btn-primary">ADD</button>
-        <script type="text/javascript">
-          $('#cat_name').on('change',function(){
-              if( $(this).val()==="new"){
-                $("#newCat").show()
-              }
-              else{
-                $("#newCat").hide()
-              }
-          });
-        </script>
-      </div>
     </div>
-   <!-- End Add Category -->
-
-  <div class="form-group row"> 
-      <label class="col-sm-2 col-form-label">Title: (Required)</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
-          <p class="text-danger"><?php echo $TitleError; ?></p>
-        </div>
-  </div>
+    <!-- End Add Category -->
 
   <div class="form-group row">
-      <label class="col-sm-2 col-form-label">Description: (Required)</label>
-        <div class="col-sm-4">
-          <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>    
-          <p class="text-danger"><?php echo $DescError; ?></p>
-        </div>
+      <div class="col-sm-8">
+          <strong>Description</strong> <sup class="text-danger">*</sup>
+          <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>   
+          <p class="text-danger"><?php echo $descError; ?></p>
+      </div>
   </div>
 
-   <textarea hidden="" name="uploaded_by"><?php echo $userRow['first_name']." ".$userRow['last_name'] ?></textarea>
-    <textarea hidden="" name="location"><?php echo $location; ?></textarea>
-    <textarea hidden="" name="url"><?php echo $url; ?></textarea> 
+  <div class="form-group row" style="display:none;">
+      <div class="col-sm-8">
+          <input type="text" class="form-control" name="uploaded_by" value="<?php echo $userRow['first_name']." ".$userRow['last_name'] ?>" />
+          <input type="text" class="form-control" name="location" value="<?php echo $location; ?>" />
+          <input type="text" class="form-control" name="url" value="<?php echo $url; ?>" />
+      </div>
+  </div>
 
   <br>
   <div class="form-group row">
-    <label class="col-sm-2 col-form-label"></label>
-      <div class="col-sm-4">
-      <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
-    CANCEL </a>
-     <button type="submit" name="btn-upload" class="btn btn-success" formaction="upload-document.php"><span class="glyphicon glyphicon-upload"></span>
-    &nbsp;UPLOAD</button> (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.
-    </div>
-    </div>
-
+      <div class="col-sm-8">
+          <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> CANCEL </a>&nbsp;
+          <button type="submit" name="btn-upload" class="btn btn-success" formaction="upload-document.php"><span class="glyphicon glyphicon-upload"></span>&nbsp;UPLOAD
+          </button>
+      </div>
+  </div>
+  <br>
   </form>
 
-  </div><!-- /.container-fluid -->
-          </div><!-- /#page-wrapper -->
-
-      </div><!-- /#wrapper -->
   </div>
+  </div>
+
+  </div><!-- /.container-fluid -->
+  </div><!-- /.container-fluid2 -->
+  </div><!-- /#page-wrapper -->
+  </div><!-- /#wrapper -->
 
       <footer class="footer">
           <div class="container-fluid">
@@ -415,7 +432,7 @@
       </footer>
 
   <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="../assets/js/jquery.min.js"></script>
   <script src="../assets/js/bootstrap.min.js"></script>
   <script src="../assets/js/index.js"></script>
 

@@ -1,8 +1,22 @@
+<?php
+include('User.php'); // Includes Login Script
+include('dbConnect.php');
+include_once ('gpConfig.php');
+
+if ( isset($_SESSION['token'])!="" ) {
+        header("Location: library");
+        exit;
+    }
+    else {
+        $loginError = "You need to login first!";
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-    <title>UP Open University</title>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+<title>UP Open University</title>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/bootstrap-theme.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet">
@@ -14,7 +28,20 @@
 <?php include 'header.php'; ?>
         <div class="container-fluid"><br><br><br><br><br>
                 <div class="site-index">
-                    <div class="jumbotron">  
+                <?php
+            		if ( isset($_GET['loginError']) ) {
+            			$loginError = "You need to login first!";
+        		?>
+            		<div class="form-group">
+                		<div class="alert alert-danger alert-dismissible" role="alert">
+                    		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    		<?php echo $loginError; ?>
+                		</div>
+            		</div>
+        		<?php
+            		}
+        		?>
+                    <div class="jumbotron" style="background: transparent;text-align: center;"> 
                         <?php echo $output; ?>                      
                     </div>
                 </div>

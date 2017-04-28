@@ -2,15 +2,22 @@
     ob_start();
     session_start();
     require_once '../includes/dbconnect.php';
+
+    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+
+    if ($DB_con->connect_errno) {
+        echo "Connect failed: ", $DB_con->connect_error;
+    exit();
+    }
     
     // if session is not set this will redirect to login page
     if( !isset($_SESSION['user']) ) {
-        header("Location: index.php");
+        header("Location: /ovcaa/administrator");
         exit;
     }
     // select loggedin members detail
-    $res=mysql_query("SELECT * FROM members WHERE userId=".$_SESSION['user']);
-    $userRow=mysql_fetch_array($res);
+    $res = $DB_con->query("SELECT * FROM members WHERE userId=".$_SESSION['user'], MYSQLI_USE_RESULT);
+    $userRow = $res->fetch_array(MYSQLI_BOTH);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -21,38 +28,6 @@
 <script src="../assets/js/index.js"></script>
 <script src="../assets/js/jquery.min.js"></script>
 <!-- end of jQuery -->
-<style type="text/css">
-ul.pagination li.page_info {
-    display: inline;
-    -webkit-margin-before: 1em;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
-    -webkit-padding-start: 40px;
-}
-
-/* For pagination function. */
-ul.pagination {
-    text-align:center;
-    color:#829994;
-}
-ul.pagination li {
-    display:inline;
-    padding:0 3px;
-}
-ul.pagination a {
-    color:#014421;
-    display:inline-block;
-    padding:5px 10px;
-    border:1px solid #cde0dc;
-    text-decoration:none;
-}
-ul.pagination a:hover,
-ul.pagination a.current {
-    background:#014421;
-    color:#fff;
-}
-</style>
 </head>
 <body>
 
@@ -64,7 +39,7 @@ $per_page = 5; // Set how many records do you want to display per page.
 
 
     $search = $_GET['search'];
-    $search = mysql_real_escape_string($search);
+    $search = $DB_con->real_escape_string($search);
     $output = 'Showing results for "'.$search.'."';
 
     $startpoint = ($page * $per_page) - $per_page;
@@ -75,17 +50,14 @@ $per_page = 5; // Set how many records do you want to display per page.
 
 ?>  
 
-<div class="row">
-<?php echo pagination($statement,$per_page,$page,$url='?');?> 
-</div>
+<div class="container-fluid">
 
 <?php if (isset($_GET['search'])) {
     echo $output;
 }  ?>
 
 <div class="row">
-<div class="table-responsive">
-<table class="table table-striped table-bordered table-hover" id="table-id">
+<table class="table table-striped table-bordered table-responsive table-hover" id="table-id">
 <thead>
     <tr>
         <th><center>Action</center></th>
@@ -104,7 +76,6 @@ if (mysqli_num_rows($results) != 0) {
 ?>  
     <tbody>
         <tr>
-            
             <td><center>
             <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['userId']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
             </td>
@@ -133,34 +104,13 @@ else {
                 ?>
         </tr>
     </tbody>
-</table></div>
-<?php 
-echo pagination($statement,$per_page,$page,$url='?');
-?>
+</table>
 </div>
+
+<div class="row">
+<?php echo pagination($statement,$per_page,$page,$url='?');?> 
+</div>
+
+</div> <!-- end of container-fluid -->
 </body>
 </html>
-
-<script type="text/javascript">    
-$(document).ready(function() {
-$(".first").click(function() {
-$("#checkAll").attr("data-type", "uncheck");
-});
-$("input[name=option2]").click(function() {
-$("#selectall").prop("checked", false);
-});
-$("#checkAll").attr("data-type", "check");
-$("#checkAll").click(function() {
-if ($("#checkAll").attr("data-type") === "check") {
-$(".first").prop("checked", true);
-$("#checkAll").attr("data-type", "uncheck");
-} else {
-$(".first").prop("checked", false);
-$("#checkAll").attr("data-type", "check");
-}
-})
-$("#selectall").click(function() {
-$(".second").prop("checked", $("#selectall").prop("checked"))
-})
-});
-</script>
