@@ -33,13 +33,25 @@
   $edit_row = $stmt_edit->fetch(PDO::FETCH_ASSOC);
   extract($edit_row);
  }
+
+ $error = false;
  
  if(isset($_POST['btn-update']))
  {
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name']; 
-  $userName = $_POST['userName'];    
-  $userEmail = $_POST['userEmail'];
+
+  $userName = trim($_POST['userName']);
+  $userName = strip_tags($userName);
+  $userName = htmlspecialchars($userName);
+  
+  $userEmail = trim($_POST['userEmail']);
+  $userEmail = strip_tags($userEmail);
+  $userEmail = htmlspecialchars($userEmail);
+  
+  $userPass = trim($_POST['userPass']);
+  $userPass = strip_tags($userPass);
+  $userPass = htmlspecialchars($userPass);
 
   // basic username validation
   if (empty($userName)) {
@@ -59,24 +71,53 @@
     $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Provided username is already in use.";
    }
   }
+
+  //basic email validation
+  if ( !filter_var($userEmail,FILTER_VALIDATE_EMAIL) ) {
+   $error = true;
+   $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter a valid email address.";
+  } 
+  else if (strlen($userEmail) > 30) {
+   $error = true;
+   $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> That was a very long email address! Please try a shorter one";
+  }
+  else {
+   // check email exist or not
+   $query = "SELECT userEmail FROM members WHERE userEmail='$userEmail'";
+   $result = $DB_con->query($query);
+
+   if($result->num_rows != 0){
+    $error = true;
+    $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Provided email is already in use.";
+   }
+  }
+
+  // password validation
+  if (empty($userPass)){
+   $error = true;
+   $passError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter password.";
+  } else if(strlen($userPass) < 8) {
+   $error = true;
+   $passError = "<span class='glyphicon glyphicon-info-sign'></span> Password must have atleast 8 characters.";
+  }
+
+  // password encrypt using SHA256();
+  $userPass = hash('sha256', $userPass);
   
   // if no error occured, continue ....
-  if(!isset($errMSG))
+  if(!$error)
   {
-   $stmt = $DB_con->prepare('UPDATE members SET first_name=:first_name, last_name=:last_name, userName = :userName, userEmail = :userEmail WHERE userId=:uid');
+   $stmt = $DB_con->prepare('UPDATE members SET first_name=:first_name, last_name=:last_name, userName = :userName, userEmail = :userEmail, userPass = :userPass WHERE userId=:uid');
    $stmt->bindParam(':first_name',$first_name);
    $stmt->bindParam(':last_name',$last_name);
    $stmt->bindParam(':userName',$userName);
    $stmt->bindParam(':userEmail',$userEmail);
+   $stmt->bindParam(':userPass',$userPass);
    $stmt->bindParam(':uid',$id);
     
    if($stmt->execute()){
-    ?>
-                <script>
-    alert('Successfully Updated ...');
-    window.location.href='view_profile.php';
-    </script>
-                <?php
+    $successMSG = 'Successfully Updated ...';
+    header("refresh:3; view_profile.php");
    }
    else{
     $errMSG = "Sorry Data Could Not Updated !";
@@ -250,6 +291,16 @@
       <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
      </div>
       <p class="text-danger"><?php echo $emailError; ?></p>
+  </div>
+</div>
+
+<div class="form-group row"> 
+  <div class="col-sm-8">
+    <strong>Password</strong><sup class="text-danger">*</sup> (at least 8 characters)
+    <div class="input-group" data-validate="userPass">
+      <input type="password" class="form-control" name="userPass" id="userPass" /><span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
+    </div>      
+    <p class="text-danger"><?php echo $passError; ?></p>
   </div>
 </div>
 
