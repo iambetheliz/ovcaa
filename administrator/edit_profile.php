@@ -259,7 +259,7 @@
 <br>
 <div class="form-group row">
   <div class="col-sm-8">
-    <a type="button" href="tbl_users.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
+    <a type="button" href="view_profile.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
   CANCEL </a>&nbsp;
     <button type="submit" class="btn btn-success send" name="btn-update" data-loading-text="Saving info"><span class='glyphicon glyphicon-thumbs-up'></span> Update </button>
   </div>
