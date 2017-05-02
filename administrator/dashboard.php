@@ -176,6 +176,9 @@ if ( !class_exists('NumbersToWords') ){
                             </li>
                         </ul>
                     </li>
+                    <li>
+                         <a href="edit_profile.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Account Settings</a>
+                    </li>
                 </ul>
             </div>            
             

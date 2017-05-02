@@ -105,13 +105,12 @@
   // if there's no error, continue to signup
  if(!$error)
     {
-      $stmt = $DB_con->prepare("UPDATE members SET first_name=:first_name, last_name=:last_name, userName=:userName, userEmail=:userEmail, userPass=:userPass WHERE userId=:userId");
+      $stmt = mysqli>prepare("UPDATE members SET first_name=:first_name, last_name=:last_name, userName=:userName, userEmail=:userEmail, userPass=:userPass WHERE userId=:userId");
       $stmt->bind_Param(':first_name',$first_name);
       $stmt->bind_Param(':last_name',$last_name);
       $stmt->bind_Param(':userName',$userName);
       $stmt->bind_Param(':userEmail',$userEmail);
-      $stmt->bind_Param(':userPass',$userPass);
-      $stmt->bind_Param(':userPass',$userPass);
+      $stmt->bind_Param(':userPass',$userPass);      
       $stmt->bind_Param(':userId',$userId);
          
       if($stmt->execute()){
