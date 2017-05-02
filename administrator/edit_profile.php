@@ -55,19 +55,13 @@
    $error = true;
    $first_nameError .= "<span class='glyphicon glyphicon-exclamation-sign'></span> ";
    $first_nameError .= "Username cannot be empty!";
-  } else if (strlen($first_name) < 5) {
-   $error = true;
-   $first_nameError = "<span class='glyphicon glyphicon-info-sign'></span> Username must have atleat 5 characters.";
-  }
+  } 
 
 // basic username validation
   if (empty($last_name)) {
    $error = true;
    $last_nameError .= "<span class='glyphicon glyphicon-exclamation-sign'></span> ";
    $last_nameError .= "Username cannot be empty!";
-  } else if (strlen($last_name) < 5) {
-   $error = true;
-   $last_name = "<span class='glyphicon glyphicon-info-sign'></span> Username must have atleat 5 characters.";
   }
 
 // basic username validation
@@ -85,10 +79,6 @@
    $error = true;
    $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter a valid email address.";
   } 
-  else if (strlen($userEmail) > 30) {
-   $error = true;
-   $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> That was a very long email address! Please try a shorter one";
-  }
   
 // password validation
   if (empty($userPass)){
