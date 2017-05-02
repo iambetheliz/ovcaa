@@ -152,7 +152,7 @@ if ( !class_exists('NumbersToWords') ){
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName'] ; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                    <li><a href="edit_profile.php?edit_id=<?php echo $userRow['userName'] ; ?>" title="Update Profile" >Profile Settings</a></li>                       
+                    <li><a href="view_profile.php" title="Update Profile" >Profile Settings</a></li>                       
                         <li><a href="logout.php?logout">Logout</a></li>
                     </ul>
                 </li>

@@ -104,11 +104,10 @@
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName'] ; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a href="logout.php">Logout</a>
-                        </li>
+                    <li><a href="view_profile.php" title="Update Profile" >Profile Settings</a></li>                       
+                        <li><a href="logout.php?logout">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -172,41 +171,32 @@
   ?>
 </div>
 </div>
+
+<div class="form-group row"> 
+  <div class="col-sm-8">
+    <strong>Full Name</strong>
+      <input type="text" class="form-control" maxlength="15" value="<?php echo $userRow['first_name']; ?>&nbsp;<?php echo $userRow['last_name']; ?>" disabled />
+  </div>
+</div>
   
 <div class="form-group row"> 
   <div class="col-sm-8">
     <strong>Username</strong>
-    <?php echo $userRow['userName']; ?>
+      <input type="text" class="form-control" maxlength="15" value="<?php echo $userRow['userName']; ?>" disabled />
   </div>
 </div>
 
 <div class="form-group row"> 
   <div class="col-sm-8">
     <strong>Email</strong>
-      <?php echo $userRow['userEmail']; ?>
-  </div>
-</div>
-
-<div class="form-group row"> 
-  <div class="col-sm-8">
-    <strong>First Name</strong>
-      <?php echo $userRow['first_name']; ?>
-  </div>
-</div>
-
-<div class="form-group row"> 
-  <div class="col-sm-8">
-    <strong>Last Name</strong>
-      <?php echo $userRow['last_name']; ?>
+      <input type="text" class="form-control" maxlength="15" value="<?php echo $userRow['userEmail']; ?>" disabled />
   </div>
 </div>
 
 <br>
 <div class="form-group row">
   <div class="col-sm-8">
-    <a type="button" href="tbl_users.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
-  CANCEL </a>&nbsp;
-    <button type="submit" class="btn btn-success send" name="btn-signup" data-loading-text="Saving info"><span class='glyphicon glyphicon-thumbs-up'></span> Save </button>
+    <a type="button" href="edit_profile.php?edit_id=<?php echo $userRow['userId'] ; ?>" title="Update Profile" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span> &nbsp; EDIT </a>&nbsp;
   </div>
 </div>
 

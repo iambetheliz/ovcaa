@@ -16,55 +16,32 @@
   }
 
   // select loggedin members detail
-  $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
-  $result = $DB_con->query($res);
+    $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
+    $result = $DB_con->query($res);
 
-  if ($result->num_rows != 0) {
-    $userRow = $result->fetch_array(MYSQLI_BOTH);
-  }
+    if ($result->num_rows != 0) {
+      $userRow = $result->fetch_array(MYSQLI_BOTH);
+    }   
+ 
+ require_once 'dbConnect.php';
 
-  $error = false;
+ if(isset($_GET['edit_id']) && !empty($_GET['edit_id']))
+ {
+  $id = $_GET['edit_id'];
+  $stmt_edit = $DB_con->prepare('SELECT * FROM members WHERE userId =:uid');
+  $stmt_edit->execute(array(':uid'=>$id));
+  $edit_row = $stmt_edit->fetch(PDO::FETCH_ASSOC);
+  extract($edit_row);
+ }
+ 
+ if(isset($_POST['btn-update']))
+ {
+  $first_name = $_POST['first_name'];
+  $last_name = $_POST['last_name']; 
+  $userName = $_POST['userName'];    
+  $userEmail = $_POST['userEmail'];
 
-  $userId=$_GET['userId'];
-
-  if ( isset($_POST['btn-update']) ) {
-  
-  // clean user inputs to prevent sql injections
-  $first_name = trim($_POST['first_name']);
-  $first_name = strip_tags($first_name);
-  $first_name = htmlspecialchars($first_name);
-  
-  $last_name = trim($_POST['last_name']);
-  $last_name = strip_tags($last_name);
-  $last_name = htmlspecialchars($last_name);
-
-  $userName = trim($_POST['userName']);
-  $userName = strip_tags($userName);
-  $userName = htmlspecialchars($userName);
-  
-  $userEmail = trim($_POST['userEmail']);
-  $userEmail = strip_tags($userEmail);
-  $userEmail = htmlspecialchars($userEmail);
-  
-  $userPass = trim($_POST['userPass']);
-  $userPass = strip_tags($userPass);
-  $userPass = htmlspecialchars($userPass);
-  
-// basic username validation
-  if (empty($first_name)) {
-   $error = true;
-   $first_nameError .= "<span class='glyphicon glyphicon-exclamation-sign'></span> ";
-   $first_nameError .= "Username cannot be empty!";
-  } 
-
-// basic username validation
-  if (empty($last_name)) {
-   $error = true;
-   $last_nameError .= "<span class='glyphicon glyphicon-exclamation-sign'></span> ";
-   $last_nameError .= "Username cannot be empty!";
-  }
-
-// basic username validation
+  // basic username validation
   if (empty($userName)) {
    $error = true;
    $userNameError .= "<span class='glyphicon glyphicon-exclamation-sign'></span> ";
@@ -72,49 +49,40 @@
   } else if (strlen($userName) < 5) {
    $error = true;
    $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Username must have atleat 5 characters.";
-  }
-  
-//basic email validation
-  if ( !filter_var($userEmail,FILTER_VALIDATE_EMAIL) ) {
-   $error = true;
-   $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter a valid email address.";
-  } 
-  
-// password validation
-  if (empty($userPass)){
-   $error = true;
-   $passError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter password.";
-  } else if(strlen($userPass) < 8) {
-   $error = true;
-   $passError = "<span class='glyphicon glyphicon-info-sign'></span> Password must have atleast 8 characters.";
-  }
-  
-  // password encrypt using SHA256();
-  $userPass = hash('sha256', $userPass);
-  
-  // if there's no error, continue to signup
- if(!$error)
-    {
-      $stmt = $DB_con->prepare("UPDATE members SET first_name=:first_name, last_name=:last_name, userName=:userName, userEmail=:userEmail, userPass=:userPass WHERE userId=:userId");
-      $stmt->bind_Param(':first_name',$first_name);
-      $stmt->bind_Param(':last_name',$last_name);
-      $stmt->bind_Param(':userName',$userName);
-      $stmt->bind_Param(':userEmail',$userEmail);
-      $stmt->bind_Param(':userPass',$userPass);
-      $stmt->bind_Param(':userPass',$userPass);
-      $stmt->bind_Param(':userId',$userId);
-         
-      if($stmt->execute()){
-        $successMSG = "Successfully Updated...";
-        header("refresh:3;tbl_users.php");
-      }
-      else{
-        $errMSG = "Sorry Data Could Not Updated !";
-      }
-    
-    }
+  }else {
+   // check username exist or not
+   $query = "SELECT userName FROM members WHERE userName='$userName'";
+   $result = $DB_con->query($query);
 
+   if($result->num_rows != 0){
+    $error = true;
+    $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Provided username is already in use.";
+   }
   }
+  
+  // if no error occured, continue ....
+  if(!isset($errMSG))
+  {
+   $stmt = $DB_con->prepare('UPDATE members SET first_name=:first_name, last_name=:last_name, userName = :userName, userEmail = :userEmail WHERE userId=:uid');
+   $stmt->bindParam(':first_name',$first_name);
+   $stmt->bindParam(':last_name',$last_name);
+   $stmt->bindParam(':userName',$userName);
+   $stmt->bindParam(':userEmail',$userEmail);
+   $stmt->bindParam(':uid',$id);
+    
+   if($stmt->execute()){
+    ?>
+                <script>
+    alert('Successfully Updated ...');
+    window.location.href='view_profile.php';
+    </script>
+                <?php
+   }
+   else{
+    $errMSG = "Sorry Data Could Not Updated !";
+   }
+  }    
+ }
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -178,11 +146,10 @@
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName']; ?>&nbsp;&nbsp;<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName'] ; ?>&nbsp;&nbsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a href="logout.php?logout">Logout</a>
-                        </li>
+                    <li><a href="view_profile.php" title="Update Profile" >Profile Settings</a></li>                       
+                        <li><a href="logout.php?logout">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -229,7 +196,7 @@
 
 <div class="form-group row">
 <div class="col-sm-6">
-<form id="regValidate" method="post" action="edit_profile.php" autocomplete="off">
+<form id="regValidate" method="post" autocomplete="off">
 
 <div class="form-group row">
 <div class="col-sm-8"> 
@@ -250,28 +217,20 @@
 
 <div class="form-group row"> 
   <div class="col-sm-8">
-    <strong>First Name</strong><sup class="text-danger">*</sup>
-    <div class="input-group" data-validate="first_name">
-      <input type="text" id="first_name" name="first_name" class="form-control" maxlength="15" value="<?php echo $userRow['last_name']; ?>" autofocus />
-      <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-    </div>
+    <strong>First Name</strong>
+      <input type="text" id="first_name" name="first_name" class="form-control" maxlength="15" value="<?php echo $userRow['first_name']; ?>" autofocus />
       <p class="text-danger"><?php echo $first_nameError; ?></p>
   </div>
 </div>
 
-
 <div class="form-group row"> 
   <div class="col-sm-8">
-    <strong>Last Name</strong><sup class="text-danger">*</sup>
-    <div class="input-group" data-validate="last_name">
+    <strong>Last Name</strong>
       <input type="text" id="last_name" name="last_name" class="form-control" maxlength="15" value="<?php echo $userRow['last_name']; ?>" autofocus />
-      <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-    </div>
       <p class="text-danger"><?php echo $last_nameError; ?></p>
   </div>
 </div>
 
-  
 <div class="form-group row"> 
   <div class="col-sm-8">
     <strong>Username</strong><sup class="text-danger">*</sup>
@@ -294,16 +253,9 @@
   </div>
 </div>
 
-<div class="form-group row"> 
-  <div class="col-sm-8">
-    <strong>Password</strong><sup class="text-danger">*</sup> (at least 8 characters)
-    <div class="input-group" data-validate="userPass">
-      <input type="password" class="form-control" name="userPass" id="userPass" /><span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-    </div>      
-    <p class="text-danger"><?php echo $passError; ?></p>
-  </div>
-</div>
-
+<?php
+    $userName =  $_POST['userName'];
+?> 
 <br>
 <div class="form-group row">
   <div class="col-sm-8">
