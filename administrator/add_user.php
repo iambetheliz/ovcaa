@@ -242,11 +242,8 @@
   
 <div class="form-group row"> 
   <div class="col-sm-8">
-    <strong>Username</strong><sup class="text-danger">*</sup>
-    <div class="input-group" data-validate="userName">
+    <strong>Username</strong><sup class="text-danger">*</sup>    
       <input type="text" id="userName" name="userName" class="form-control" maxlength="15" value="<?php echo $userName ?>" autofocus />
-      <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-    </div>
       <p class="text-danger"><?php echo $userNameError; ?></p>
   </div>
 </div>
@@ -254,20 +251,16 @@
 <div class="form-group row"> 
   <div class="col-sm-8">
     <strong>Email</strong><sup class="text-danger">*</sup>
-    <div class="input-group" data-validate="email">
+    
       <input type="text" id="email" name="userEmail" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $userEmail ?>" />
-      <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-     </div>
       <p class="text-danger"><?php echo $emailError; ?></p>
   </div>
 </div>
 
 <div class="form-group row"> 
   <div class="col-sm-8">
-    <strong>Password</strong><sup class="text-danger">*</sup> (at least 8 characters)
-    <div class="input-group" data-validate="userPass">
-      <input type="password" class="form-control" name="userPass" id="userPass" /><span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-    </div>      
+    <strong>Password</strong><sup class="text-danger">*</sup> (at least 8 characters)    
+      <input type="password" class="form-control" name="userPass" id="userPass" />
     <p class="text-danger"><?php echo $passError; ?></p>
   </div>
 </div>

@@ -33,25 +33,14 @@
   $edit_row = $stmt_edit->fetch(PDO::FETCH_ASSOC);
   extract($edit_row);
  }
-
- $error = false;
  
  if(isset($_POST['btn-update']))
  {
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name']; 
-
-  $userName = trim($_POST['userName']);
-  $userName = strip_tags($userName);
-  $userName = htmlspecialchars($userName);
-  
-  $userEmail = trim($_POST['userEmail']);
-  $userEmail = strip_tags($userEmail);
-  $userEmail = htmlspecialchars($userEmail);
-  
-  $userPass = trim($_POST['userPass']);
-  $userPass = strip_tags($userPass);
-  $userPass = htmlspecialchars($userPass);
+  $userName = $_POST['userName'];    
+  $userEmail = $_POST['userEmail'];
+  $userPass = $_POST['userPass'];
 
   // basic username validation
   if (empty($userName)) {
@@ -71,27 +60,7 @@
     $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Provided username is already in use.";
    }
   }
-
-  //basic email validation
-  if ( !filter_var($userEmail,FILTER_VALIDATE_EMAIL) ) {
-   $error = true;
-   $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter a valid email address.";
-  } 
-  else if (strlen($userEmail) > 30) {
-   $error = true;
-   $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> That was a very long email address! Please try a shorter one";
-  }
-  else {
-   // check email exist or not
-   $query = "SELECT userEmail FROM members WHERE userEmail='$userEmail'";
-   $result = $DB_con->query($query);
-
-   if($result->num_rows != 0){
-    $error = true;
-    $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Provided email is already in use.";
-   }
-  }
-
+  
   // password validation
   if (empty($userPass)){
    $error = true;
@@ -100,10 +69,11 @@
    $error = true;
    $passError = "<span class='glyphicon glyphicon-info-sign'></span> Password must have atleast 8 characters.";
   }
-
+  
   // password encrypt using SHA256();
   $userPass = hash('sha256', $userPass);
-  
+
+
   // if no error occured, continue ....
   if(!$error)
   {
@@ -116,8 +86,12 @@
    $stmt->bindParam(':uid',$id);
     
    if($stmt->execute()){
-    $successMSG = 'Successfully Updated ...';
-    header("refresh:3; view_profile.php");
+    ?>
+                <script>
+    alert('Successfully Updated ...');
+    window.location.href='view_profile.php';
+    </script>
+                <?php
    }
    else{
     $errMSG = "Sorry Data Could Not Updated !";
@@ -274,32 +248,25 @@
 
 <div class="form-group row"> 
   <div class="col-sm-8">
-    <strong>Username</strong><sup class="text-danger">*</sup>
-    <div class="input-group" data-validate="userName">
+    <strong>Username</strong><sup class="text-danger">*</sup>    
       <input type="text" id="userName" name="userName" class="form-control" maxlength="15" value="<?php echo $userRow['userName']; ?>" autofocus />
-      <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-    </div>
       <p class="text-danger"><?php echo $userNameError; ?></p>
   </div>
 </div>
 
 <div class="form-group row"> 
   <div class="col-sm-8">
-    <strong>Email</strong><sup class="text-danger">*</sup>
-    <div class="input-group" data-validate="email">
-      <input type="text" id="email" name="userEmail" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $userRow['userEmail']; ?>" />
-      <span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-     </div>
+    <strong>Email</strong><sup class="text-danger">*</sup>  
+      <input type="text" id="email" name="userEmail" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $userRow['userEmail']; ?>" />     
       <p class="text-danger"><?php echo $emailError; ?></p>
   </div>
 </div>
 
+
 <div class="form-group row"> 
   <div class="col-sm-8">
-    <strong>Password</strong><sup class="text-danger">*</sup> (at least 8 characters)
-    <div class="input-group" data-validate="userPass">
-      <input type="password" class="form-control" name="userPass" id="userPass" /><span class="input-group-addon danger"><span class="glyphicon glyphicon-remove"></span></span>
-    </div>      
+    <strong>Password</strong><sup class="text-danger">*</sup> (at least 8 characters)    
+      <input type="password" class="form-control" name="userPass" id="userPass" />
     <p class="text-danger"><?php echo $passError; ?></p>
   </div>
 </div>
