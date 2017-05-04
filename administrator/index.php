@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 include 'dbConnect.php';
 include 'header.php';
 
@@ -9,6 +11,7 @@ if ( isset($_SESSION['token'])!="" ) {
 else {
         $loginError = "You need to login first!";
     }
+
 ?>
 
 <!DOCTYPE html>

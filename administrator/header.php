@@ -1,4 +1,5 @@
 <?php
+session_start();
 //Include GP config file && User class
 include_once 'gpConfig.php';
 include_once 'User.php';
@@ -28,6 +29,7 @@ if ($gClient->getAccessToken()) {
         'last_name'     => $gpUserProfile['family_name'],
         'email'         => $gpUserProfile['email'],
     );
+
     $userData = $user->checkUser($gpUserData);
     
     //Storing user data into session
