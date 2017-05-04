@@ -65,21 +65,25 @@ else {
 
         <div class="container-fluid">
                 <div class="site-index">
-                <?php
-            		if ( isset($_GET['loginError']) ) {
-            			$loginError = "You need to login first!";
-        		?>
-            		<div class="form-group">
-                		<div class="alert alert-danger alert-dismissible" role="alert">
-                    		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    		<?php echo $loginError; ?>
-                		</div>
-            		</div>
-        		<?php
-            		}
-        		?>
                     <div class="jumbotron" style="background: transparent;text-align: center;"> 
-                        <?php echo $output; ?>   
+                        <?php
+                            if ( isset($_GET['loginError']) ) {
+                                $loginError = "You need to login first!";
+                        ?>
+                            <p class="text-danger"><?php echo $loginError; ?><p>
+                        <?php }
+                        ?>
+                        <?php echo $output; ?>  <br>
+                        <?php    
+                            $stmt = $DB_con->prepare("SELECT * FROM users WHERE role = 'admin'");
+                            $stmt->execute();    
+                            $count = $stmt->rowCount();
+
+                            if ($count == 0) {
+                                $message = "This site has no admin yet. Click <strong><a href='add_admin.php'>here</a></strong> to add admin";
+                            }
+                        ?>
+                        <p class="text-danger"><?php echo $message; ?></p>
                     </div>                   
                 </div>
     </div>

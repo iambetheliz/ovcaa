@@ -2,10 +2,6 @@
 
   include 'dbConnect.php';
   include 'header.php';
-
-  if(!isset($_SESSION['token'])){
-    header("Location: index.php?loginError");
-  }
   
   require_once '../includes/dbconnect.php';
 
@@ -24,6 +20,8 @@
   $email = trim($_POST['email']);
   $email = strip_tags($email);
   $email = htmlspecialchars($email);
+
+  $role = 'admin';
   
   //basic email validation
   if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
@@ -48,15 +46,16 @@
   // if there's no error, continue to signup
   if( !$error ) {
    
-   $stmt = $DB_con->prepare("INSERT INTO users(email) VALUES('$email')");
+   $stmt = $DB_con->prepare("INSERT INTO users(email,role) VALUES('$email','$role')");
    $stmt->bind_param($email);
+   $stmt->bind_param($role);
     
    if (!$stmt) {
       $errMSG = "Something went wrong, try again later..."; 
    } else {
       $stmt->execute();
       $successMSG = "User created successfully!";
-        header("refresh:3; tbl_users.php");
+        header("refresh:3; index.php");
         unset($email);
   }  }
   
@@ -103,76 +102,8 @@
 </head>
 
 <body>
-<div class="wrap">
-    <div id="wrapper">
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
 
-            <!-- Brand and toggle -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
-            </div>
-
-            <!-- Top Menu Items -->
-            <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <?php
-                    if(!empty($userData)){?>
-                        <li><?php echo $account; ?></li>
-                        <li><?php echo $logout; ?></li>
-                <?php }?>
-            </ul> 
-            </ul>
-            </div>
-
-            <!-- Sidebar Menu Items -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
-                        <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
-                    </li>
-                    <li class="active">
-                      <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
-                        <ul id="demo" class="collapse">
-                            <li>
-                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
-                            </li>
-                            <li>
-                                <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>            
-            
-        </div>
-        </nav>
-        <!-- /.navbar-collapse -->
-        
-        <br><br>
-        <!-- Main Screen -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h3 class="page-header"><strong>Add New User</strong></h3>
-                    </div>
-                </div>
-                <!-- /.row -->              
-
-<!-- Main Form -->
-<div class="form-group row">
-<div class="col-sm-6">
-<form id="regValidate" method="post" action="add_user.php" autocomplete="off">
+<form id="regValidate" method="post" autocomplete="off">
 
 <div class="form-group row">
 <div class="col-sm-8"> 
@@ -196,6 +127,7 @@
     <strong>Email</strong><sup class="text-danger">*</sup>    
       <input type="text" id="email" name="email" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $email ?>" />
       <p class="text-danger"><?php echo $emailError; ?></p>
+      <input hidden="" type="text" name="role" value="$role" />
   </div>
 </div>
 
@@ -209,19 +141,6 @@
 </div>
 
 </form>
-</div>
-</div>
-
-</div><!-- /.container-fluid -->
-</div><!-- /.container-fluid -->
-</div><!-- /#page-wrapper -->
-</div><!-- /#wrapper -->
-
-    <footer class="footer">
-        <div class="container-fluid">
-            <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
-        </div>
-    </footer>
 
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
