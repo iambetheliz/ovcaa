@@ -1,12 +1,3 @@
-<?php
-    require_once 'includes/dbconnect.php';
-    
-    // if session is not set this will redirect to login page
-    if( !isset($_SESSION['token']) ) {
-      header("Location: 403-error.html");
-    exit;
-    }
-?>
 <!DOCTYPE HTML>
 <html>
 <head>

@@ -1,18 +1,17 @@
 <?php
+//Include GP config file
+include_once 'gpConfig.php';
 
-	session_start();
-	
-	if (!isset($_SESSION['user'])) {
-		header("Location: /ovcaa/administrator");
-	} else if(isset($_SESSION['user'])!="") {
-		header("Location: dashboard.php");
-	}
-	
-	if (isset($_GET['logout'])) {
-		unset($_SESSION['user']);
-		session_unset();
-		session_destroy($_SESSION['user']);
-		header("Location: /ovcaa/administrator");
-		exit;
-	}
+//Unset token and user data from session
+unset($_SESSION['token']);
+unset($_SESSION['userData']);
+
+//Reset OAuth access token
+$gClient->revokeToken();
+
+//Destroy entire session
+session_destroy($_SESSION['userData']);
+
+//Redirect to homepage
+header("Location:/ovcaa/administrator");
 ?>

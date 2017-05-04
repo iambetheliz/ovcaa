@@ -1,5 +1,12 @@
 <?php
-  session_start();
+
+  include 'dbConnect.php';
+  include 'header.php';
+
+  if(!isset($_SESSION['token'])){
+    header("Location: index.php?loginError");
+  }
+  
   require_once '../includes/dbconnect.php';
 
   $DB_con = new mysqli("localhost", "root", "", "ovcaa");
@@ -8,69 +15,28 @@
     echo "Connect failed: ", $DB_con->connect_error;
   exit();
   }
-   
-  // if session is not set this will redirect to login page
-  if( !isset($_SESSION['user']) ) {
-      header("Location: /ovcaa/administrator");
-  exit;
-  }
-
-  // select loggedin members detail
-  $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
-  $result = $DB_con->query($res);
-
-  if ($result->num_rows != 0) {
-    $userRow = $result->fetch_array(MYSQLI_BOTH);
-  }
 
   $error = false;
 
   if ( isset($_POST['btn-signup']) ) {
   
-  // clean user inputs to prevent sql injections
-  $userName = trim($_POST['userName']);
-  $userName = strip_tags($userName);
-  $userName = htmlspecialchars($userName);
-  
-  $userEmail = trim($_POST['userEmail']);
-  $userEmail = strip_tags($userEmail);
-  $userEmail = htmlspecialchars($userEmail);
-  
-  $userPass = trim($_POST['userPass']);
-  $userPass = strip_tags($userPass);
-  $userPass = htmlspecialchars($userPass);
-  
-  // basic username validation
-  if (empty($userName)) {
-   $error = true;
-   $userNameError .= "<span class='glyphicon glyphicon-exclamation-sign'></span> ";
-   $userNameError .= "Username cannot be empty!";
-  } else if (strlen($userName) < 5) {
-   $error = true;
-   $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Username must have atleat 5 characters.";
-  }else {
-   // check username exist or not
-   $query = "SELECT userName FROM members WHERE userName='$userName'";
-   $result = $DB_con->query($query);
-
-   if($result->num_rows != 0){
-    $error = true;
-    $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> Provided username is already in use.";
-   }
-  }
+  // clean user inputs to prevent sql injections  
+  $email = trim($_POST['email']);
+  $email = strip_tags($email);
+  $email = htmlspecialchars($email);
   
   //basic email validation
-  if ( !filter_var($userEmail,FILTER_VALIDATE_EMAIL) ) {
+  if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
    $error = true;
    $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter a valid email address.";
   } 
-  else if (strlen($userEmail) > 30) {
+  else if (strlen($email) > 30) {
    $error = true;
    $userNameError = "<span class='glyphicon glyphicon-info-sign'></span> That was a very long email address! Please try a shorter one";
   }
   else {
    // check email exist or not
-   $query = "SELECT userEmail FROM members WHERE userEmail='$userEmail'";
+   $query = "SELECT email FROM users WHERE email='$email'";
    $result = $DB_con->query($query);
 
    if($result->num_rows != 0){
@@ -78,24 +44,12 @@
     $emailError = "<span class='glyphicon glyphicon-info-sign'></span> Provided email is already in use.";
    }
   }
-
-  // password validation
-  if (empty($userPass)){
-   $error = true;
-   $passError = "<span class='glyphicon glyphicon-info-sign'></span> Please enter password.";
-  } else if(strlen($userPass) < 8) {
-   $error = true;
-   $passError = "<span class='glyphicon glyphicon-info-sign'></span> Password must have atleast 8 characters.";
-  }
-  
-  // password encrypt using SHA256();
-  $userPass = hash('sha256', $userPass);
   
   // if there's no error, continue to signup
   if( !$error ) {
    
-   $stmt = $DB_con->prepare("INSERT INTO members(userName,userEmail,userPass) VALUES('$userName', '$userEmail', '$userPass')");
-   $stmt->bind_param($userName, $userEmail, $userPass);
+   $stmt = $DB_con->prepare("INSERT INTO users(email) VALUES('$email')");
+   $stmt->bind_param($email);
     
    if (!$stmt) {
       $errMSG = "Something went wrong, try again later..."; 
@@ -103,9 +57,7 @@
       $stmt->execute();
       $successMSG = "User created successfully!";
         header("refresh:3; tbl_users.php");
-        unset($userName);
-        unset($userEmail);
-        unset($userPass);    
+        unset($email);
   }  }
   
  }
@@ -171,13 +123,12 @@
             <!-- Top Menu Items -->
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName'] ; ?>&nbsp;&nbsp;<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                    <li><a href="view_profile.php" title="Update Profile" >Profile Settings</a></li>                       
-                        <li><a href="logout.php?logout">Logout</a></li>
-                    </ul>
-                </li>
+                <?php
+                    if(!empty($userData)){?>
+                        <li><?php echo $account; ?></li>
+                        <li><?php echo $logout; ?></li>
+                <?php }?>
+            </ul> 
             </ul>
             </div>
 
@@ -239,29 +190,13 @@
   ?>
 </div>
 </div>
-  
-<div class="form-group row"> 
-  <div class="col-sm-8">
-    <strong>Username</strong><sup class="text-danger">*</sup>    
-      <input type="text" id="userName" name="userName" class="form-control" maxlength="15" value="<?php echo $userName ?>" autofocus />
-      <p class="text-danger"><?php echo $userNameError; ?></p>
-  </div>
-</div>
 
 <div class="form-group row"> 
   <div class="col-sm-8">
     <strong>Email</strong><sup class="text-danger">*</sup>
     
-      <input type="text" id="email" name="userEmail" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $userEmail ?>" />
+      <input type="text" id="email" name="email" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $email ?>" />
       <p class="text-danger"><?php echo $emailError; ?></p>
-  </div>
-</div>
-
-<div class="form-group row"> 
-  <div class="col-sm-8">
-    <strong>Password</strong><sup class="text-danger">*</sup> (at least 8 characters)    
-      <input type="password" class="form-control" name="userPass" id="userPass" />
-    <p class="text-danger"><?php echo $passError; ?></p>
   </div>
 </div>
 

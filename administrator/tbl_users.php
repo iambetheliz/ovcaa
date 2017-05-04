@@ -1,39 +1,31 @@
 <?php
-    session_start();
-    require_once '../includes/dbconnect.php';
 
-    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+  include 'header.php';
 
-    if ($DB_con->connect_errno) {
-      echo "Connect failed: ", $DB_con->connect_error;
-    exit();
-    }
-   
-    // if session is not set this will redirect to login page
-    if( !isset($_SESSION['user']) ) {
-      header("Location: /ovcaa/administrator");
-    exit;
-    }
+  if(!isset($_SESSION['token'])){
+    header("Location: index.php?loginError");
+  }
+  
+  require_once '../includes/dbconnect.php';
 
-    // select loggedin members detail
-    $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
-    $result = $DB_con->query($res);
+  $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
-    if ($result->num_rows != 0) {
-      $userRow = $result->fetch_array(MYSQLI_BOTH);
-    }
+  if ($DB_con->connect_errno) {
+    echo "Connect failed: ", $DB_con->connect_error;
+  exit();
+  }
 
     require_once 'dbConnect.php';
     
     if(isset($_GET['delete_id']))
  {
   // select image from db to delete
-  $stmt_select = $DB_con->prepare('SELECT * FROM members WHERE userId =:id');
+  $stmt_select = $DB_con->prepare('SELECT * FROM users WHERE id =:id');
   $stmt_select->execute(array(':id'=>$_GET['delete_id']));
   $fileRow=$stmt_select->fetch(PDO::FETCH_ASSOC);
   
   // it will delete an actual record from db
-  $stmt_delete = $DB_con->prepare('DELETE FROM members WHERE userId =:id');
+  $stmt_delete = $DB_con->prepare('DELETE FROM users WHERE id =:id');
   $stmt_delete->bindParam(':id',$_GET['delete_id']);
   $stmt_delete->execute();
   
@@ -74,13 +66,12 @@
             <!-- Top Menu Items -->
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName'] ; ?>&nbsp;&nbsp;<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                    <li><a href="view_profile.php" title="Update Profile" >Profile Settings</a></li>                       
-                        <li><a href="logout.php?logout">Logout</a></li>
-                    </ul>
-                </li>
+                <?php
+                    if(!empty($userData)){?>
+                        <li><?php echo $account; ?></li>
+                        <li><?php echo $logout; ?></li>
+                <?php }?>
+            </ul> 
             </ul>
             </div>
 
@@ -113,7 +104,7 @@
             <div class="container-fluid">
                 
                 <?php    
-                $stmt = $DB_con->prepare('SELECT * FROM members ORDER BY userId');
+                $stmt = $DB_con->prepare('SELECT * FROM users ORDER BY id');
                 $stmt->execute();    
                 $count = $stmt->rowCount();
                 ?>
