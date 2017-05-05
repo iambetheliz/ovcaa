@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 //Include GP config file && User class
 include_once 'gpConfig.php';
 include_once 'User.php';
@@ -15,6 +15,7 @@ if (isset($_SESSION['token'])) {
 }
 
 if ($gClient->getAccessToken()) {
+    
     //Get user profile data from google
     $gpUserProfile = $google_oauthV2->userinfo->get();
     
@@ -45,8 +46,17 @@ if ($gClient->getAccessToken()) {
     }
 
 } else {
+
+    $stmt = $DB_con->prepare("SELECT * FROM users WHERE role = 'admin'");
+    $stmt->execute();    
+    $count = $stmt->rowCount();
+
+        if ($count == 0) {
+            $disabled = 'disabled';
+        }
+
     $authUrl = $gClient->createAuthUrl();
     $output = '<h1>Welcome to UPOU Scribd!</h1>';
-    $output .= '<p><a class="btn btn-lg btn-danger" href="'.$authUrl.'"><span class="fa fa-google-plus"></span> Sign-in with Google</a></p>';
+    $output .= '<p><a class="btn btn-lg btn-danger '."<?php echo $disabled ?>".'" id="google" href="'.$authUrl.'"><span class="fa fa-google-plus"></span> Sign-in with Google</a></p>';
 }
 ?>

@@ -200,6 +200,8 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <title>Upload New File - UP Open University</title>
+  <link href="http://getbootstrap.com/examples/sticky-footer-navbar/sticky-footer-navbar.css" rel="stylesheet">
+  <link href="../assets/css/grid.css" rel="stylesheet">
   <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   </head>
@@ -272,15 +274,12 @@
                           </h3>
                       </div>
                   </div>
-                  <!-- /.row -->              
+                  <!-- /.row -->    
 
 <!-- Main Form -->
-<div class="form-group row">
-<div class="col-sm-6">
-
 <form method="post" enctype="multipart/form-data" action="" >
 <div class="form-group row">
-<div class="col-sm-8"> 
+<div class="col-sm"> 
   <?php
     if(isset($successMSG)){
       ?>
@@ -298,6 +297,34 @@
 </div>
 </div>
 
+<div class="row">
+<div class="col-sm-6 col-md-5 col-lg-6">
+  <div class="form-group row"> 
+        <div class="col-sm-8">
+          <strong>Title</strong> <sup class="text-danger">*</sup>
+          <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
+          <p class="text-danger"><?php echo $TitleError; ?></p>
+        </div>
+  </div>
+
+  <div class="form-group row">
+      <div class="col-sm-8">
+          <strong>Description</strong> <sup class="text-danger">*</sup>
+          <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>   
+          <p class="text-danger"><?php echo $descError; ?></p>
+      </div>
+  </div>
+
+  <div class="form-group row" style="display:none;">
+      <div class="col-sm-8">
+          <input type="text" class="form-control" name="uploaded_by" value="<?php echo $userRow['first_name']." ".$userRow['last_name'] ?>" />
+          <input type="text" class="form-control" name="location" value="<?php echo $location; ?>" />
+          <input type="text" class="form-control" name="url" value="<?php echo $url; ?>" />
+      </div>
+  </div>
+</div>
+
+<div class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">
 <div class="form-group row">
   <div class="col-sm-8"> 
     <div class="input-group">
@@ -318,16 +345,7 @@
       });
     </script>
   </div>
-</div><br>
-
-  <div class="form-group row"> 
-        <div class="col-sm-8">
-          <strong>Title</strong> <sup class="text-danger">*</sup>
-          <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
-          <p class="text-danger"><?php echo $TitleError; ?></p>
-        </div>
-  </div>
-      
+</div>
     <div class="form-group row">
       <div class="col-sm-8">
           <strong>Category</strong> <sup class="text-danger">*</sup>
@@ -382,38 +400,22 @@
     </div>
     <!-- End Add Category -->
 
-  <div class="form-group row">
-      <div class="col-sm-8">
-          <strong>Description</strong> <sup class="text-danger">*</sup>
-          <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>   
-          <p class="text-danger"><?php echo $descError; ?></p>
-      </div>
-  </div>
+</div>
+</div>
 
-  <div class="form-group row" style="display:none;">
-      <div class="col-sm-8">
-          <input type="text" class="form-control" name="uploaded_by" value="<?php echo $userRow['first_name']." ".$userRow['last_name'] ?>" />
-          <input type="text" class="form-control" name="location" value="<?php echo $location; ?>" />
-          <input type="text" class="form-control" name="url" value="<?php echo $url; ?>" />
-      </div>
-  </div>
-
-  <br>
   <div class="form-group row">
-      <div class="col-sm-8">
+      <div class="col-sm-6 col-md-5 col-lg-6">
           <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> CANCEL </a>&nbsp;
           <button type="submit" name="btn-upload" class="btn btn-success" formaction="upload-document.php"><span class="glyphicon glyphicon-upload"></span>&nbsp;UPLOAD
           </button>
       </div>
   </div>
-  <br>
+
+  </div>
+  </div>
   </form>
 
-  </div>
-  </div>
-
   </div><!-- /.container-fluid -->
-  </div><!-- /.container-fluid2 -->
   </div><!-- /#page-wrapper -->
   </div><!-- /#wrapper -->
 

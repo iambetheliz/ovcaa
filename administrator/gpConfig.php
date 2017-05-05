@@ -21,6 +21,7 @@ $gClient->setApplicationName('UPOU Scribd');
 $gClient->setClientId($clientId);
 $gClient->setClientSecret($clientSecret);
 $gClient->setRedirectUri($redirectURL);
+$gClient->setDeveloperKey('AIzaSyC5LpD3IIutZ1VUgdY8sDQe_tED3BdzY2U'); // API key
 
 $google_oauthV2 = new Google_Oauth2Service($gClient);
 ?>

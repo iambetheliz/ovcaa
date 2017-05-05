@@ -48,6 +48,7 @@
 <body>
 <div class="wrap">
     <div id="wrapper">
+
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
@@ -95,8 +96,8 @@
                 </ul>
             </div>
 
-            </div>
-            </nav><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+        </nav><!-- /.navbar-collapse -->
 
         <br><br>
         <!-- Main Screen -->
@@ -174,6 +175,7 @@
                     </div>
                 </div>
                 <!-- End of Buttons -->
+
                 <br>
                 <!-- Table and Pagination -->
                 <?php 
@@ -199,6 +201,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
-</body>
 
+</body>
 </html>

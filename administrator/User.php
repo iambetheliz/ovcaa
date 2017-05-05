@@ -29,7 +29,7 @@ class User {
                 $query = "UPDATE ".$this->userTbl." SET oauth_provider = '".$userData['oauth_provider']."', oauth_uid = '".$userData['oauth_uid']."', first_name = '".$userData['first_name']."', last_name = '".$userData['last_name']."', email = '".$userData['email']."' WHERE email = '".$userData['email']."'";
                 $update = $this->db->query($query);
             }
-            elseif($prevResult->num_rows < 0) {
+            else {
                 $loginError = "Your google account does not exists in our database";
             }
             

@@ -5,7 +5,7 @@ include 'dbConnect.php';
 include 'header.php';
 
 if ( isset($_SESSION['token'])!="" ) {
-        header("Location: dashboard");
+        header("Location: dashboard.php");
         exit;
     }
 else {
@@ -70,7 +70,7 @@ else {
                             if ( isset($_GET['loginError']) ) {
                                 $loginError = "You need to login first!";
                         ?>
-                            <p class="text-danger"><?php echo $loginError; ?><p>
+                            <p class="text-danger"><?php echo $loginError; ?></p>
                         <?php }
                         ?>
                         <?php echo $output; ?>  <br>
@@ -80,11 +80,34 @@ else {
                             $count = $stmt->rowCount();
 
                             if ($count == 0) {
-                                $message = "This site has no admin yet. Click <strong><a href='add_admin.php'>here</a></strong> to add admin";
+                                $message = "This site has <strong>no admin</strong> yet. Click <strong><a class='text-danger' data-toggle='collapse' href='#collapseExample' aria-expanded='false' aria-controls='collapseExample'>here</a></strong> to add admin";
                             }
                         ?>
-                        <p class="text-danger"><?php echo $message; ?></p>
-                    </div>                   
+                        <span class="text-danger">
+                            <span class="col-10">
+                            <?php echo $message; ?>
+                            </span>
+                        </span>
+                        <?php include 'add_admin.php'; 
+                            if ($error) {
+                                $collapse = 'in';
+                            }
+                            if ($successMSG) {
+                                $collapse = 'in';
+                            }
+                        ?>  <br><br>
+                        <div class="collapse <?php echo $collapse; ?>" id="collapseExample">
+                            <form class="form-inline" id="regValidate" action="" method="post" autocomplete="off">
+                                <div class="col-10">    
+                                    <input type="text" id="email" name="email" class="form-control" title="(e.g. example@email.com)" maxlength="25" value="<?php echo $email ?>" placeholder="Email Address (required)" /> 
+                                    <input hidden="" type="text" name="role" value="$role" />
+                                    <button type="submit" class="btn btn-success send" name="btn-signup" data-loading-text="Saving info"> Save </button><br>
+                                    <span class="text-danger"><?php echo $emailError;?></span>
+                                    <span class="text-success"><?php echo $successMSG;?></span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>  
                 </div>
     </div>
 </div>
@@ -95,6 +118,9 @@ else {
     </div>
 </footer>
 
-<script src="../assets/js/bootstrap.js"></script>
+<!-- jQuery -->
+  <script src="../assets/js/jquery.min.js"></script>
+  <script src="../assets/js/bootstrap.min.js"></script>
+  <script src="../assets/js/index.js"></script>
 </body>
 </html>

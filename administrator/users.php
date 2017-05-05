@@ -98,10 +98,10 @@ else {
 <thead>
     <tr>
         <th><center>Action</center></th>
-        <th>Google ID</th>
         <th>First Name</th>
         <th>Last Name</th>
         <th>Email</th>
+        <th>Role</th>
         <th>Date Added</th>
         <th>Date Modified</th>
     </tr>
@@ -117,10 +117,10 @@ if ($result->num_rows != 0) { ?>
             <td><center>
             <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['id']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
             </td>
-            <td><?php echo $row['oauth_uid'] ?></td>
             <td><?php echo $row['first_name'] ?></td>
             <td><?php echo $row['last_name'] ?></td>
             <td><?php echo $row['email'] ?></td>
+            <td><?php echo $row['role'] ?></td>
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['created'])) ?></p></td>
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['modified'])) ?></p></td>
 <?php
