@@ -309,15 +309,15 @@
 
   <div class="form-group row">
       <div class="col-sm-8">
-          <strong>Description</strong> <sup class="text-danger">*</sup>
+          <strong>Description</strong> 
           <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>   
           <p class="text-danger"><?php echo $descError; ?></p>
       </div>
   </div>
 
-  <div class="form-group row" style="display:none;">
+  <div class="form-group row" style="display: none;">
       <div class="col-sm-8">
-          <input type="text" class="form-control" name="uploaded_by" value="<?php echo $userRow['first_name']." ".$userRow['last_name'] ?>" />
+          <input type="text" class="form-control" name="uploaded_by" value="<?php echo $userData['first_name']." ".$userData['last_name'] ?>" />
           <input type="text" class="form-control" name="location" value="<?php echo $location; ?>" />
           <input type="text" class="form-control" name="url" value="<?php echo $url; ?>" />
       </div>
@@ -325,61 +325,61 @@
 </div>
 
 <div class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">
-<div class="form-group row">
-  <div class="col-sm-8"> 
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button id="file-button-browse" type="button" class="btn btn-default">
+  <div class="form-group row">
+    <div class="col-sm-8"> 
+      <strong>File</strong> <sup class="text-danger">*</sup>
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button id="file-button-browse" type="button" class="btn btn-default">
           <span class="glyphicon glyphicon-file"></span>  Browse
-        </button>
-      </span>
-      <input type="file" class="form-control-file" name="file" id="files-input-upload" style="display:none">
-      <input type="text" id="file-input-name" disabled="disabled" placeholder="File not selected" class="form-control">
-    </div>
-    <script type="text/javascript">
-      document.getElementById('file-button-browse').addEventListener('click', function() {
-      document.getElementById('files-input-upload').click();
-      });
-      document.getElementById('files-input-upload').addEventListener('change', function() {
-      document.getElementById('file-input-name').value = this.value;
-      });
-    </script>
-  </div>
-</div>
-    <div class="form-group row">
-      <div class="col-sm-8">
-          <strong>Category</strong> <sup class="text-danger">*</sup>
-          <?php
-              // php select option value from database
-              $hostname = "localhost";
-              $username = "root";
-              $password = "";
-              $databaseName = "ovcaa";
-              // connect to mysql database
-              $connect = mysqli_connect($hostname, $username, $password, $databaseName);
-              // mysql select query
-              $query = "SELECT * FROM `category` ORDER BY category_id";
-              // for method 1
-              $result1 = mysqli_query($connect, $query);
-              // for method 2
-              $result2 = mysqli_query($connect, $query);
-              $options = "";
-              while($row2 = mysqli_fetch_array($result2))
-                    {
-                        $options = $options."<option>$row2[1]</option>";
-                    }
-          ?>
-          <script src="../assets/js/jquery.min.js"></script>
-          <select name="category_id" class="form-control" id="cat_name">
-         
-           <?php while($row1 = mysqli_fetch_array($result1)):;?>
-              <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
-              <?php endwhile;?>
-              <option value="new">Add new category</option>
-          </select>
-       <p class="text-danger"><?php echo $categoryError; ?></p>
+          </button>
+        </span>
+        <input type="file" class="form-control-file" name="file" id="files-input-upload" style="display:none">
+        <input type="text" id="file-input-name" disabled="disabled" placeholder="File not selected" class="form-control">
       </div>
+      <script type="text/javascript">
+        document.getElementById('file-button-browse').addEventListener('click', function() {
+          document.getElementById('files-input-upload').click();
+        });
+        document.getElementById('files-input-upload').addEventListener('change', function() {
+          document.getElementById('file-input-name').value = this.value;
+        });
+      </script>
     </div>
+  </div><br>
+
+  <div class="form-group row">
+    <div class="col-sm-8">
+      <strong>Category</strong> <sup class="text-danger">*</sup>
+        <?php
+          // php select option value from database
+          $hostname = "localhost";
+          $username = "root";
+          $password = "";
+          $databaseName = "ovcaa";
+          // connect to mysql database
+          $connect = mysqli_connect($hostname, $username, $password, $databaseName);
+          // mysql select query
+          $query = "SELECT * FROM `category` ORDER BY category_id";
+          // for method 1
+          $result1 = mysqli_query($connect, $query);
+          // for method 2
+          $result2 = mysqli_query($connect, $query);
+          $options = "";
+            while($row2 = mysqli_fetch_array($result2)) {
+              $options = $options."<option>$row2[1]</option>";
+            }
+        ?>
+        <script src="../assets/js/jquery.min.js"></script>
+      <select name="category_id" class="form-control" id="cat_name">  
+        <?php while($row1 = mysqli_fetch_array($result1)):;?>
+        <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
+        <?php endwhile;?>
+        <option value="new">Add new category</option>
+      </select>
+      <p class="text-danger"><?php echo $categoryError; ?></p>
+    </div>
+  </div>
     
     <div class="form-group row" id="newCat" style="display:none;">
           <div class="col-sm-8" id="cname">
