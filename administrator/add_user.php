@@ -1,13 +1,13 @@
 <?php
 
-  include 'dbConnect.php';
+  include '../includes/dbconnect.php';
   include 'header.php';
 
   if(!isset($_SESSION['token'])){
     header("Location: index.php?loginError");
   }
-  
-  require_once '../includes/dbconnect.php';
+
+  require_once 'dbConnect.php';
 
   $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
@@ -15,7 +15,7 @@
     echo "Connect failed: ", $DB_con->connect_error;
   exit();
   }
-
+  
   $error = false;
 
   if ( isset($_POST['btn-signup']) ) {
@@ -47,6 +47,8 @@
   
   // if there's no error, continue to signup
   if( !$error ) {
+
+    error_reporting(~E_NOTICE || ~E_ALL);
    
    $stmt = $DB_con->prepare("INSERT INTO users(email) VALUES('$email')");
    $stmt->bind_param($email);
@@ -55,7 +57,7 @@
       $errMSG = "Something went wrong, try again later..."; 
    } else {
       $stmt->execute();
-      $successMSG = "User created successfully!";
+      $successMSG = "<span class='glyphicon glyphicon-ok'></span> User created successfully!";
         header("refresh:3; tbl_users.php");
         unset($email);
   }  }

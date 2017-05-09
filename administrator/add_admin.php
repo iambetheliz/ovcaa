@@ -45,6 +45,8 @@
   
   // if there's no error, continue to signup
   if( !$error ) {
+
+    error_reporting(~E_NOTICE || ~E_ALL);
    
    $stmt = $DB_con->prepare("INSERT INTO users(email,role) VALUES('$email','$role')");
    $stmt->bind_param($email);
@@ -54,8 +56,8 @@
       $errMSG = "Something went wrong, try again later..."; 
    } else {
       $stmt->execute();
-      $successMSG = "User created successfully!";
-        header("refresh:3; index.php");
+      $successMSG = "<span class='glyphicon glyphicon-ok'></span> User created successfully!<br><br>";
+        header("refresh:3; /ovcaa/administrator");
         unset($email);
   }  }
   

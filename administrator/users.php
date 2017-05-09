@@ -58,7 +58,7 @@ if (isset($_GET['search'])) {
 
     $startpoint = ($page * $per_page) - $per_page;
 
-    $statement = "`users` WHERE CONCAT(`id`, `oauth_uid`, `first_name`, `last_name`, `email`, `created`, `modified`) LIKE '%".$search."%'"; 
+    $statement = "`users` WHERE CONCAT(`uid`, `oauth_uid`, `first_name`, `last_name`, `email`, `created`, `modified`) LIKE '%".$search."%'"; 
  
     $result = mysqli_query($DB_con,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
 } 
@@ -66,7 +66,7 @@ else {
 
     $startpoint = ($page * $per_page) - $per_page;
 
-    $statement = "users ORDER BY id"; 
+    $statement = "users ORDER BY uid"; 
  
     $result = mysqli_query($DB_con,"SELECT * FROM {$statement} LIMIT {$startpoint} , {$per_page}");
 }
@@ -115,7 +115,7 @@ if ($result->num_rows != 0) { ?>
     while ($row = $result->fetch_assoc()){ ?>
         <tr>
             <td><center>
-            <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['id']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
+            <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['uid']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
             </td>
             <td><?php echo $row['first_name'] ?></td>
             <td><?php echo $row['last_name'] ?></td>

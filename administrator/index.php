@@ -98,12 +98,12 @@ else {
                         ?>  <br><br>
                         <div class="collapse <?php echo $collapse; ?>" id="collapseExample">
                             <form class="form-inline" id="regValidate" action="" method="post" autocomplete="off">
+                                <span class="text-success"><?php echo $successMSG;?></span>
                                 <div class="col-10">    
-                                    <input type="text" id="email" name="email" class="form-control" title="(e.g. example@email.com)" maxlength="25" value="<?php echo $email ?>" placeholder="Email Address (required)" /> 
+                                    <input type="text" id="email" name="email" class="form-control" title="(e.g. example@email.com)" maxlength="30" value="<?php echo $email ?>" placeholder="Email Address (required)" autofocus /> 
                                     <input hidden="" type="text" name="role" value="$role" />
                                     <button type="submit" class="btn btn-success send" name="btn-signup" data-loading-text="Saving info"> Save </button><br>
                                     <span class="text-danger"><?php echo $emailError;?></span>
-                                    <span class="text-success"><?php echo $successMSG;?></span>
                                 </div>
                             </form>
                         </div>

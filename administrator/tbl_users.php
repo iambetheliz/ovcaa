@@ -105,7 +105,7 @@
             <div class="container-fluid">
                 
                 <?php    
-                $stmt = $DB_con->prepare('SELECT * FROM users ORDER BY id');
+                $stmt = $DB_con->prepare('SELECT * FROM users ORDER BY uid');
                 $stmt->execute();    
                 $count = $stmt->rowCount();
                 ?>
