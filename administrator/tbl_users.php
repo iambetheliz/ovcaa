@@ -134,13 +134,14 @@
                                 <span class="glyphicon glyphicon-sort"></span> Sort by <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="tbl_users.php?sorting='.$sort.'&field=userName">Username</a></li>
-                                <li><a href="tbl_users.php?sorting='.$sort.'&field=userEmail">Email</a></li>
-                                <li><a href="tbl_users.php?sorting='.$sort.'&field=regDate">Date Added</a></li>
+                                <li><a href="tbl_users.php?sorting='.$sort.'&field='.$field.'">Default</a></li>
+                                <li><a href="tbl_users.php?sorting='.$sort.'&field=first_name">Name</a></li>
+                                <li><a href="tbl_users.php?sorting='.$sort.'&field=email">Email</a></li>
+                                <li><a href="tbl_users.php?sorting='.$sort.'&field=created">Date Added</a></li>
                             </ul>
                             <?php 
-                                $field='regDate';
-                                $sort='DESC';
+                                $field='role';
+                                $sort='ASC';
 
                                 if(isset($_GET['sorting']))
                                     {
@@ -150,17 +151,17 @@
                                             }
                                         else { $sort='ASC'; }
                                     }
-                                if($_GET['field']=='userName')
+                                if($_GET['field']=='first_name')
                                     { 
-                                        $field = "userName";  
+                                        $field = "first_name";  
                                     }
-                                elseif($_GET['field']=='userEmail')
+                                elseif($_GET['field']=='email')
                                     {
-                                        $field = "userEmail"; 
+                                        $field = "email"; 
                                     }
-                                elseif($_GET['field']=='regDate')
+                                elseif($_GET['field']=='created')
                                     { 
-                                        $field="regDate"; 
+                                        $field="created"; 
                                         $sort="DESC";
                                     }
                             ?>
