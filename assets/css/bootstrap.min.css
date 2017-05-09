@@ -7,7 +7,9 @@
 /*# sourceMappingURL=bootstrap.min.css.map */
 
 /* Custom CSS */
-.footer {
+footer {
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -16,7 +18,7 @@
   background-color: #f5f5f5;
 }
 
-.footer > .container-fluid {
+#footer > .container-fluid {
   padding-right: 15px;
   padding-left: 15px;
 }
@@ -156,12 +158,6 @@ body {
     bottom: 0;
     overflow-x: hidden;
     padding-bottom: 40px;
-}
-.footer {
-    height: 60px;
-    background-color: #f5f5f5;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
 }
 
 .not-set {

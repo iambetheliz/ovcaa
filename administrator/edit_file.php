@@ -1,27 +1,20 @@
 <?php
-    session_start();
-    require_once '../includes/dbconnect.php';
 
-    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+  include 'dbConnect.php';
+  include 'header.php';
 
-    if ($DB_con->connect_errno) {
-      echo "Connect failed: ", $DB_con->connect_error;
-    exit();
-    }
-   
-    // if session is not set this will redirect to login page
-    if( !isset($_SESSION['user']) ) {
-      header("Location: /ovcaa/administrator");
-    exit;
-    }
+  if(!isset($_SESSION['token'])){
+    header("Location: index.php?loginError");
+  }
+  
+  require_once '../includes/dbconnect.php';
 
-    // select loggedin members detail
-    $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
-    $result = $DB_con->query($res);
+  $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
-    if ($result->num_rows != 0) {
-      $userRow = $result->fetch_array(MYSQLI_BOTH);
-    }
+  if ($DB_con->connect_errno) {
+    echo "Connect failed: ", $DB_con->connect_error;
+  exit();
+  }
   
   require_once 'dbConnect.php';
   

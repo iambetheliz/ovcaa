@@ -1,27 +1,20 @@
 <?php
-    session_start();
-    require_once '../includes/dbconnect.php';
 
-    $DB_con = new mysqli("localhost", "root", "", "ovcaa");
+  include '../includes/dbconnect.php';
+  include 'header.php';
 
-    if ($DB_con->connect_errno) {
-      echo "Connect failed: ", $DB_con->connect_error;
-    exit();
-    }
-   
-    // if session is not set this will redirect to login page
-    if( !isset($_SESSION['user']) ) {
-      header("Location: /ovcaa/administrator");
-    exit;
-    }
+  if(!isset($_SESSION['token'])){
+    header("Location: index.php?loginError");
+  }
 
-    // select loggedin members detail
-    $res = "SELECT * FROM members WHERE userId=".$_SESSION['user'];
-    $result = $DB_con->query($res);
+  $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
-    if ($result->num_rows != 0) {
-      $userRow = $result->fetch_array(MYSQLI_BOTH);
-    }
+  if ($DB_con->connect_errno) {
+    echo "Connect failed: ", $DB_con->connect_error;
+  exit();
+  }
+
+  require_once 'dbConnect.php';
    
     $error = false;
     if(isset($_POST['btn-upload'])) {
@@ -206,7 +199,6 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <title>Upload New File - UP Open University</title>
-  <link href="http://getbootstrap.com/examples/sticky-footer-navbar/sticky-footer-navbar.css" rel="stylesheet">
   <link href="../assets/css/grid.css" rel="stylesheet">
   <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">

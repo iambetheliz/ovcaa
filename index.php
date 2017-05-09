@@ -18,6 +18,13 @@ ul.pagination>li>a.current {
     background:#014421;
     color:#fff;
 }
+
+footer {
+    height: 60px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
 </style>
 </head>
 <body>
@@ -114,11 +121,11 @@ ul.pagination>li>a.current {
     </div><!-- /#wrapper -->
 </div><!-- /#wrap -->
 
-    <footer class="footer">
-    <div class="container-fluid">
+<footer id="footer">
+    <div class="container">
         <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
     </div>
-    </footer>
+</footer>
 
 <script src="assets/js/bootstrap.min.js"></script>
 <script src="assets/js/index.js"></script>
