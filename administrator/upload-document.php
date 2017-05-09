@@ -276,7 +276,7 @@
 <!-- Main Form -->
 <form method="post" enctype="multipart/form-data" action="" >
 <!-- Error/Success Messages -->
-<div class="form-group row">
+<div class="form-group">
 <div class="col-sm"> 
   <?php
     if(isset($successMSG)){
