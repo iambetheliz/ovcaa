@@ -199,7 +199,6 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <title>Upload New File - UP Open University</title>
-  <link href="../assets/css/grid.css" rel="stylesheet">
   <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   </head>
@@ -276,6 +275,7 @@
 
 <!-- Main Form -->
 <form method="post" enctype="multipart/form-data" action="" >
+<!-- Error/Success Messages -->
 <div class="form-group row">
 <div class="col-sm"> 
   <?php
@@ -291,9 +291,9 @@
   <?php
     }
   ?>
-
 </div>
 </div>
+<!-- Error/Success Messages -->
 
 <div class="row">
 <div class="col-sm-6 col-md-5 col-lg-6">

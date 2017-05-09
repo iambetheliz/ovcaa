@@ -1,13 +1,11 @@
 <?php
 
-  include 'dbConnect.php';
+  include '../includes/dbconnect.php';
   include 'header.php';
 
   if(!isset($_SESSION['token'])){
     header("Location: index.php?loginError");
   }
-  
-  require_once '../includes/dbconnect.php';
 
   $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
@@ -15,7 +13,7 @@
     echo "Connect failed: ", $DB_con->connect_error;
   exit();
   }
-  
+
   require_once 'dbConnect.php';
   
   if(isset($_GET['edit_id']) && !empty($_GET['edit_id']))
@@ -31,7 +29,8 @@
   {
     header("Location: tbl_materials.php");
   }  
-  
+
+  $error = false;  
   
   if(isset($_POST['btn_save_updates']))
   {
@@ -47,11 +46,9 @@
 
     // new file size in KB
     $new_size = $file_size/1024;  
-    // new file size in KB
  
     // make file name in lower case
     $new_file_name = strtolower($file);
-    // make file name in lower case
  
     $final_file=str_replace(' ','-',$new_file_name);
     
@@ -66,7 +63,7 @@
 
      if($result->num_rows != 0){
             $error = true;
-            $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> File is already exists.";
+            $errMSG = "<span class='glyphicon glyphicon-info-sign'></span> File already exists.";
         }
       }  
       
@@ -106,6 +103,9 @@
           $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
           $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
 
+      unlink("../administrator/uploads/".$edit_row['filename']);
+      move_uploaded_file($file_loc,$folder.$final_file);
+
             if($new_size > 5000000)    {     
                 $error = true;
                 $errMSG = "Sorry, your file is too large.";
@@ -114,10 +114,6 @@
           $error = true;
           $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
         }
-    }
-    else if (file_exists($final_file))
-    {
-        //do your rename code here
     }
     else
     {
@@ -140,7 +136,6 @@
       $stmt->bindParam(':category_id', $_POST['category_id']);
       $stmt->bindParam(':id',$id);
 
-      unlink($folder.$edit_row['filename']);
       move_uploaded_file($file_loc,$folder.$final_file);
         
       if($stmt->execute()){
@@ -149,6 +144,7 @@
       }
       else{
         $errMSG = "Sorry Data Could Not Updated !";
+        header("refresh:3;tbl_materials.php");
       }
     
     }
@@ -173,57 +169,56 @@
 <body>
 <div class="wrap">
     <div id="wrapper">
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
+          <!-- Navigation -->
+          <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="container-fluid">
 
-            <!-- Brand and toggle -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
-            </div>
+              <!-- Brand and toggle -->
+              <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
+              </div>
 
             <!-- Top Menu Items -->
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<?php echo $userRow['userName'] ; ?>&nbsp;&nbsp;<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                    <li><a href="view_profile.php" title="Update Profile" >Profile Settings</a></li>                       
-                        <li><a href="logout.php?logout">Logout</a></li>
-                    </ul>
-                </li>
+                <?php
+                    if(!empty($userData)){?>
+                        <li><?php echo $account; ?></li>
+                        <li><?php echo $logout; ?></li>
+                <?php }?>
+            </ul> 
             </ul>
             </div>
 
-            <!-- Sidebar Menu Items -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
-                        <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
-                    </li>
-                    <li class="active">
-                      <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
-                        <ul id="demo" class="collapse">
-                            <li>
-                                <a href="tbl_materials.php"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
-                            </li>
-                            <li>
-                                <a href="tbl_users.php"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>            
-            
-        </div>
-        </nav>
-        <!-- /.navbar-collapse -->
+              <!-- Sidebar Menu Items -->
+              <div class="collapse navbar-collapse navbar-ex1-collapse">
+                  <ul class="nav navbar-nav side-nav">
+                      <li>
+                          <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
+                      </li>
+                      <li class="active">
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
+                          <ul id="demo" class="collapse">
+                              <li>
+                                  <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                              </li>
+                              <li>
+                                  <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
+                              </li>
+                          </ul>
+                      </li>
+                  </ul>
+              </div>            
+              
+          </div>
+          </nav>
+          <!-- /.navbar-collapse -->
         
         <br><br>
         <!-- Main Screen -->
@@ -238,12 +233,11 @@
                 </div>
                 <!-- /.row -->
 
-<div class="form-group row">
-<div class="col-sm-6">
-
+<!-- Main Form -->
 <form method="post" enctype="multipart/form-data" action="" >
-<div class="form-group row">
-<div class="col-sm-8"> 
+<!-- Error/Success Messages -->
+<div class="form-group">
+<div class="col-sm"> 
   <?php
     if(isset($successMSG)){
       ?>
@@ -252,17 +246,18 @@
     }
     if(isset($errMSG)){
       ?>
-      <div class="alert alert-danger"><?php echo $errMSG; ?></div> 
+      <div class="alert alert-danger"><?php echo $errMSG; ?></div>
+
   <?php
     }
   ?>
-
 </div>
 </div>
+<!-- Error/Success Messages -->
 
-<form method="post" enctype="multipart/form-data">  
-
- <div class="form-group row"> 
+<div class="row">
+<div class="col-sm-6 col-md-5 col-lg-6">
+  <div class="form-group row"> 
         <div class="col-sm-8">
           <strong>Title</strong> <sup class="text-danger">*</sup>
           <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
@@ -272,14 +267,24 @@
 
   <div class="form-group row">
       <div class="col-sm-8">
-          <strong>Description</strong> <sup class="text-danger">*</sup>
+          <strong>Description</strong> 
           <textarea class="form-control" name="description" id="exampleTextarea" rows="3"><?php echo $description; ?></textarea>   
           <p class="text-danger"><?php echo $descError; ?></p>
       </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row" style="display: none;">
       <div class="col-sm-8">
+          <input type="text" class="form-control" name="uploaded_by" value="<?php echo $userData['first_name']." ".$userData['last_name'] ?>" />
+          <input type="text" class="form-control" name="location" value="<?php echo $location; ?>" />
+          <input type="text" class="form-control" name="url" value="<?php echo $url; ?>" />
+      </div>
+  </div>
+</div>
+
+  <div class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">
+  <div class="form-group row">
+    <div class="col-sm-8"> 
         <strong>Category</strong> <sup class="text-danger">*</sup>
         <?php
             // php select option value from database
@@ -334,7 +339,7 @@
     </div>
   </div>
   
-  <div class="form-group row"> 
+  <div class="form-group row">
     <div class="col-sm-8">
       <strong>Old File</strong> 
       <input disabled="" readonly="" type="text" class="form-control" name="file" value="<?php echo $edit_row['filename'] ?>" >
@@ -363,33 +368,23 @@
     </script>
     </div>
   </div>
+  <br>
 
-  <div class="form-group row" style="display:none;">
-      <div class="col-sm-8">
-          <input type="text" class="form-control" name="uploaded_by" value="<?php echo $userRow['first_name']." ".$userRow['last_name'] ?>" />
-          <input type="text" class="form-control" name="location" value="<?php echo $location; ?>" />
-          <input type="text" class="form-control" name="url" value="<?php echo $url; ?>" />
+  </div></div>
+  
+  <div class="form-group row">
+      <div class="col-sm-6 col-md-5 col-lg-6">
+          <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> CANCEL </a>&nbsp;
+          <button type="submit" name="btn_save_updates" class="btn btn-success"><span class="glyphicon glyphicon-upload"></span>&nbsp;UPDATE
+          </button>
       </div>
   </div>
 
-  <br>
-  
-  <div class="form-group row">
-    <div class="col-sm-8">
-    <a type="button" href="tbl_materials.php" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span>
-  CANCEL </a>
-  <button type="submit" name="btn_save_updates" class="btn btn-success"><span class="glyphicon glyphicon-save"></span>
-  UPDATE </button> (<?php echo ini_get('upload_max_filesize').'B'; ?>) Max.
   </div>
   </div>
-  <br>
   </form>
 
-  </div>
-  </div>
-
   </div><!-- /.container-fluid -->
-  </div><!-- /.container-fluid2 -->
   </div><!-- /#page-wrapper -->
   </div><!-- /#wrapper -->
 
