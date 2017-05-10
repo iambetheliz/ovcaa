@@ -48,7 +48,7 @@
     $new_size = $file_size/1024;  
  
     // make file name in lower case
-    $new_file_name = strtolower($file);
+    $new_file_name = ucwords($file);
  
     $final_file=str_replace(' ','-',$new_file_name);
     
