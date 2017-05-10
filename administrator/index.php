@@ -4,7 +4,7 @@ session_start();
 include 'dbConnect.php';
 include 'header.php';
 
-if ( isset($_SESSION['token'])!="" ) {
+if (!empty($userData)) {
         header("Location: dashboard.php");
         exit;
     }

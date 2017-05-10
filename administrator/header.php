@@ -42,7 +42,8 @@ if ($gClient->getAccessToken()) {
         $account = '<p class="navbar-text" style="color:white;"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;'. $userData['first_name'].'&nbsp;'. $userData['last_name'].'</p>';
         $logout = '<a href="logout"><i class="glyphicon glyphicon-off">'.'</i>&nbsp;&nbsp;Logout</a>';
     }else{
-        $output .= '<h3 style="color:red">Some problem occurred, please try again.</h3>';
+        $output .= '<h3 class="alert alert-danger">Your google account does not exists in our database!<br>Redirecting to login page ...</h3>';
+        header("Refresh:3; logout.php?logout");
     }
 
 } else {

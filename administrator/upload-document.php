@@ -36,9 +36,9 @@
       $new_size = $file_size/1024;  
    
       // make file name in lower case
-      $new_file_name = strtolower($file);
+      $new_file_name = $file;
    
-      $final_file=str_replace(' ','-',$new_file_name);
+      $final_file = $new_file_name;
 
      // Description error
       if (empty($description)) {
@@ -88,7 +88,7 @@
         $folder = 'uploads/'; // upload directory 
         $fileExt = strtolower(pathinfo($final_file,PATHINFO_EXTENSION)); 
         // valid image extensions
-        $valid_extensions = array('docx', 'doc', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'txt', 'jpg', 'jpeg', 'png'); // valid extensions
+        $valid_extensions = array('docx', 'doc', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'txt'); // valid extensions
             $url = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}".dirname($_SERVER['PHP_SELF'])."/{$folder}{$final_file}";
             $location = dirname($_SERVER['PHP_SELF'])."/{$folder}";
     
@@ -102,7 +102,7 @@
           }
         } else{
       $error = true;
-      $errMSG = "Sorry, only DOCX, PDF, XLS, CSV, TXT files and images are allowed.";  
+      $errMSG = "Sorry, only DOCX, PDF, XLS, CSV and TXT files are allowed.";  
      }
   }
 

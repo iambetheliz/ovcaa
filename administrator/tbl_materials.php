@@ -213,7 +213,7 @@ ul.pagination>li>a.current {
 
 <footer>
     <div class="container-fluid">
-        <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
+        <p align="right"><a href="/ovcaa/" target="_blank">UP Open University - Scribd</a> &copy; <?php echo date("Y"); ?></p>
     </div>
 </footer>
 
