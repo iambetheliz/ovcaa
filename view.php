@@ -50,7 +50,7 @@ ul.pagination>li>a.current {
       <br><br>
       <div class="row">
         <div class="col-sm-3">
-          <h4 class="page-header"><strong><?php echo $row['title']; ?></strong></h4>
+          <h2 class="page-header"><strong><?php echo $row['title']; ?></strong></h2>
           <p>Uploaded by <span class="text-primary"><?php echo $row['uploaded_by']; ?></span> on <?php echo date("F j, Y", strtotime($row["date_updated"])); ?></p>
           <p><strong>Description: </strong><?php echo $row['description'] ?></p>
         </div>
