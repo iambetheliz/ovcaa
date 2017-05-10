@@ -99,9 +99,13 @@ ul.pagination>li>a.current {
                             <li class="active">
                                 <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
                             </li>
+                            <?php 
+                                if ($userData['role'] === 'admin') {?>
                             <li>
                                 <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
                             </li>
+                            <?php    }
+                            ?>
                         </ul>
                     </li>
                 </ul>

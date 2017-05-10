@@ -52,13 +52,14 @@ ul.pagination>li>a.current {
         <div class="col-sm-3">
           <h4 class="page-header"><strong><?php echo $row['title']; ?></strong></h4>
           <p>Uploaded by <span class="text-primary"><?php echo $row['uploaded_by']; ?></span> on <?php echo date("F j, Y", strtotime($row["date_updated"])); ?></p>
+          <p><strong>Description: </strong><?php echo $row['description'] ?></p>
         </div>
     
         <div class="col-lg-9 offset-lg-0">
         <!-- Page Content --><br><br>
             <!-- Iframe -->
             <div class="embed-responsive embed-responsive-16by9">
-              <iframe class="embed-responsive-item" name="iframe" src="<?php echo $row['url']; ?>"></iframe>
+              <iframe class="embed-responsive-item" src="<?php echo $row['url']; ?>"></iframe>
             </div><br>
             <!-- End of Iframe -->
         </div>

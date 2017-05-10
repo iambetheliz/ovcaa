@@ -34,11 +34,19 @@
   
   if(isset($_POST['btn_save_updates']))
   {
-    $title = $_POST['title'];
+    $title = trim($_POST['title']);
+    $title = strip_tags($title);
+    $title = htmlspecialchars($title);
+    $title = ucwords($title);
+
     $description = $_POST['description'];
+    $description = ucfirst($description);
+
     $category_id = $_POST['category_id'];
     $cat_name = $_POST['cat_name'];
+      
     $uploaded_by = $_POST['uploaded_by'];
+    $uploaded_by = ucwords($uploaded_by);
     
     $file = $_FILES['file']['name'];
     $file_loc = $_FILES['file']['tmp_name'];
