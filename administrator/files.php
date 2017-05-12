@@ -155,7 +155,7 @@ if ($result->num_rows != 0) { ?>
             <td><p><?php echo $row['filename'] ?></p></td>
             <td><p><?php echo format_filesize($row['filesize']) ?></p></td>
             <td><p><?php echo $row['location'] ?></p></td>
-            <td><p><a href="view.php?document=<?php echo $row['filename'] ?>" target="_blank">http://localhost/ovcaa/documents/<?php echo $row['filename'] ?></a></p></td>
+            <td><p><a href="view.php?document=<?php echo $row['filename'] ?>" target="_blank">https://goo.gl/96bNKI<?php echo $row['id'] ?></a></p></td>
             <td><p><?php echo $row['uploaded_by'] ?></p></td>
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['date_created'])) ?></p></td>
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['date_updated'])) ?></p></td>

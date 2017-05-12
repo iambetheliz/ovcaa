@@ -11,9 +11,9 @@
 
   require_once 'dbConnect.php';
   
-  if(isset($_GET['document']) && !empty($_GET['document']))
+  if(isset($_GET['title']) && !empty($_GET['title']))
   {
-    $id = $_GET['document'];
+    $id = $_GET['title'];
     $stmt = $DB_con->prepare('SELECT * FROM material JOIN 
     category ON category.category_id = material.category_id WHERE filename =:id');
     $stmt->execute(array(':id'=>$id));
@@ -51,7 +51,7 @@ ul.pagination>li>a.current {
       <div class="row">
         <div class="col-sm-3">
           <h2 class="page-header"><strong><?php echo $row['title']; ?></strong></h2>
-          <p>Uploaded by <span class="text-primary"><?php echo $row['uploaded_by']; ?></span> on <?php echo date("F j, Y", strtotime($row["date_updated"])); ?></p>
+          <p>Uploaded by <span class="text-success"><strong><?php echo ucwords($row['uploaded_by']); ?></strong></span> on <?php echo date("F j, Y", strtotime($row["date_updated"])); ?></p>
           <p><strong>Description: </strong><?php echo $row['description'] ?></p>
         </div>
     

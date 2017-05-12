@@ -7,7 +7,8 @@ include_once 'User.php';
 if(isset($_GET['code'])){
     $gClient->authenticate($_GET['code']);
     $_SESSION['token'] = $gClient->getAccessToken();
-    header('Location: ' . $redirectURL);
+    header('Location: ' . filter_var($redirectURL, FILTER_SANITIZE_URL));
+  exit;
 }
 
 if (isset($_SESSION['token'])) {

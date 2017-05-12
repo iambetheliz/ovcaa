@@ -178,7 +178,7 @@
       
       require_once 'dbConnect.php';
      
-      $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name)');
+      $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name);');
       $stmt->bindParam(':cat_name',$cat_name);
           if($stmt->execute()) {
             $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");

@@ -91,7 +91,7 @@ class Google_Client {
   static $useBatch = false;
 
   /** @var array $scopes */
-  protected $scopes = array();
+  protected $scopes = array("userinfo.email", "userinfo.profile");
 
   /** @var bool $useObjects */
   protected $useObjects = false;

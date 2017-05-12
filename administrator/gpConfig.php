@@ -18,6 +18,12 @@ $gClient = new Google_Client();
 $gClient->setApprovalPrompt('auto');
 $gClient->setAccessType('offline');
 $gClient->setApplicationName('UPOU Scribd');
+$gClient->setScopes(array(
+     'https://www.googleapis.com/auth/plus.login',
+     'profile',
+     'email',
+     'openid',
+));
 $gClient->setClientId($clientId);
 $gClient->setClientSecret($clientSecret);
 $gClient->setRedirectUri($redirectURL);
