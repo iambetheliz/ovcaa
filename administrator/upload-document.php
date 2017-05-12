@@ -22,11 +22,16 @@
       $title = trim($_POST['title']);
       $title = strip_tags($title);
       $title = htmlspecialchars($title);
+      $title = ucwords($title);
 
       $description = $_POST['description'];
+      $description = ucfirst($description);
+
       $category_id = $_POST['category_id'];
       $cat_name = $_POST['cat_name'];
+
       $uploaded_by = $_POST['uploaded_by'];
+      $uploaded_by = ucwords($uploaded_by);
     
       $file = $_FILES['file']['name'];
       $file_loc = $_FILES['file']['tmp_name'];
@@ -36,9 +41,9 @@
       $new_size = $file_size/1024;  
    
       // make file name in lower case
-      $new_file_name = $file;
-   
-      $final_file = $new_file_name;
+      $new_file_name = ucwords($file);
+ 
+      $final_file=str_replace(' ','-',$new_file_name);
 
      // Description error
       if (empty($description)) {
@@ -299,7 +304,7 @@
 <div class="col-sm-6 col-md-5 col-lg-6">
   <div class="form-group row"> 
         <div class="col-sm-8">
-          <strong>Title</strong> <sup class="text-danger">*</sup>
+          <strong>Title</strong> <sup class="text-danger">required</sup>
           <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
           <p class="text-danger"><?php echo $TitleError; ?></p>
         </div>
@@ -325,7 +330,7 @@
 <div class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">
   <div class="form-group row">
     <div class="col-sm-8"> 
-      <strong>File</strong> <sup class="text-danger">*</sup>
+      <strong>File</strong> <sup class="text-danger">required</sup>
       <div class="input-group">
         <span class="input-group-btn">
           <button id="file-button-browse" type="button" class="btn btn-default">
@@ -348,7 +353,7 @@
 
   <div class="form-group row">
     <div class="col-sm-8">
-      <strong>Category</strong> <sup class="text-danger">*</sup>
+      <strong>Category</strong>
         <?php
           // php select option value from database
           $hostname = "localhost";
@@ -417,17 +422,17 @@
   </div><!-- /#page-wrapper -->
   </div><!-- /#wrapper -->
 
-      <footer class="footer">
-          <div class="container-fluid">
-              <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
-          </div>
-      </footer>
+<footer>
+    <div class="container-fluid">
+        <p align="right"><a href="/ovcaa/" target="_blank">UP Open University - Scribd</a> &copy; <?php echo date("Y"); ?></p>
+    </div>
+</footer>
 
-  <!-- jQuery -->
-  <script src="../assets/js/jquery.min.js"></script>
-  <script src="../assets/js/bootstrap.min.js"></script>
-  <script src="../assets/js/index.js"></script>
+<!-- jQuery -->
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/js/index.js"></script>
 
-  </body>
-  </html>
-  <?php ob_end_flush(); ?>
+</body>
+</html>
+<?php ob_end_flush(); ?>
