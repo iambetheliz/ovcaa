@@ -79,7 +79,7 @@ if ($result->num_rows != 0) { ?>
         <td><br>
             <p>Description: <?php echo $row['description'] ?></p>
             <p>Category: <?php echo $row['cat_name'] ?></p>
-            <p>URL: <a href="view.php?document=<?php echo $row['filename'] ?>" target="_blank"><?php echo $row['url'] ?></a></p>
+            <p>URL: <a href="view.php?document=<?php echo $row['filename'] ?>" target="_blank">http://localhost/ovcaa/documents/<?php echo $row['filename'] ?></a></p>
         </td>
         <td><br>
         <p><?php echo $row['uploaded_by'] ?></p>
