@@ -17,7 +17,7 @@ else {
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-<title>UP Open University</title>
+<title>Admin Login - UPOU Scribd</title>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id" content="359845811077-5tmabkh7pthfqvgtn89ets51b3cin7s2.apps.googleusercontent.com">
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">

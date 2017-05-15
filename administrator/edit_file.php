@@ -55,7 +55,7 @@
     // new file size in KB
     $new_size = $file_size/1024;  
  
-    // make file name in lower case
+    // make file name in upper case
     $new_file_name = ucwords($file);
  
     $final_file=str_replace(' ','-',$new_file_name);
