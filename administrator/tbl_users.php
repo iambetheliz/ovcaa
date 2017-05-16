@@ -43,13 +43,24 @@
 <meta name="author" content="">
 <title>Table: Users - UP Open University</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
-<link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/simple-sidebar.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+/* For pagination function. */
+ul.pagination>li>a {
+    color:#014421;
+}
+ul.pagination>li>a.current {
+    background:#014421;
+    color:#fff;
+}
+</style>
 </head>
 
 <body>
 <div class="wrap">
     <div id="wrapper">
-
+    
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
@@ -62,6 +73,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <a class="navbar-brand" href="#menu-toggle" id="menu-toggle" title="Toggle Sidebar"><span class="glyphicon glyphicon-align-justify"></span></a>
                 <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
             </div>
 
@@ -76,15 +88,21 @@
             </ul> 
             </ul>
             </div>
+            <!-- End of Top Menu Items -->
+            
+        </div>
+        </nav>
+        <!-- /.navbar-collapse -->
 
-            <!-- Sidebar Menu Items -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
-                        <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
-                    </li>
-                    <li  class="active">
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
+        <!-- Sidebar Menu Items -->
+        <br><br>
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav"> 
+                <li>
+                    <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
+                </li>
+                <li  class="active">
+                    <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
                         <ul id="demo" class="collapse">
                             <li>
                                 <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
@@ -93,16 +111,12 @@
                                 <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
                             </li>
                         </ul>
-                    </li>
-                </ul>
-            </div>
+                </li>
+            </ul>
+        </div>
 
-        </div><!-- /.container-fluid -->
-        </nav><!-- /.navbar-collapse -->
-
-        <br><br>
         <!-- Main Screen -->
-        <div id="page-wrapper">
+        <div id="page-content-wrapper">
             <div class="container-fluid">
                 
                 <?php    
@@ -123,12 +137,12 @@
 
                 <!-- Buttons -->
                 <div class="row">
-                    <div class="col col-xs-4">
+                    <div class="col col-xs-7">
                         <a href="add_user.php" class="btn btn-success" type="button" role="button" >
                             <span class="glyphicon glyphicon-plus"></span> Add New
                         </a>  
-                    </div>                            
-                    <div class="col col-xs-3"></div>         
+                        <label for="submit-form" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete Multiple</label>
+                    </div>
                     <div class="col col-xs-2 text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -168,24 +182,24 @@
                             ?>
                         </div>
                     </div>
-                <form action="" method="get">
                     <div class="col col-xs-3 text-right">
+                    <form action="" method="get">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Search for terms..">
                             <span class="input-group-btn"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button></span>
-                        </div>
+                        </div>       
+                    </form>
                     </div>
                 </div>
                 <!-- End of Buttons -->
 
                 <br>
-                <!-- Table and Pagination -->         
-                </form>
-                <form name="bulk_action_form" action="action.php" method="post" onSubmit="return delete_confirm();"/>
+                <!-- Table and Pagination -->  
+                <form id="myForm" name="bulk_action_form" action="action.php" method="post" onSubmit="return delete_confirm();"/>
                 <?php 
                     include 'users.php';
                 ?>
-                <input type="submit" class="btn btn-danger" name="bulk_delete_user" value="Delete"/>
+                <input type="submit" class="btn btn-danger hidden" id="submit-form" name="bulk_delete_user" value="Delete"/>
                 </form>
 
             </div><!-- /.container-fluid -->
@@ -202,9 +216,20 @@
 </footer>
 
 <!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="../assets/js/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $( document ).ready(function() {
+        $("#wrapper").addClass("toggled");
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    });
+    </script>
 
 </body>
 </html>

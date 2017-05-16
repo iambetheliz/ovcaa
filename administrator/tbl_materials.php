@@ -42,9 +42,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>Table: Material - UP Open University</title>
+<title>Table: Material - UPOU Scribd</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/simple-sidebar.css" rel="stylesheet" type="text/css">
 <style type="text/css">
 /* For pagination function. */
 ul.pagination>li>a {
@@ -60,7 +61,7 @@ ul.pagination>li>a.current {
 <body>
 <div class="wrap">
     <div id="wrapper">
-
+    
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
@@ -73,6 +74,7 @@ ul.pagination>li>a.current {
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <a class="navbar-brand" href="#menu-toggle" id="menu-toggle" title="Toggle Sidebar"><span class="glyphicon glyphicon-align-justify"></span></a>
                 <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
             </div>
 
@@ -87,37 +89,39 @@ ul.pagination>li>a.current {
             </ul> 
             </ul>
             </div>
+            <!-- End of Top Menu Items -->
+            
+        </div>
+        </nav>
+        <!-- /.navbar-collapse -->
 
-            <!-- Sidebar Menu Items -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
-                        <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
-                    </li>
-                    <li  class="active">
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
-                        <ul id="demo" class="collapse">
-                            <li class="active">
-                                <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
-                            </li>
-                            <?php 
-                                if ($userData['role'] === 'admin') {?>
+        <!-- Sidebar Menu Items -->
+        <br><br>
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">  
+                <li>
+                    <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
+                </li>
+                <li  class="active">
+                    <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>                        
+                    <ul id="demo" class="collapse">
+                        <li class="active">
+                            <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                        </li>
+                        <?php 
+                            if ($userData['role'] === 'admin') {?>
                             <li>
                                 <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
                             </li>
-                            <?php    }
-                            ?>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+                        <?php    }
+                        ?>
+                    </ul>
+                </li>
+            </ul>
         </div>
-        </nav>
-        <!-- End of Navigation -->
 
-        <br><br>
         <!-- Main Screen -->
-        <div id="page-wrapper">
+        <div id="page-content-wrapper">
             <div class="container-fluid">
                 
                 <?php    
@@ -130,19 +134,20 @@ ul.pagination>li>a.current {
                 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header"><strong><a style="color: black;text-decoration: none;" href="tbl_materials.php">Documents</a> <font color="#7b1113">(<?php echo $count; ?>)</font></strong></h1>
+                        <h1 class="page-header"><strong><a style="color: black;text-decoration: none;" href="tbl_materials.php">Documents</a> <font color="#7b1113">(<?php echo $count; ?>)</font></strong>
+                        </h1>
                     </div>
                 </div>
                 <!-- End of Page Heading -->
 
                 <!-- Buttons -->
                 <div class="row">
-                    <div class="col col-xs-4">
+                    <div class="col col-xs-7">
                         <a href="upload-document.php" class="btn btn-success" type="button" role="button" >
                             <span class="glyphicon glyphicon-plus"></span> Upload New File
                         </a>  
-                    </div>  
-                    <div class="col col-xs-3"></div>
+                        <label for="submit-form" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete Multiple</label>
+                    </div>                      
                     <div class="col col-xs-2 text-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -190,25 +195,24 @@ ul.pagination>li>a.current {
                             </ul>
                         </div>
                     </div>
-                    <form action="" method="get">
                     <div class="col col-xs-3 text-right">
+                    <form action="" method="get">
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Search for terms..">
                             <span class="input-group-btn"><button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button></span>
                         </div>
+                    </form>
                     </div>
                 </div>
                 <!-- End of Buttons -->
                 <br>
-                    </form>
 
                 <form name="bulk_action_form" action="action.php" method="post" onSubmit="return delete_confirm();"/>
                 <?php 
                     include 'files.php'; 
                 ?><br>
-                <input type="submit" class="btn btn-danger" name="bulk_delete_material" value="Delete"/>
-                <br><br>
-                    </form>
+                <input type="submit" class="btn btn-danger hidden" id="submit-form" name="bulk_delete_material" value="Delete"/>
+                </form>
 
             </div><!-- /.container-fluid -->
         </div><!-- /#page-wrapper -->
@@ -227,6 +231,17 @@ ul.pagination>li>a.current {
 <script src="../assets/js/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $( document ).ready(function() {
+        $("#wrapper").addClass("toggled");
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    });
+    </script>
 
 </body>
 </html>

@@ -1,3 +1,4 @@
+  
 $("input[type=password]").keyup(function(){
     var ucase = new RegExp("[A-Z]+");
 	var lcase = new RegExp("[a-z]+");

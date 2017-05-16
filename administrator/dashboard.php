@@ -8,6 +8,7 @@ if(!isset($_SESSION['token'])){
 header("Location: index.php?loginError");
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -16,16 +17,18 @@ header("Location: index.php?loginError");
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<title>Admin - UP Open University</title>
+<title>Admin - UPOU Scribd</title>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/dashboard.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/simple-sidebar.css" rel="stylesheet" type="text/css">
 <link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet" media="screen">
 </head>
 
 <body>
 <div class="wrap">
     <div id="wrapper">
+
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
@@ -38,6 +41,7 @@ header("Location: index.php?loginError");
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <a class="navbar-brand" href="#menu-toggle" id="menu-toggle" title="Toggle Sidebar"><span class="glyphicon glyphicon-align-justify"></span></a>
                 <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
             </div>
 
@@ -52,38 +56,39 @@ header("Location: index.php?loginError");
             </ul> 
             </ul>
             </div>
-
-            <!-- Sidebar Menu Items -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
-                        <ul id="demo" class="collapse">
-                            <li>
-                                <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
-                            </li>
-                            <?php 
-                                if ($userData['role'] === 'admin') {?>
-                            <li>
-                                <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
-                            </li>
-                            <?php    }
-                            ?>
-                        </ul>
-                    </li>
-                </ul>
-            </div>            
+            <!-- End of Top Menu Items -->
             
         </div>
         </nav>
         <!-- /.navbar-collapse -->
-        
+
+        <!-- Sidebar Menu Items -->
         <br><br>
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">                    
+                <li class="active">
+                    <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
+                </li>
+                <li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp; Tables &nbsp;&nbsp;<span class="caret"></span></a>
+                    <ul id="demo" class="collapse">
+                        <li>
+                            <a href="tbl_materials"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp; Materials</a>
+                        </li>
+                        <?php 
+                            if ($userData['role'] === 'admin') {?>
+                            <li>
+                                <a href="tbl_users"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp; Users</a>
+                            </li>
+                        <?php    }
+                        ?>
+                    </ul>
+                </li>
+            </ul>
+        </div>            
+        
         <!-- Main Screen -->
-        <div id="page-wrapper">
+        <div id="page-content-wrapper">
             <div class="container-fluid">
 
                 <!-- Page Heading -->
@@ -97,7 +102,10 @@ header("Location: index.php?loginError");
                         <span aria-hidden="true">&times;</span></button><p>Displaying total numbers of files per day, week, month and year</p>
                     </div>
                 </div>
-                <div class="row">
+                <!-- End of Page Heading -->
+                
+<!-- Notification Badges -->
+    <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
             <div class="offer offer-success">
                 <div class="shape">
@@ -214,17 +222,27 @@ header("Location: index.php?loginError");
     </div><!-- /#wrapper -->
 </div><!-- /.wrap -->
 
-    <footer class="footer">
-        <div class="container-fluid">
-            <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
-        </div>
-    </footer>
+<footer>
+    <div class="container-fluid">
+        <p align="right"><a href="/ovcaa/" target="_blank">UP Open University - Scribd</a> &copy; <?php echo date("Y"); ?></p>
+    </div>
+</footer>
 
 <!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="../assets/js/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
 
+    <!-- Menu Toggle Script -->
+    <script>
+    $( document ).ready(function() {
+        $("#wrapper").addClass("toggled");
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    });
+    </script>
+
 </body>
 </html>
-<?php ob_end_flush(); ?>

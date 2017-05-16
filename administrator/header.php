@@ -40,7 +40,7 @@ if ($gClient->getAccessToken()) {
     //Render facebook profile data
     $output = '';
     if(!empty($userData)){
-        $account = '<p class="navbar-text" style="color:white;"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;'. ucwords($userData['first_name']).'&nbsp;'. ucwords($userData['last_name']).'</p>';
+        $account = '<a href="#"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;'. ucwords($userData['first_name']).'&nbsp;'. ucwords($userData['last_name']).'</a>';
         $logout = '<a href="logout"><i class="glyphicon glyphicon-off">'.'</i>&nbsp;&nbsp;Logout</a>';
     }else{
         $output .= '<h3 class="alert alert-danger">Your google account does not exists in our database!<br>Redirecting to login page ...</h3>';
