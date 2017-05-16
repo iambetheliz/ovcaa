@@ -202,7 +202,7 @@
 <div class="form-group row"> 
   <div class="col-sm-8">
     <strong>Email</strong><sup class="text-danger">*</sup>    
-      <input type="text" id="email" name="email" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $email ?>" />
+      <input type="text" id="email" name="email" class="form-control" title="Please enter the valid email format (e.g. example@email.com)" maxlength="25" value="<?php echo $email ?>" autofocus />
       <p class="text-danger"><?php echo $emailError; ?></p>
   </div>
 </div>

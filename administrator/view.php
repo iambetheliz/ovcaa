@@ -47,10 +47,13 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-<title>UP Open University</title>
+<title>UPOU Scribd</title>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/dashboard.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/simple-sidebar.css" rel="stylesheet" type="text/css">
+<link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet" media="screen">
 <style type="text/css">
 /* For pagination function. */
 ul.pagination>li>a {
@@ -79,6 +82,7 @@ ul.pagination>li>a.current {
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <a class="navbar-brand" href="#menu-toggle" id="menu-toggle" title="Toggle Sidebar"><span class="glyphicon glyphicon-align-justify"></span></a>
                 <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
             </div>
 
@@ -93,10 +97,16 @@ ul.pagination>li>a.current {
             </ul> 
             </ul>
             </div>
+            <!-- End of Top Menu Items -->
+            
+        </div>
+        </nav>
+        <!-- /.navbar-collapse -->
 
-            <!-- Sidebar Menu Items -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
+        <!-- Sidebar Menu Items -->
+        <br><br>
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">   
                     <li>
                         <a href="/ovcaa/administrator"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp; Dashboard</a>
                     </li>
@@ -117,15 +127,11 @@ ul.pagination>li>a.current {
                     </li>
                 </ul>
             </div>
-        </div>
-        </nav>
-        <!-- End of Navigation -->
 
-<!-- Main Screen -->
-<div class="wrap">
-    
+      <!-- Main Screen -->
+      <div id="page-content-wrapper">
       <div class="container-fluid">
-      <br><br>
+      
       <div class="row">
         <div class="col-sm-3">
           <h2 class="page-header"><strong><?php echo $row['title']; ?></strong></h2>
@@ -160,6 +166,17 @@ ul.pagination>li>a.current {
 <script src="../assets/js/jquery.min.js"></script>
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $( document ).ready(function() {
+        $("#wrapper").addClass("toggled");
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    });
+    </script>
 
 </body>
 </html>
