@@ -1,6 +1,7 @@
 <?php
 
   include 'header.php';
+  include '../includes/pagination.php'; 
 
   if(!isset($_SESSION['token'])){
     header("Location: index.php?loginError");
@@ -199,13 +200,14 @@ ul.pagination>li>a.current {
                 </div>
                 <!-- End of Buttons -->
                 <br>
-                <div class="container-fluid">
+                    </form>
+
+                <form name="bulk_action_form" action="action.php" method="post" onSubmit="return delete_confirm();"/>
                 <?php 
-                    include '../includes/pagination.php'; 
                     include 'files.php'; 
-                ?>
-                </div>
-                <br>
+                ?><br>
+                <input type="submit" class="btn btn-danger" name="bulk_delete_material" value="Delete"/>
+                <br><br>
                     </form>
 
             </div><!-- /.container-fluid -->

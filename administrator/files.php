@@ -25,6 +25,38 @@
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
 <script src="../assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+function delete_confirm(){
+    var result = confirm("Are you sure to delete these documents?");
+    if(result){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+$(document).ready(function(){
+    $('#select_all').on('click',function(){
+        if(this.checked){
+            $('.checkbox').each(function(){
+                this.checked = true;
+            });
+        }else{
+             $('.checkbox').each(function(){
+                this.checked = false;
+            });
+        }
+    });
+    
+    $('.checkbox').on('click',function(){
+        if($('.checkbox:checked').length == $('.checkbox').length){
+            $('#select_all').prop('checked',true);
+        }else{
+            $('#select_all').prop('checked',false);
+        }
+    });
+});
+</script>
 </head>
 <body>
 
@@ -73,17 +105,18 @@ else {
 }
 ?>  
 
+<div class="container-fluid">
 <?php if(!empty($_SESSION['success_msg'])){ ?>
-    <div class="alert alert-success"><?php echo $_SESSION['success_msg']; ?></div>
+    <div class="row alert alert-success"><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><?php echo $_SESSION['success_msg']; ?></div>
     <?php unset($_SESSION['success_msg']); 
 } ?>
 
 <?php
   if(isset($successMSG)){
 ?>
-    <p class="alert alert-success">
+    <div class="row alert alert-success"><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
        <span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?>
-    </p>
+    </div>
 <?php
     }
 ?>
@@ -98,6 +131,7 @@ else {
 <table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
+        <th><input type="checkbox" name="select_all" id="select_all" value=""/></th>
         <th>Edit</th>
         <th>Delete</th>
         <th>Title</th>
@@ -143,6 +177,7 @@ if ($result->num_rows != 0) { ?>
     // displaying records.
     while ($row = $result->fetch_assoc()){ ?>
         <tr>
+            <td align="center"><input type="checkbox" name="checked_id[]" class="checkbox" value="<?php echo $row['id']; ?>"/></td>
             <td>
             <a class="btn btn-primary btn-lg active btn-sm" role="button" aria-pressed="true" href="edit_file.php?edit_id=<?php echo $row['id']; ?>" title="click for edit"> <span class="glyphicon glyphicon-edit"></span></a>
             </td>
@@ -163,7 +198,7 @@ if ($result->num_rows != 0) { ?>
     <?php 
     } 
 }else { ?>
-        <tr><td colspan="13">No records found.</td></tr> 
+        <tr><td colspan="14">No records found.</td></tr> 
     </tbody>
     <?php } ?>
 </table>
@@ -172,6 +207,6 @@ if ($result->num_rows != 0) { ?>
 <!-- end of container-fluid -->
 
 <?php echo pagination($statement,$per_page,$page,$url='?');?> 
-
+</div>
 </body>
 </html>

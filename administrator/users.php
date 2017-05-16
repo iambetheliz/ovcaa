@@ -25,6 +25,38 @@
 <script src="../assets/js/bootstrap.min.js"></script>
 <script src="../assets/js/index.js"></script>
 <script src="../assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+function delete_confirm(){
+    var result = confirm("Are you sure to delete these users?");
+    if(result){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+$(document).ready(function(){
+    $('#select_all').on('click',function(){
+        if(this.checked){
+            $('.checkbox').each(function(){
+                this.checked = true;
+            });
+        }else{
+             $('.checkbox').each(function(){
+                this.checked = false;
+            });
+        }
+    });
+    
+    $('.checkbox').on('click',function(){
+        if($('.checkbox:checked').length == $('.checkbox').length){
+            $('#select_all').prop('checked',true);
+        }else{
+            $('#select_all').prop('checked',false);
+        }
+    });
+});
+</script>
 <!-- end of jQuery -->
 </head>
 <body>
@@ -58,7 +90,7 @@ if (isset($_GET['search'])) {
 
     $startpoint = ($page * $per_page) - $per_page;
 
-    $statement = "users WHERE CONCAT(uid, oauth_uid, first_name, last_name, email, created, modified) LIKE '%".$search."%'"; 
+    $statement = "users WHERE CONCAT(uid, oauth_uid, first_name, last_name, email, role, created, modified) LIKE '%".$search."%'"; 
  
     $result = mysqli_query($DB_con,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
 } 
@@ -75,14 +107,14 @@ else {
 <div class="container-fluid">
 
 <?php if(!empty($_SESSION['success_msg'])){ ?>
-    <div class="alert alert-success"><?php echo $_SESSION['success_msg']; ?></div>
+    <div class="row alert alert-success"><?php echo $_SESSION['success_msg']; ?></div>
     <?php unset($_SESSION['success_msg']); 
 } ?>
 
 <?php
   if(isset($successMSG)){
 ?>
-    <p class="alert alert-success">
+    <p class="row alert alert-success">
        <span class="glyphicon glyphicon-info-sign"></span> <?php echo $successMSG; ?>
     </p>
 <?php
@@ -94,9 +126,11 @@ else {
 }  ?>
 
 <div class="row">
-<table class="table table-striped table-bordered table-responsive table-hover" id="table-id">
+<div class="table-responsive ">
+<table class="table table-striped table-bordered table-hover" id="table-id">
 <thead>
     <tr>
+        <th><input type="checkbox" name="select_all" id="select_all" value=""/></th>
         <th><center>Action</center></th>
         <th>First Name</th>
         <th>Last Name</th>
@@ -114,6 +148,7 @@ if ($result->num_rows != 0) { ?>
     // displaying records.
     while ($row = $result->fetch_assoc()){ ?>
         <tr>
+            <td align="center"><input type="checkbox" name="checked_id[]" class="checkbox" value="<?php echo $row['uid']; ?>"/></td>
             <td><center>
             <a class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true" href="?delete_id=<?php echo $row['uid']; ?>" title="click for delete" onclick="return confirm('sure to delete ?')"><span class="glyphicon glyphicon-trash"></span>&nbsp; Delete</a></center>
             </td>
@@ -135,7 +170,7 @@ else {
                 <?php
                     if(isset($errMSG)){
                 ?>
-                    <td colspan="7" class="alert alert-danger">
+                    <td colspan="8" class="alert alert-danger">
                         <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
                     </td>
                 <?php
@@ -144,6 +179,7 @@ else {
         </tr>
     </tbody>
 </table>
+</div>
 </div>
 
 <div class="row">

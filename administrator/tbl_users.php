@@ -1,6 +1,7 @@
 <?php
 
   include 'header.php';
+  include '../includes/pagination.php';
 
   if(!isset($_SESSION['token'])){
     header("Location: index.php?loginError");
@@ -178,11 +179,13 @@
                 <!-- End of Buttons -->
 
                 <br>
-                <!-- Table and Pagination -->
+                <!-- Table and Pagination -->         
+                </form>
+                <form name="bulk_action_form" action="action.php" method="post" onSubmit="return delete_confirm();"/>
                 <?php 
-                    include '../includes/pagination.php';
                     include 'users.php';
-                ?>                               
+                ?>
+                <input type="submit" class="btn btn-danger" name="bulk_delete_user" value="Delete"/>
                 </form>
 
             </div><!-- /.container-fluid -->
@@ -192,11 +195,11 @@
     </div><!-- /#wrapper -->
 </div><!-- /#wrap -->
 
-    <footer class="footer">
-        <div class="container-fluid">
-            <p align="right">UP Open University - Scribd &copy; <?php echo date("Y"); ?></p>
-        </div>
-    </footer>
+<footer>
+    <div class="container-fluid">
+        <p align="right"><a href="/ovcaa/" target="_blank">UP Open University - Scribd</a> &copy; <?php echo date("Y"); ?></p>
+    </div>
+</footer>
 
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
