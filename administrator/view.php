@@ -68,10 +68,10 @@ ul.pagination>li>a.current {
 
 <div class="wrap">
     <div id="wrapper">
+        <div class="container-fluid">
 
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
 
             <!-- Brand and toggle -->
             <div class="navbar-header">
@@ -84,6 +84,7 @@ ul.pagination>li>a.current {
                 <a class="navbar-brand" href="#menu-toggle" id="menu-toggle" title="Toggle Sidebar"><span class="glyphicon glyphicon-align-justify"></span></a>
                 <a class="navbar-brand" style="color: #f3a22c;" href="/ovcaa/administrator"><img class="img-fluid" alt="Brand" src="images/logo.png" width="40" align="left">&nbsp;&nbsp;UP Open University</a>
             </div>
+            <!-- End of Brand and toggle -->
 
             <!-- Top Menu Items -->
             <div id="navbar" class="navbar-collapse collapse">
@@ -125,10 +126,9 @@ ul.pagination>li>a.current {
                         </ul>
                     </li>
                 </ul>
-            </div>
+        </div>
 
       <!-- Main Screen -->
-      <div id="page-content-wrapper">
       <div class="container-fluid">
       
       <div class="row">
@@ -142,18 +142,19 @@ ul.pagination>li>a.current {
         <div class="col-lg-9 offset-lg-0">
         <!-- Page Content --><br><br>
             <!-- Iframe -->
-            <div class="embed-responsive embed-responsive-16by9">
+            <div class="embed-responsive embed-responsive-4by3">
               <iframe class="embed-responsive-item" src="<?php echo $row['url']; ?>"></iframe>
             </div><br>
             <!-- End of Iframe -->
         </div>
         <!-- End of Content --> 
-      </div>
+      </div><!-- /row -->
 
-      </div><!-- /container -->
+      </div><!-- /container-fluid -->
 
+</div><!-- /container-fluid -->
+</div><!-- /#wrapper -->
 </div><!-- /#wrap -->
-</div></div>
 
 <footer>
     <div class="container-fluid">
