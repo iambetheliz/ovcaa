@@ -273,7 +273,7 @@
 <div class="col-sm-6 col-md-5 col-lg-6">
   <div class="form-group row"> 
         <div class="col-sm-8">
-          <strong>Title</strong> <sup class="text-danger">*</sup>
+          <strong>Title</strong> <sup class="text-danger">required</sup>
           <input type="text" class="form-control" name="title" value="<?php echo $title; ?>" autofocus />
           <p class="text-danger"><?php echo $TitleError; ?></p>
         </div>
@@ -299,7 +299,7 @@
   <div class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">
   <div class="form-group row">
     <div class="col-sm-8"> 
-        <strong>Category</strong> <sup class="text-danger">*</sup>
+        <strong>Category</strong> <sup class="text-danger">required</sup>
         <?php
             // php select option value from database
             $hostname = "localhost";
@@ -362,7 +362,7 @@
 
   <div class="form-group row"> 
     <div class="col-sm-8">
-      <strong>New</strong> 
+      <strong>New</strong> <sup class="text-danger">required</sup>
       <div class="input-group">
       <span class="input-group-btn">
         <button id="file-button-browse" type="button" class="btn btn-default">

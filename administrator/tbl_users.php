@@ -1,13 +1,12 @@
 <?php
 
+  include '../includes/pagination.php'; 
+  include '../includes/dbconnect.php';
   include 'header.php';
-  include '../includes/pagination.php';
 
   if(!isset($_SESSION['token'])){
     header("Location: index.php?loginError");
   }
-  
-  require_once '../includes/dbconnect.php';
 
   $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
@@ -15,18 +14,18 @@
     echo "Connect failed: ", $DB_con->connect_error;
   exit();
   }
-
-    require_once 'dbConnect.php';
+  
+  require_once 'dbConnect.php';
     
     if(isset($_GET['delete_id']))
  {
   // select image from db to delete
-  $stmt_select = $DB_con->prepare('SELECT * FROM users WHERE id =:id');
+  $stmt_select = $DB_con->prepare('SELECT * FROM users WHERE uid =:id');
   $stmt_select->execute(array(':id'=>$_GET['delete_id']));
   $fileRow=$stmt_select->fetch(PDO::FETCH_ASSOC);
   
   // it will delete an actual record from db
-  $stmt_delete = $DB_con->prepare('DELETE FROM users WHERE id =:id');
+  $stmt_delete = $DB_con->prepare('DELETE FROM users WHERE uid =:id');
   $stmt_delete->bindParam(':id',$_GET['delete_id']);
   $stmt_delete->execute();
   

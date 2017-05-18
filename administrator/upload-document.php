@@ -143,59 +143,6 @@
    }
   ?>
 
-  <!-- Add Category -->
-  <?php
-              
-  $error = false;
-   if ( isset($_POST['add_new_cat']) ) {
-    
-    $cat_name = trim($_POST['cat_name']);
-    $cat_name = strip_tags($cat_name);
-    $cat_name = htmlspecialchars($cat_name);
-    
-    if (empty($cat_name)) {
-     $error = true;
-     $categoryError = "Please enter a Category.";
-    } else if (strlen($cat_name) < 5) {
-     $error = true;
-     $categoryError = "Category must have atleat 5 characters.";
-    } 
-    else if (!preg_match("/^[a-zA-Z ]+$/",$cat_name)) {
-     $error = true;
-     $categoryError = "Category must contain alphabets and space.";
-    }
-   
-    else {         
-      $query = "SELECT cat_name FROM category WHERE cat_name='$cat_name'";
-      $result = $DB_con->query($query);
-    
-    if($result->num_rows != 0){
-            $error = true;
-            $categoryError = "Provided Category is already in use.";
-      }
-    }
-   
-    if( !$error ) {
-      
-      require_once 'dbConnect.php';
-     
-      $stmt = $DB_con->prepare('INSERT INTO category(cat_name) VALUES (:cat_name);');
-      $stmt->bindParam(':cat_name',$cat_name);
-          if($stmt->execute()) {
-            $stmt = $DB_con->query("SELECT LAST_INSERT_ID()");
-            $lastId = $stmt->fetchColumn();
-            $successMSG = "New category added!";
-              header('refresh:3;upload-document.php');
-            }
-          else {
-            $errMSG = "Error!";
-            header('refresh:3;upload-document.php');
-          } 
-      
-    }      
-   }
-?>
-
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -381,34 +328,15 @@
             }
         ?>
         <script src="../assets/js/jquery.min.js"></script>
-      <select name="category_id" class="form-control" id="cat_name">  
+      <select name="category_id" class="form-control" id="sampleSelect">  
         <?php while($row1 = mysqli_fetch_array($result1)):;?>
         <option id="output" value="<?php echo $row1[0];?>"><?php echo $row1[1];?></option>
         <?php endwhile;?>
-        <option value="new">Add new category</option>
+        <option value="add_category.php">Add new category</option>
       </select>
       <p class="text-danger"><?php echo $categoryError; ?></p>
     </div>
   </div>
-    
-    <div class="form-group row" id="newCat" style="display:none;">
-          <div class="col-sm-8" id="cname">
-              <input type="text" class="form-control" name="cat_name" placeholder="Specify category" autofocus /><br>
-              <?php echo $successMSG; ?>
-              <button type="submit" id="add" name="add_new_cat" class="btn btn-primary pull-right">ADD</button>
-              <script type="text/javascript">
-                $('#cat_name').on('change',function(){
-                  if( $(this).val()==="new"){
-                    $("#newCat").show()
-                  }
-                  else{
-                    $("#newCat").hide()
-                  }
-                  });
-              </script>
-          </div>
-    </div>
-    <!-- End Add Category -->
 
 </div>
 </div>
@@ -449,6 +377,15 @@
             $("#wrapper").toggleClass("toggled");
         });
     });
+    $("select").click(function() {
+  var open = $(this).data("isopen");
+  if(open) {
+    window.location.href = $(this).val()
+  }
+  //set isopen to opposite so next time when use clicked select box
+  //it wont trigger this event
+  $(this).data("isopen", !open);
+});
     </script>
 
 </body>

@@ -1,12 +1,11 @@
 <?php
 
+  include '../includes/dbconnect.php';
   include 'header.php';
 
   if(!isset($_SESSION['token'])){
     header("Location: index.php?loginError");
   }
-  
-  require_once '../includes/dbconnect.php';
 
   $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
@@ -14,8 +13,8 @@
     echo "Connect failed: ", $DB_con->connect_error;
   exit();
   }
-
-    require_once 'dbConnect.php';
+  
+  require_once 'dbConnect.php';
   
   if(isset($_GET['document']) && !empty($_GET['document']))
   {

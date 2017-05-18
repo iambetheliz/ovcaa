@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2017 at 11:47 AM
+-- Generation Time: May 18, 2017 at 08:41 AM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 5.6.24
 
@@ -57,29 +57,6 @@ CREATE TABLE `material` (
   `date_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `members`
---
-
-CREATE TABLE `members` (
-  `userId` int(11) NOT NULL,
-  `first_name` varchar(30) NOT NULL DEFAULT 'not specified',
-  `last_name` varchar(30) NOT NULL DEFAULT 'not specified',
-  `userName` varchar(30) NOT NULL,
-  `userEmail` varchar(60) NOT NULL,
-  `userPass` varchar(255) NOT NULL,
-  `regDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
-
---
--- Dumping data for table `members`
---
-
-INSERT INTO `members` (`userId`, `first_name`, `last_name`, `userName`, `userEmail`, `userPass`, `regDate`) VALUES
-(1, 'not specified', 'not specifed', 'admin', 'admin@gmail.com', '41e5653fc7aeb894026d6bb7b2db7f65902b454945fa8fd65a6327047b5277fb', '2017-04-02 22:51:37');
 
 -- --------------------------------------------------------
 
