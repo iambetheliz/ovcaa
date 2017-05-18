@@ -90,7 +90,7 @@ if (isset($_GET['search'])) {
 
     $startpoint = ($page * $per_page) - $per_page;
 
-    $statement = "users WHERE CONCAT(uid, oauth_uid, first_name, last_name, email, role, created, modified) LIKE '%".$search."%'"; 
+    $statement = "users WHERE CONCAT(uid, oauth_uid, first_name, last_name, email, created, modified) LIKE '%".$search."%'"; 
  
     $result = mysqli_query($DB_con,"SELECT * FROM {$statement} ORDER BY $field $sort LIMIT {$startpoint} , {$per_page}");
 } 
