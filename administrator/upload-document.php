@@ -152,6 +152,7 @@
     $cat_name = trim($_POST['cat_name']);
     $cat_name = strip_tags($cat_name);
     $cat_name = htmlspecialchars($cat_name);
+    
     if (empty($cat_name)) {
      $error = true;
      $categoryError = "Please enter a Category.";
