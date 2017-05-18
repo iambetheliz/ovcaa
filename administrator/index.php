@@ -74,39 +74,6 @@ else {
                         <?php }
                         ?>
                         <?php echo $output; ?>  <br>
-                        <?php    
-                            $stmt = $DB_con->prepare("SELECT * FROM users WHERE role = 'admin'");
-                            $stmt->execute();    
-                            $count = $stmt->rowCount();
-
-                            if ($count == 0) {
-                                $message = "This site has <strong>no admin</strong> yet. Click <strong><a class='text-danger' data-toggle='collapse' href='#collapseExample' aria-expanded='false' aria-controls='collapseExample'>here</a></strong> to add admin";
-                            }
-                        ?>
-                        <span class="text-danger">
-                            <span class="col-10">
-                            <?php echo $message; ?>
-                            </span>
-                        </span>
-                        <?php include 'add_admin.php'; 
-                            if ($error) {
-                                $collapse = 'in';
-                            }
-                            if ($successMSG) {
-                                $collapse = 'in';
-                            }
-                        ?>  <br><br>
-                        <div class="collapse <?php echo $collapse; ?>" id="collapseExample">
-                            <form class="form-inline" id="regValidate" action="" method="post" autocomplete="off">
-                                <span class="text-success"><?php echo $successMSG;?></span>
-                                <div class="col-10">    
-                                    <input type="text" id="email" name="email" class="form-control" title="(e.g. example@email.com)" maxlength="30" value="<?php echo $email ?>" placeholder="Email Address (required)" autofocus /> 
-                                    <input hidden="" type="text" name="role" value="$role" />
-                                    <button type="submit" class="btn btn-success send" name="btn-signup" data-loading-text="Saving info"> Save </button><br>
-                                    <span class="text-danger"><?php echo $emailError;?></span>
-                                </div>
-                            </form>
-                        </div>
                     </div>  
                 </div>
     </div>

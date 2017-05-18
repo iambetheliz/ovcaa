@@ -1,13 +1,11 @@
 <?php
 
-  include 'dbConnect.php';
+  include '../includes/dbconnect.php';
   include 'header.php';
 
   if(!isset($_SESSION['token'])){
     header("Location: index.php?loginError");
   }
-  
-  require_once '../includes/dbconnect.php';
 
   $DB_con = new mysqli("localhost", "root", "", "ovcaa");
 
@@ -15,6 +13,8 @@
     echo "Connect failed: ", $DB_con->connect_error;
   exit();
   }
+  
+  require_once 'dbConnect.php';
   
 ?>
 <!DOCTYPE HTML>
@@ -135,7 +135,6 @@ else {
         <th>First Name</th>
         <th>Last Name</th>
         <th>Email</th>
-        <th>Role</th>
         <th>Date Added</th>
         <th>Date Modified</th>
     </tr>
@@ -155,7 +154,6 @@ if ($result->num_rows != 0) { ?>
             <td><?php echo $row['first_name'] ?></td>
             <td><?php echo $row['last_name'] ?></td>
             <td><?php echo $row['email'] ?></td>
-            <td><?php echo $row['role'] ?></td>
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['created'])) ?></p></td>
             <td><p><?php echo date('l; F j, Y; g:i a', strtotime($row['modified'])) ?></p></td>
 <?php
@@ -170,7 +168,7 @@ else {
                 <?php
                     if(isset($errMSG)){
                 ?>
-                    <td colspan="8" class="alert alert-danger">
+                    <td colspan="7" class="alert alert-danger">
                         <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
                     </td>
                 <?php

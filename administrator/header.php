@@ -42,23 +42,12 @@ if ($gClient->getAccessToken()) {
     if(!empty($userData)){
         $account = '<a href="#"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;'. ucwords($userData['first_name']).'&nbsp;'. ucwords($userData['last_name']).'</a>';
         $logout = '<a href="logout"><i class="glyphicon glyphicon-off">'.'</i>&nbsp;&nbsp;Logout</a>';
-    }else{
-        $output .= '<h3 class="alert alert-danger">Your google account does not exists in our database!<br>Redirecting to login page ...</h3>';
-        header("Refresh:3; logout.php?logout");
     }
 
 } else {
 
-    $stmt = $DB_con->prepare("SELECT * FROM users WHERE role = 'admin'");
-    $stmt->execute();    
-    $count = $stmt->rowCount();
-
-        if ($count == 0) {
-            $disabled = 'disabled';
-        }
-
     $authUrl = $gClient->createAuthUrl();
     $output = '<h1>Welcome to UPOU Scribd!</h1>';
-    $output .= '<p><a class="btn btn-lg btn-danger '."<?php echo $disabled ?>".'" id="google" href="'.$authUrl.'"><span class="fa fa-google-plus"></span> Sign-in with Google</a></p>';
+    $output .= '<p><a class="btn btn-lg btn-danger" id="google" href="'.$authUrl.'"><span class="fa fa-google-plus"></span> Sign-in with Google</a></p>';
 }
 ?>
