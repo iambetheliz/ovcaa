@@ -14,6 +14,3 @@ This is a Web Application Project called Document Management System. It is desig
 4. Click import from the menu above. Select the database file located at 'db' folder (C:\xampp\htdocs\ovcaa\db)
 5. Click 'Go' to finish importing it
 6. Open your browser, type "http://localhost/ovcaa/administrator"
-
-Note: This site doesn't have any admin account installed yet. Add your email and then login through Google.
-Now you are signed in as an administrator. You can now add aditional users and upload documents on the system.
